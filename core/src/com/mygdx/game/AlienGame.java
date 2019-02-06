@@ -60,7 +60,6 @@ public class AlienGame extends Game {
     public CreditScreen creditScreen;
 
 
-
     @Override
     public void create () {
 
@@ -70,7 +69,10 @@ public class AlienGame extends Game {
         //Creates the singleton
         EntityList.getEntityList();
 
+
+        /** Handles the loading of the assets */
         assets = new AssetManager(new PrefixFileHandleResolver(new InternalFileHandleResolver(), AlienGame.PROJECT_PATH));
+
 
         batch = new SpriteBatch();
         camera = new OrthographicCamera();

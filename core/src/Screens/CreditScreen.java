@@ -41,6 +41,15 @@ public class CreditScreen implements Screen {
 
     }
 
+    /**
+     * Load in the necessary assets for this Screen into the assetManager
+     */
+    private void queueAssets(){
+        game.assets.load("/assets/alienred.jpg", Texture.class);
+        game.assets.load("/assets/keys.png", Texture.class);
+        game.assets.load("/assets/uiskin.atlas", TextureAtlas.class);
+    }
+
 
 
     @Override
