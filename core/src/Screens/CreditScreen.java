@@ -41,15 +41,6 @@ public class CreditScreen implements Screen {
 
     }
 
-    /**
-     * Load in the necessary assets for this Screen into the assetManager
-     */
-    private void queueAssets(){
-        game.assets.load("/assets/alienred.jpg", Texture.class);
-        game.assets.load("/assets/keys.png", Texture.class);
-        game.assets.load("/assets/uiskin.atlas", TextureAtlas.class);
-    }
-
 
 
     @Override
@@ -60,10 +51,11 @@ public class CreditScreen implements Screen {
 
         path.replace("assets", "UI");
 
+        //Made it work on windows by taking out the string path
         this.skin = new Skin();
-        this.skin.addRegions(game.assets.get(path + "/uiskin.atlas", TextureAtlas.class));
+        this.skin.addRegions(game.assets.get("/assets/uiskin.atlas", TextureAtlas.class));
         this.skin.add("default-font", game.fontB24);
-        this.skin.load(Gdx.files.internal(path + "/uiskin.json"));
+        this.skin.load(Gdx.files.internal("assets/uiskin.json"));
         initButtons();
 
     }

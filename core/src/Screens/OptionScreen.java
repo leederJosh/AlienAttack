@@ -34,26 +34,13 @@ public class OptionScreen implements Screen {
         this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
         this.stage = new Stage(new StretchViewport(game.V_WIDTH, game.V_HEIGHT,game.camera));
-
-        //This seems to work but it is still using the pathing stuff?
-        // May need to go back to Antonio to ask again
-        // Pretty sure you need to load the assets with .load()
-        // Then set them to the variables with with assets.get()
-
         this.bg = new Texture(path + "/alienred.jpg");
         this.wasd = new Texture(path + "/keys.png");
-        //queueAssets();
+
 
     }
 
-    /**
-     * Load in the necessary assets for this Screen into the assetManager
-     */
-    private void queueAssets(){
-        game.assets.load("/assets/alienred.jpg", Texture.class);
-        game.assets.load("/assets/keys.png", Texture.class);
-        game.assets.load("/assets/uiskin.atlas", TextureAtlas.class);
-    }
+
 
     @Override
     public void show() {
@@ -61,13 +48,13 @@ public class OptionScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         stage.clear();
 
-
         path.replace("assets", "UI");
 
+        //Made this work on windows by taking out path from the get statement, instead added "/assets" to the name of the file i want to get
         this.skin = new Skin();
-        this.skin.addRegions(game.assets.get("/assets/uiskin.atlas", TextureAtlas.class));
+        this.skin.addRegions(game.assets.get( "/assets/uiskin.atlas", TextureAtlas.class));
         this.skin.add("default-font", game.fontB24);
-        this.skin.load(Gdx.files.internal(path + "/assets/uiskin.json"));
+        this.skin.load(Gdx.files.internal( "uiskin.json"));
         initButtons();
 
 

@@ -37,6 +37,7 @@ public class LoadingScreen implements Screen {
 
     }
 
+
     private void queueAssets() {
         game.assets.load("/assets/logonew.png", Texture.class);
         game.assets.load("/assets/uiskin.atlas", TextureAtlas.class);

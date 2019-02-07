@@ -23,13 +23,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.AlienGame;
 
-//I added this
+
+import world.GameMap;
 import world.TiledGameMap;
 
 
 public class MainMenuScreen implements Screen {
 
-    /** A constant for the Aliendred.jpg asset to be loaded */
     public static final String ALIENRED_JPG = "/assets/alienred.jpg";
     private final AlienGame game;
     private Texture bg;
@@ -45,8 +45,6 @@ public class MainMenuScreen implements Screen {
     private boolean isInGame;
 
     private TiledGameMap tiledGameMap;
-
-
 
 
 
@@ -87,10 +85,10 @@ public class MainMenuScreen implements Screen {
 
         update(delta);
 
-        // This gets the asset "ALIENRED_JPG" that was loaded into the assetManager "assets"
+
         game.batch.begin();
-        if(isInGame == false){
-            if(this.bg == null){
+        if (isInGame == false) {
+            if (this.bg == null) {
                 this.bg = game.assets.get(ALIENRED_JPG, Texture.class);
             }
             game.batch.draw(bg, 0, 0);

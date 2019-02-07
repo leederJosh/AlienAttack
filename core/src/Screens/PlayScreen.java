@@ -71,10 +71,11 @@ public class PlayScreen implements Screen {
         //stage.clear();
 
 
+        //Changed for windows, string path has been taken out and "/assets" has been added to the file name
         this.skin = new Skin();
-        this.skin.addRegions(game.assets.get(path + "/uiskin.atlas", TextureAtlas.class));
+        this.skin.addRegions(game.assets.get( "/assets/uiskin.atlas", TextureAtlas.class));
         this.skin.add("default-font", game.fontB24);
-        this.skin.load(Gdx.files.internal(path + "/uiskin.json"));
+        this.skin.load(Gdx.files.internal( "assets/uiskin.json"));
         initButtons();
 
     }
