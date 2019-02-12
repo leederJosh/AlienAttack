@@ -4,7 +4,7 @@ Team 12s awesome new shoot'em up game <br/>
 This current version of JoshBranch (12/02/19) works on windows and has shooting semi implemented.<br/>
 Author: Josh Leeder<br/>
 <br/>
-The shooting is based around an abstract bullet class, with concrete bullet types (e.g. HandGun) extended it.<br/>
+The shooting is based around an abstract bullet class, with concrete bullet types (e.g. HandGun) extended it.<br/><br/>
 Currently:<br/>
 A new bullet is created on mouse click and is added to the singleton BulletList<br/>
 The bullets in this list render and travel in a positive x direction from the character (and are also updated via the same list)<br/>
