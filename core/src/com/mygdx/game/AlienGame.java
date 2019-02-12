@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.mygdx.game.Shooting.BulletList;
 import com.mygdx.game.entities.EntityList;
 import world.GameMap;
 import world.TiledGameMap;
@@ -67,8 +68,9 @@ public class AlienGame extends Game {
         //TODO: Remove this after pathing is done.
         System.out.println(PROJECT_PATH);
 
-        //Creates the singleton
+        //Creates the singletons
         EntityList.getEntityList();
+        BulletList.getBulletList();
 
         assets = new AssetManager(new PrefixFileHandleResolver(new InternalFileHandleResolver(), AlienGame.PROJECT_PATH));
 

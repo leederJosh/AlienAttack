@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.AlienGame;
 
+import com.mygdx.game.Shooting.AbstractBullet;
+import com.mygdx.game.Shooting.HandGunBullet;
 import world.GameMap;
 
 public class Player extends Entity {
@@ -151,7 +153,12 @@ public class Player extends Entity {
             batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
         } else {
             if (Gdx.input.isKeyPressed(Keys.D)) {
+                //Makes a new bullet to be shot
+                HandGunBullet bullet = new HandGunBullet(pos.x, pos.y);
                 batch.draw(weapon, pos.x, pos.y);
+                //Draws the bullet to be shot
+                // These shouldn't be hardcoded, just dooing it to test the bullet
+                batch.draw(bullet.getBulletTex(), pos.x + 15 , pos.y + 15, 10, 10);
             }
             if (Gdx.input.isKeyPressed(Keys.A)) {
                 batch.draw(weaponLeft, pos.x - 22, pos.y + 2);

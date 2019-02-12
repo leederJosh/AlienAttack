@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.MyInputProcessor;
+import com.mygdx.game.Shooting.AbstractBullet;
+import com.mygdx.game.Shooting.BulletList;
 import com.mygdx.game.entities.Enemy;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
@@ -27,6 +29,7 @@ public abstract class GameMap {
     public void setPlayer(Player player) {
         this.player = player;
     }
+
     public GameMap(SpriteBatch batch) {
         player = new Player(25, 400, this);
         //Spawn player, add to the EntityList
@@ -70,6 +73,17 @@ public abstract class GameMap {
         for(Entity entity: EntityList.getListEntities()) {
             entity.render(batch);
         }
+
+        //If the bulletList contains a bullet it will be rendered here
+        //This will not be removed as of yet
+        if(BulletList.getBulletList().getBullets() != null){
+            for(AbstractBullet bullet: BulletList.getBulletList().getBullets()){
+                batch.draw(bullet.getBulletTex(), bullet.getBulletX() , bullet.getBulletY(), 15, 15);
+                System.out.print("\n A bullet has been added to the bullet list");
+            }
+
+        }
+
         camera.position.x = EntityList.getListEntities().get(0).getx();
         camera.position.y = EntityList.getListEntities().get(0).gety();
         camera.update();
@@ -78,6 +92,16 @@ public abstract class GameMap {
         //need to apply gravity (used earths gravity in this case)
         for(Entity entity: EntityList.getListEntities()) {
             entity.update(delta, -9.8f);
+        }
+
+        //THE PROBLEM IS THAT THE BULLET TRAVELS TOO FAST, NEED TO FIGURE OUT WHY AND HOW TO REDUCE IT
+        //If the bulletList contains a bullet it's position will be updated here
+        //This will not be removed as of yet
+        if(BulletList.getBulletList().getBullets() != null){
+            for(AbstractBullet bullet: BulletList.getBulletList().getBullets()){
+                bullet.updateXPosition(bullet.getSpeed() * Gdx.graphics.getDeltaTime());
+            }
+
         }
     }
     public abstract void dispose ();

@@ -14,6 +14,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.Input.Keys;
+import com.mygdx.game.Shooting.AbstractBullet;
+import com.mygdx.game.Shooting.BulletList;
+import com.mygdx.game.Shooting.HandGunBullet;
 import com.mygdx.game.entities.Enemy;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
@@ -103,6 +106,10 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
             Object[] keys = EntityList.getMapEntities().keySet().toArray();
 
             System.out.println(keys.toString());
+
+            //Create a bullet object and add it to the bullet list (Done here as the direction of fire doens't matter at this point
+            AbstractBullet bullet = new HandGunBullet(playerX, playerY);
+            BulletList.getBulletList().addBullet(bullet);
 
             System.out.println(camera.position);
 
