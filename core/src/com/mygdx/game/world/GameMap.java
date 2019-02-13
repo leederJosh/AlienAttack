@@ -1,6 +1,4 @@
-package world;
-
-import java.util.ArrayList;
+package com.mygdx.game.world;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -79,7 +77,6 @@ public abstract class GameMap {
         if(BulletList.getBulletList().getBullets() != null){
             for(AbstractBullet bullet: BulletList.getBulletList().getBullets()){
                 batch.draw(bullet.getBulletTex(), bullet.getBulletX() , bullet.getBulletY(), 15, 15);
-                System.out.print("\n A bullet has been added to the bullet list");
             }
 
         }
@@ -95,11 +92,13 @@ public abstract class GameMap {
         }
 
         //THE PROBLEM IS THAT THE BULLET TRAVELS TOO FAST, NEED TO FIGURE OUT WHY AND HOW TO REDUCE IT
+        // The bullet seems to travel slower the further left you are, it accelerates to the right
         //If the bulletList contains a bullet it's position will be updated here
         //This will not be removed as of yet
         if(BulletList.getBulletList().getBullets() != null){
             for(AbstractBullet bullet: BulletList.getBulletList().getBullets()){
-                bullet.updateXPosition(bullet.getSpeed() * Gdx.graphics.getDeltaTime());
+                bullet.updateXPosition(bullet.getSpeed());
+                System.out.println("Delta time is : " + Gdx.graphics.getDeltaTime());
             }
 
         }
@@ -112,7 +111,7 @@ public abstract class GameMap {
     //gets the width, height and number of layers
 
     /**
-     * gets a tile by pixel position within the game world at a specified layer.
+     * gets a tile by pixel position within the game com.mygdx.game.world at a specified layer.
      * @param layer
      * @param x
      * @param y
@@ -122,7 +121,7 @@ public abstract class GameMap {
     public Tile getTileByid(int layer, float x, float y) {
         return this.getTileByCoordinate(layer, (int) (x/Tile.TILE_SIZE), (int) (y/Tile.TILE_SIZE));
     }
-    //gets the location on the screen (game world) and divide it by the tile size
+    //gets the location on the screen (game com.mygdx.game.world) and divide it by the tile size
     //converts it to an integer, it gets the location within the array that the tile exists in
     //then calls the next method to get the tile from where it is.
 

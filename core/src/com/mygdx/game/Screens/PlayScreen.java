@@ -1,4 +1,4 @@
-package Screens;
+package com.mygdx.game.Screens;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
@@ -6,10 +6,13 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -19,48 +22,63 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.AlienGame;
+import com.mygdx.game.MyInputProcessor;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.EntityList;
 
-public class CreditScreen implements Screen {
+import com.mygdx.game.world.GameMap;
+
+public class PlayScreen implements Screen {
 
     private AlienGame game;
     private Stage stage;
     private Skin skin;
     private TextButton buttonMainMenu;
-    private Texture bg;
+    private GameMap gameMap;
+    public OrthographicCamera camera;
+    public SpriteBatch batch;
+    public static final int V_WIDTH = 512;
+    public static final int V_HEIGHT = 512;
+    private ArrayList<Entity> entities;
+    private GameMap map;
+    private MyInputProcessor inputProcessor;
     private String path;
 
 
 
-
-    public CreditScreen (final AlienGame game) {
+    public PlayScreen (final AlienGame game, GameMap map) {
         this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
-        this.stage = new Stage(new StretchViewport(game.V_WIDTH, game.V_HEIGHT,game.camera));
-        this.bg = new Texture(path + "/alienred.jpg");
-
-
+        this.stage = new Stage(new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), game.camera));
+        batch = new SpriteBatch();
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.update();
+        gameMap = map;
+        this.inputProcessor = new MyInputProcessor(camera, map.getPlayer());
     }
 
 
 
     @Override
     public void show() {
-        System.out.println("CREDITS");
-        Gdx.input.setInputProcessor(stage);
-        stage.clear();
+        System.out.println("PLAY");
+        Gdx.input.setInputProcessor(inputProcessor);
+        //stage.clear();
 
-        path.replace("assets", "UI");
 
-        //Made it work on windows by taking out the string path
+        //Changed for windows, string path has been taken out and "/assets" has been added to the file name
         this.skin = new Skin();
-        this.skin.addRegions(game.assets.get("/assets/uiskin.atlas", TextureAtlas.class));
+        this.skin.addRegions(game.assets.get( "/assets/uiskin.atlas", TextureAtlas.class));
         this.skin.add("default-font", game.fontB24);
-        this.skin.load(Gdx.files.internal("assets/uiskin.json"));
+        this.skin.load(Gdx.files.internal( "assets/uiskin.json"));
         initButtons();
 
     }
 
     public void update(float delta) {
+
+
         stage.act();
     }
 
@@ -68,31 +86,16 @@ public class CreditScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.35f, 0.35f, 0.35f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //stage.clear();
+        gameMap.update(Gdx.graphics.getDeltaTime());
+        gameMap.render(camera, batch);
+
+        for(Entity entity: EntityList.getListEntities()) {
+            entity.update(delta, -9.8f);
+        }
 
         update(delta);
-
-        game.batch.begin();
-
-        game.batch.draw(bg, 0, 0);
-
-        game.font40.draw(game.batch,"Credits", 170, 480);
-        game.font40.draw(game.batch,"The Final Stand", 60, 420);
-        game.fontT16.draw(game.batch,"-------------------------------------------------", 10, 380);
-        game.fontT16.draw(game.batch,"PRODUCED BY TEAM 12 OFFCIAL", 110, 350);
-        game.fontT16.draw(game.batch,"COORDINATOR        AMER", 30, 300);
-        game.fontT16.draw(game.batch,"ART DESIGN          ADBUL / HASNAATH", 30, 270);
-        game.fontT16.draw(game.batch,"SOUND DESIGN       SAMUEL", 30, 240);
-        game.fontT16.draw(game.batch,"PROGRAMMERS       EHSAN / SAMUEL / SOJOURNER", 30, 210);
-        game.fontT16.draw(game.batch,"MENU DESIGN        EHSAN", 30, 180);
-        game.fontT16.draw(game.batch,"LEVEL DESIGN        HASNAATH", 30, 150);
-        game.fontT16.draw(game.batch,"WEBSITE DESIGN     ABDUL", 30, 120);
-
-        game.batch.end();
-
         stage.draw();
-
-
-
     }
 
     @Override

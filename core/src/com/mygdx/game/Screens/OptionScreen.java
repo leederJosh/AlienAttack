@@ -1,19 +1,9 @@
-package Screens;
-
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-
-import java.util.ArrayList;
+package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -23,66 +13,56 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.AlienGame;
-import com.mygdx.game.MyInputProcessor;
-import com.mygdx.game.entities.Enemy;
-import com.mygdx.game.entities.Entity;
-import com.mygdx.game.entities.EntityList;
-import com.mygdx.game.entities.Player;
 
-import world.GameMap;
-import world.TiledGameMap;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
-public class PlayScreen implements Screen {
+public class OptionScreen implements Screen {
 
     private AlienGame game;
     private Stage stage;
     private Skin skin;
     private TextButton buttonMainMenu;
-    private GameMap gameMap;
-    public OrthographicCamera camera;
-    public SpriteBatch batch;
-    public static final int V_WIDTH = 512;
-    public static final int V_HEIGHT = 512;
-    private ArrayList<Entity> entities;
-    private GameMap map;
-    private MyInputProcessor inputProcessor;
+    private TextButton musicImg;
+    private Texture bg;
+    private Texture wasd;
     private String path;
 
 
 
-    public PlayScreen (final AlienGame game, GameMap map) {
+
+    public OptionScreen (final AlienGame game) {
         this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
-        this.stage = new Stage(new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), game.camera));
-        batch = new SpriteBatch();
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.update();
-        gameMap = map;
-        this.inputProcessor = new MyInputProcessor(camera, map.getPlayer());
+        this.stage = new Stage(new StretchViewport(game.V_WIDTH, game.V_HEIGHT,game.camera));
+        this.bg = new Texture(path + "/alienred.jpg");
+        this.wasd = new Texture(path + "/keys.png");
+
+
     }
 
 
 
     @Override
     public void show() {
-        System.out.println("PLAY");
-        Gdx.input.setInputProcessor(inputProcessor);
-        //stage.clear();
+        System.out.println("OPTION");
+        Gdx.input.setInputProcessor(stage);
+        stage.clear();
 
+        path.replace("assets", "UI");
 
-        //Changed for windows, string path has been taken out and "/assets" has been added to the file name
+        //Made this work on windows by taking out path from the get statement, instead added "/assets" to the name of the file i want to get
         this.skin = new Skin();
         this.skin.addRegions(game.assets.get( "/assets/uiskin.atlas", TextureAtlas.class));
         this.skin.add("default-font", game.fontB24);
-        this.skin.load(Gdx.files.internal( "assets/uiskin.json"));
+        this.skin.load(Gdx.files.internal( "uiskin.json"));
         initButtons();
+
+
+
 
     }
 
     public void update(float delta) {
-
-
         stage.act();
     }
 
@@ -90,15 +70,29 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.35f, 0.35f, 0.35f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //stage.clear();
-        gameMap.update(Gdx.graphics.getDeltaTime());
-        gameMap.render(camera, batch);
-
-        for(Entity entity: EntityList.getListEntities()) {
-            entity.update(delta, -9.8f);
-        }
 
         update(delta);
+
+        game.batch.begin();
+
+        game.batch.draw(bg, 0, 0);
+        game.batch.draw(wasd, 20, 100);
+
+        game.font40.draw(game.batch,"Option", 170, 480);
+        game.font40.draw(game.batch,"The Final Stand", 60, 420);
+        game.fontT16.draw(game.batch,"-------------------------------------------------", 10, 380);
+        game.fontT16.draw(game.batch,"SURVIVE EACH TREACHEROUS LEVEL LONG ENOUGH TO", 10, 350);
+        game.fontT16.draw(game.batch,"PROCEDD TO THE NEXT STAGE IN ORDER TO SAVE", 10, 320);
+        game.fontT16.draw(game.batch,"HUMANITY THROUGH OBTAINING THE CURE, BUT BE", 10, 290);
+        game.fontT16.draw(game.batch,"AWARE ONE WRONG STEP COULD END YOUR MISSION.", 10, 260);
+        game.fontT16.draw(game.batch,"WITH THE CURE HUMANITY CAN STRIKE BACK AND", 10, 230);
+        game.fontT16.draw(game.batch,"RECLAIM THEIR FREEDOM.", 10, 200);
+        game.fontT16.draw(game.batch,"WASD / ARROW KEYS TO MOVE", 140, 150);
+        game.fontT16.draw(game.batch,"MOUSE LEFT CLICK TO SHOOT", 140, 120);
+        game.batch.end();
+
+
+
         stage.draw();
     }
 

@@ -8,9 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.AlienGame;
 
-import com.mygdx.game.Shooting.AbstractBullet;
 import com.mygdx.game.Shooting.HandGunBullet;
-import world.GameMap;
+import com.mygdx.game.world.GameMap;
 
 public class Player extends Entity {
 

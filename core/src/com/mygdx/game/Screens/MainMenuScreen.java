@@ -1,4 +1,4 @@
-package Screens;
+package com.mygdx.game.Screens;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
@@ -24,8 +24,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.AlienGame;
 
 
-import world.GameMap;
-import world.TiledGameMap;
+import com.mygdx.game.world.TiledGameMap;
 
 
 public class MainMenuScreen implements Screen {

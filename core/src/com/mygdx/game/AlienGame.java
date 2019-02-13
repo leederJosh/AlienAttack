@@ -1,6 +1,6 @@
 package com.mygdx.game;
 
-import Screens.*;
+import com.mygdx.game.Screens.*;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,8 +16,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.Shooting.BulletList;
 import com.mygdx.game.entities.EntityList;
-import world.GameMap;
-import world.TiledGameMap;
+import com.mygdx.game.world.GameMap;
+import com.mygdx.game.world.TiledGameMap;
 
 import java.io.File;
 

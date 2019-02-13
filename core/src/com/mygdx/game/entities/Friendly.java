@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.AlienGame;
 
-import world.GameMap;
+import com.mygdx.game.world.GameMap;
 
 public class Friendly extends Entity {
 
