@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.mygdx.game.AlienGame;
+import com.mygdx.game.Game.AlienGame;
 
 import com.mygdx.game.Shooting.HandGunBullet;
 import com.mygdx.game.world.GameMap;

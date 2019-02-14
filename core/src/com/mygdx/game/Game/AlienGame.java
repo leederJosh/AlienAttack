@@ -1,5 +1,6 @@
-package com.mygdx.game;
+package com.mygdx.game.Game;
 
+import com.mygdx.game.Pickkups.PickupHandler;
 import com.mygdx.game.Screens.*;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -38,6 +39,7 @@ public class AlienGame extends Game {
     public SpriteBatch batch;
     public Texture img;
     /////////////////////////////////
+    //Why are these all public?
     //NATHAN
     public GameMap gameMap;
     public ShapeRenderer sr;
@@ -60,6 +62,8 @@ public class AlienGame extends Game {
     public OptionScreen optionScreen;
     public CreditScreen creditScreen;
 
+    //Pickup handler I added
+    private PickupHandler pickupHandler;
 
 
     @Override
@@ -71,6 +75,9 @@ public class AlienGame extends Game {
         //Creates the singletons
         EntityList.getEntityList();
         BulletList.getBulletList();
+
+        //Create the pickupHandler object
+        pickupHandler = new PickupHandler();
 
         assets = new AssetManager(new PrefixFileHandleResolver(new InternalFileHandleResolver(), AlienGame.PROJECT_PATH));
 

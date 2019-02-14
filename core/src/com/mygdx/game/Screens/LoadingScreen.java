@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.mygdx.game.AlienGame;
+import com.mygdx.game.Game.AlienGame;
 
 public class LoadingScreen implements Screen {
 

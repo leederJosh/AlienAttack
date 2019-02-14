@@ -21,8 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.mygdx.game.AlienGame;
-import com.mygdx.game.MyInputProcessor;
+import com.mygdx.game.Game.AlienGame;
+import com.mygdx.game.Game.MyInputProcessor;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
 

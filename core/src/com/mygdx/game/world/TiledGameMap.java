@@ -14,7 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.mygdx.game.AlienGame;
+import com.mygdx.game.Game.AlienGame;
 
 public class TiledGameMap extends GameMap{
     private

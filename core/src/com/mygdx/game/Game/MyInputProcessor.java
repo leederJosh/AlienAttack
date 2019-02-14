@@ -1,12 +1,9 @@
-package com.mygdx.game;
+package com.mygdx.game.Game;
 
 import java.util.ArrayList;
 
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -14,6 +11,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.Input.Keys;
+import com.mygdx.game.Pickkups.AbstractPickup;
+import com.mygdx.game.Pickkups.HealthPickup;
+import com.mygdx.game.Pickkups.PickupHandler;
 import com.mygdx.game.Shooting.AbstractBullet;
 import com.mygdx.game.Shooting.BulletList;
 import com.mygdx.game.Shooting.HandGunBullet;
@@ -35,6 +35,10 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
     Sound sound;
     String path;
 
+    /** This is to handle the pickups */
+    // Probably shouldn't be in the input processor
+    private PickupHandler pickupHandler;
+
     public Player getPlayer() {
         return player;
     }
@@ -49,6 +53,7 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
         this.player = player;
         //this.soundManager = new SoundManager();
         this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
+        pickupHandler = new PickupHandler();
     }
 
     public MyInputProcessor(Camera camera) {
@@ -111,6 +116,7 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
             AbstractBullet bullet = new HandGunBullet(playerX, playerY);
             BulletList.getBulletList().addBullet(bullet);
 
+
             System.out.println(camera.position);
 
             while ((i <= EntityList.getListEntities().size()-1) && entityFound == false) {
@@ -159,11 +165,19 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
         }
 
         //Only increase humanity when an enemy dies
+        // Not sure why the is dead is handled by the input scanner, Josh
         if (e.isDead() == true && e instanceof Enemy) {
             player.decreaseHumanity(-10);
 
             //Remove the entity from the EntityList
             ArrayList<Entity> tempList = EntityList.getListEntities();
+
+            /** This is where the pickups are currently handled, doesn't look like they should be here */
+            AbstractPickup pickup = new HealthPickup(e.getx(), e.gety());
+
+            if(pickup.dropItem() == true){
+                pickupHandler.addPickUp(pickup);
+            }
             tempList.remove(e);
             EntityList.clear();
 

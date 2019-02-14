@@ -1,6 +1,7 @@
 package com.mygdx.game.Pickkups;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Shooting.AbstractBullet;
 import com.mygdx.game.entities.Player;
@@ -28,13 +29,24 @@ public abstract class AbstractPickup {
     private final float WIDTH = 15;
     private final float HEIGHT = 15;
 
+    /** The x cordinates of the pickup */
+    private float pickupX;
 
-    public AbstractPickup(){
+    /** The y coordinates of the pickup */
+    private float pickupY;
+
+
+    public AbstractPickup(float pixkupX, float pickupY){
+        this.pickupX = pixkupX;
+        this.pickupY = pickupY;
         toDrop = false;
     }
 
 
-    /** The random chance that the pickup will drop */
+    /**
+     * The random chance that the pickup will drop
+     * @return toDrop
+     */
     public boolean dropItem(){
         // 1 in 4 chance to drop the pickup
         // The next int is between 0 and n where n is exclusive
@@ -49,24 +61,57 @@ public abstract class AbstractPickup {
     public void applyPickup(Player player){
     }
 
-
-    /** Rendering the pickup */
-    public void render(SpriteBatch batch, Texture tex, float xpos, float ypos){
-        batch.draw(tex, xpos, ypos, WIDTH, HEIGHT);
+    /**
+     * Return the texture a given pickup is using
+     * @return pickupTex
+     */
+    public Texture getPickupTex(){
+        return pickupTex;
     }
 
-    //To do here
-    // Random chance for dropping an item
-    // IF drop then render the item at the relevant coordinated
-    // This will need to be where the enemy entity is killed, will need to use the entity list
+
+    /** Rendering the pickup */
+    public void render(SpriteBatch batch, Texture tex, float xpos, float ypos) {
+
+        //Is it good practice to call the method in here?
+        if (dropItem() == true) {
+            batch.draw(tex, xpos, ypos, WIDTH, HEIGHT);
+        }
+
+        //To do here
+        // Random chance for dropping an item
+        // IF drop then render the item at the relevant coordinated
+        // This will need to be where the enemy entity is killed, will need to use the entity list
 
 
-    //How am i going to make it so when an entity dies they call this
-    // Use the entity list, When entity dies call the drop item.
-    // IF drop item is true, get the coords of the entity
-    // Spawn the pickup at that location useing the render method
+        //How am i going to make it so when an entity dies they call this
+        // Use the entity list, When entity dies call the drop item.
+        // IF drop item is true, get the coords of the entity
+        // Spawn the pickup at that location useing the render method
 
-    //Then i'll worry about the collison.
-    // May need to make another list to check all of the pickups for collision
+        //Then i'll worry about the collison.
+        // May need to make another list to check all of the pickups for collision
 
+        //Should I assign these an entityType?
+    }
+
+    public float getWIDTH(){
+        return WIDTH;
+    }
+
+    public float getHEIGHT(){
+        return HEIGHT;
+    }
+
+    public void render(SpriteBatch batch, float posX, float posY){
+        batch.draw(pickupTex, posX, posY, WIDTH, HEIGHT);
+    }
+
+    public float getPickupX(){
+        return pickupX;
+    }
+
+    public float getPickupY(){
+        return pickupY;
+    }
 }

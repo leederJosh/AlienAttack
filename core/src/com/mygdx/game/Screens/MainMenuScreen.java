@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.mygdx.game.AlienGame;
+import com.mygdx.game.Game.AlienGame;
 
 
 import com.mygdx.game.world.TiledGameMap;

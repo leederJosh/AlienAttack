@@ -4,7 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.MyInputProcessor;
+import com.mygdx.game.Game.MyInputProcessor;
+import com.mygdx.game.Pickkups.AbstractPickup;
+import com.mygdx.game.Pickkups.HealthPickup;
+import com.mygdx.game.Pickkups.PickupHandler;
 import com.mygdx.game.Shooting.AbstractBullet;
 import com.mygdx.game.Shooting.BulletList;
 import com.mygdx.game.entities.Enemy;
@@ -19,6 +22,8 @@ public abstract class GameMap {
     protected Camera cam;
     protected MyInputProcessor inputProcessor;
     private Player player;
+
+    protected PickupHandler pickupHandler;
 
 
     public Player getPlayer() {
@@ -63,6 +68,10 @@ public abstract class GameMap {
         this.inputProcessor =
                 new MyInputProcessor(cam, player);
         Gdx.input.setInputProcessor(inputProcessor);
+
+        //I added this
+        pickupHandler = new PickupHandler();
+
     }
     //made so we can call the methods in alien game
     //orthogonal camera since it is side on
@@ -71,6 +80,14 @@ public abstract class GameMap {
         for(Entity entity: EntityList.getListEntities()) {
             entity.render(batch);
         }
+
+        //Just done to check the drawing of the health pickup works
+        // This does indead work so huzzah
+        /** Pretty sure this works logically but needs to be able to pass around the list of pickups? Should I use another singleton? Could have a pickupHandler object in each map?*/
+        for (AbstractPickup pickup: pickupHandler.getActivePickups()){
+            pickup.render(batch, pickup.getPickupX(), pickup.getPickupY());
+        }
+        //pickup.render(batch, player.getx(), player.gety());
 
         //If the bulletList contains a bullet it will be rendered here
         //This will not be removed as of yet

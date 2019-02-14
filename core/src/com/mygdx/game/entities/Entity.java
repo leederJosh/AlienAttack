@@ -3,6 +3,7 @@ package com.mygdx.game.entities;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import com.mygdx.game.Pickkups.AbstractPickup;
 import com.mygdx.game.world.GameMap;
 
 public abstract class Entity {
@@ -116,5 +117,10 @@ public abstract class Entity {
 
     public void reduceHealth(int amount) {
         health -= amount;
+    }
+
+    //Is this appropriate to be here or should it be in player?
+    public void increaseHealth(int amount) {
+        health += amount;
     }
 }
