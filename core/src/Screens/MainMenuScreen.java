@@ -30,7 +30,6 @@ import world.TiledGameMap;
 
 public class MainMenuScreen implements Screen {
 
-    public static final String ALIENRED_JPG = "/assets/alienred.jpg";
     private final AlienGame game;
     private Texture bg;
     private Stage stage;
@@ -46,14 +45,17 @@ public class MainMenuScreen implements Screen {
 
     private TiledGameMap tiledGameMap;
 
+    private String path;
+
 
 
 
     public MainMenuScreen( final AlienGame game) {
+        this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
         this.stage = new Stage(new StretchViewport(game.V_WIDTH, game.V_HEIGHT,game.camera));
         this.shapeRenderer = new ShapeRenderer();
-
+        this.bg = new Texture(path + "/alienred.jpg");
         this.camera = new OrthographicCamera();
         this.batch = new SpriteBatch();
         this.isInGame = false;
@@ -66,10 +68,12 @@ public class MainMenuScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         stage.clear();
 
+        path.replace("assets", "UI");
+
         this.skin = new Skin();
-        this.skin.addRegions(game.assets.get("/assets/uiskin.atlas", TextureAtlas.class));
+        this.skin.addRegions(game.assets.get(path + "/uiskin.atlas", TextureAtlas.class));
         this.skin.add("default-font", game.fontB24);
-        this.skin.load(game.assets.getFileHandleResolver().resolve("/assets/uiskin.json"));
+        this.skin.load(Gdx.files.internal(path + "/uiskin.json"));
 
         initButtons();
     }
@@ -88,9 +92,6 @@ public class MainMenuScreen implements Screen {
 
         game.batch.begin();
         if (isInGame == false) {
-            if (this.bg == null) {
-                this.bg = game.assets.get(ALIENRED_JPG, Texture.class);
-            }
             game.batch.draw(bg, 0, 0);
             game.font40.draw(game.batch, "The Final Stand", 70, 440);
             game.font24.draw(game.batch, "Screen: MAIN MENU", 20, 20);

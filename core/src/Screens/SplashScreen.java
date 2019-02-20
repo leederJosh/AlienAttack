@@ -10,8 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.AlienGame;
 
-import java.io.File;
-
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 
@@ -28,7 +26,9 @@ public class SplashScreen implements Screen {
         this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
         this.stage = new Stage(new StretchViewport(AlienGame.V_WIDTH, AlienGame.V_HEIGHT, game.camera));
-        this.bg = new Texture("assets/alienred.jpg");
+        this.bg = new Texture(path + "/alienred.jpg");
+
+
     }
 
 
@@ -44,7 +44,7 @@ public class SplashScreen implements Screen {
             }
         };
 
-        Texture splashTex = game.assets.get("/assets/logonew.png", Texture.class);
+        Texture splashTex = game.assets.get(path + "/logonew.png", Texture.class);
         splashImg = new Image(splashTex);
         splashImg.setOrigin(splashImg.getWidth() / 2 , splashImg.getHeight() / 2);
         splashImg.setPosition(stage.getWidth()/2 - 50, stage.getHeight() / 2 + 32);
