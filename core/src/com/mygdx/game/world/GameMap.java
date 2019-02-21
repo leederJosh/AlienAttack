@@ -10,6 +10,7 @@ import com.mygdx.game.Pickkups.HealthPickup;
 import com.mygdx.game.Pickkups.PickupHandler;
 import com.mygdx.game.Shooting.AbstractBullet;
 import com.mygdx.game.Shooting.BulletList;
+import com.mygdx.game.Shooting.ShootingHandler;
 import com.mygdx.game.entities.Enemy;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
@@ -24,6 +25,8 @@ public abstract class GameMap {
     private Player player;
 
     protected PickupHandler pickupHandler;
+
+    private ShootingHandler shootingHandler;
 
 
     public Player getPlayer() {
@@ -58,6 +61,8 @@ public abstract class GameMap {
 
         System.out.println(EntityList.getMapEntities().size());
 
+
+
 //			entities.add(new Enemy(80, 400, this));
 //			entities.add(new Enemy(100, 400, this));
 //			entities.add(new Enemy(120, 400, this));
@@ -71,6 +76,9 @@ public abstract class GameMap {
 
         //I added this
         pickupHandler = new PickupHandler();
+
+        // Handles the shooting
+        shootingHandler = new ShootingHandler();
 
     }
     //made so we can call the methods in alien game
@@ -91,9 +99,9 @@ public abstract class GameMap {
 
         //If the bulletList contains a bullet it will be rendered here
         //This will not be removed as of yet
-        if(BulletList.getBulletList().getBullets() != null){
+        if(BulletList.getBulletList().getBullets().size() != 0){
             for(AbstractBullet bullet: BulletList.getBulletList().getBullets()){
-                batch.draw(bullet.getBulletTex(), bullet.getBulletX() , bullet.getBulletY(), 15, 15);
+                batch.draw(bullet.getBulletTex(), bullet.getBulletX() , bullet.getBulletY(), bullet.getWidth(), bullet.getHeight());
             }
 
         }
@@ -103,22 +111,31 @@ public abstract class GameMap {
         camera.update();
     }
     public void update (float delta) {
+
+
+
         //need to apply gravity (used earths gravity in this case)
         for(Entity entity: EntityList.getListEntities()) {
             entity.update(delta, -9.8f);
         }
 
-        //THE PROBLEM IS THAT THE BULLET TRAVELS TOO FAST, NEED TO FIGURE OUT WHY AND HOW TO REDUCE IT
-        // The bullet seems to travel slower the further left you are, it accelerates to the right
-        //If the bulletList contains a bullet it's position will be updated here
-        //This will not be removed as of yet
-        if(BulletList.getBulletList().getBullets() != null){
+        if(BulletList.getBulletList().getBullets().size() != 0){
             for(AbstractBullet bullet: BulletList.getBulletList().getBullets()){
-                bullet.updateXPosition(bullet.getSpeed());
-                System.out.println("Delta time is : " + Gdx.graphics.getDeltaTime());
+
+                if(bullet.toRemove() == true){
+                    BulletList.getBulletList().addBulletToRemove(bullet);
+                }
+                bullet.bulletMovement();
+               // System.out.print("There is a bullet in the bullet list\n");
             }
 
         }
+
+        //Handles the bullet collisions
+        shootingHandler.handleBullet(BulletList.getBulletList(), EntityList.getEntityList());
+
+        //To remove the bullets
+        BulletList.getBulletList().removeBullets();
     }
     public abstract void dispose ();
 

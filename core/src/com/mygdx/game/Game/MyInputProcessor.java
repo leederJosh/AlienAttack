@@ -112,9 +112,21 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
 
             System.out.println(keys.toString());
 
+
+            // Moved the blow code out of the while loop below as i dont think it needs to be done repeatedly
+            final float rawMouseX = Gdx.input.getX();
+            final float rawMouseY = Gdx.input.getY();
+
+            final float mappedMouseX = rawMouseX - Gdx.graphics.getWidth()/2 + camera.position.x;
+            final float mappedMouseY = Gdx.graphics.getHeight()/2 - rawMouseY + camera.position.y;
+            System.out.println(String.format("Mapped mouse coords: (%f, %f)", mappedMouseX, mappedMouseY));
+
             //Create a bullet object and add it to the bullet list (Done here as the direction of fire doens't matter at this point
-            AbstractBullet bullet = new HandGunBullet(playerX, playerY);
+            AbstractBullet bullet = new HandGunBullet(playerX + 15, playerY);
+
+            bullet.calculateMovement(mappedMouseX, mappedMouseY);
             BulletList.getBulletList().addBullet(bullet);
+
 
 
             System.out.println(camera.position);
@@ -125,12 +137,7 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
                 float entityX = e.getx();
                 float entityY = e.gety();
 
-                final float rawMouseX = Gdx.input.getX();
-                final float rawMouseY = Gdx.input.getY();
 
-                final float mappedMouseX = rawMouseX - Gdx.graphics.getWidth()/2 + camera.position.x;
-                final float mappedMouseY = Gdx.graphics.getHeight()/2 - rawMouseY + camera.position.y;
-                System.out.println(String.format("Mapped mouse coords: (%f, %f)", mappedMouseX, mappedMouseY));
 
                 //Aiming to the right
                 if ((entityX < mappedMouseX) && (mappedMouseX > entityX + e.getType().getWidth())) {

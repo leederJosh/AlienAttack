@@ -24,6 +24,10 @@ public class EntityList {
         return entityList;
     }
 
+    public static ArrayList<Entity> getEntities(){
+        return entityArrayList;
+    }
+
     public static void updateEntityList(Entity e) {
         entityArrayList.add(e);
 

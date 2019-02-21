@@ -21,7 +21,9 @@ public class BulletList {
 
 
     private BulletList(){
+
         bullets = new ArrayList<AbstractBullet>();
+        bulletsToRemove = new ArrayList<AbstractBullet>();
     }
 
     public static BulletList getBulletList(){
@@ -62,13 +64,18 @@ public class BulletList {
      */
     public void removeBullets(){
 
-        //Not sure if this is going to work or if it needs to be a nested loop
-        for(AbstractBullet bullet: bulletsToRemove){
-            bullets.remove(bullet);
+        // Only removes the bullets if there is a bullet in the list to remove
+        if(bullets.size() != 0){
+
+            //Not sure if this is going to work or if it needs to be a nested loop
+            for(AbstractBullet bullet: bulletsToRemove){
+                bullets.remove(bullet);
+            }
+
+            //This may break things if not done at the right time
+            bulletsToRemove.clear();
         }
 
-        //This may break things if not done at the right time
-        bulletsToRemove.clear();
     }
 
 }

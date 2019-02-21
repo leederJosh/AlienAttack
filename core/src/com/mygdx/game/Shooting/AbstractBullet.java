@@ -19,7 +19,7 @@ public abstract class AbstractBullet {
     /** A factor to scale the bullet to depending on the gun */
     private double bulletSize;
     /** The damage a bullet will deal to another entity */
-    private int bulletDamage;
+    protected int bulletDamage;
     /** The texture for the bullet */
     private Texture bulletTex;
     /** Whether or not hte bullet needs to be removed */
@@ -28,12 +28,30 @@ public abstract class AbstractBullet {
     AssetManager manager = new AssetManager();
     /** The speed the bullet travels at */
     protected float speed;
+    /**The amount the bullet will move in the X per frame */
+    private float moveX;
+    /**The amount the bullet will move in the Y per frame */
+    private float moveY;
+    /** Keeps the bullets original X position so that it can be removed later */
+    private float originX;
+    /** Keeps the bullet original Y position so that it can be removed later */
+    private float originY;
+    /** The bundaries for the X and Y of the bullet */
+    private static float boundary = 1000;
+    /** Width of the bullet */
+    protected float width;
+    /** Width of the bullet */
+    protected float height;
 
 
     //Constructor
     public AbstractBullet(float posX, float posY){
         bulletX = posX;
         bulletY = posY;
+
+        originX = posX;
+        originY = posY;
+
         // manager.load("assets/bullet.png", Texture.class);
         // This is the problem at the moment
         bulletTex = new Texture ("assets/bullet.png");
@@ -41,18 +59,26 @@ public abstract class AbstractBullet {
 
     /**
      * Updates the current X position of the bullet
-     * @param movement
      */
-    public void updateXPosition(double movement){
-        bulletX += bulletX + movement;
+    public void updateXPosition(){
+        bulletX += moveX;
     }
 
     /**
      * Updates the current Y position of the bullet
-     * @param movement
      */
-    public void updateYPosition(double movement) {
-        bulletY += bulletY + movement;
+    public void updateYPosition() {
+        bulletY += moveY;
+    }
+
+    public int getBulletDamage(){
+        return bulletDamage;
+    }
+
+    public void bulletMovement(){
+        updateXPosition();
+        updateYPosition();
+        removeOffscreenBullet();
     }
 
     //get the X pos of the bullet
@@ -68,6 +94,10 @@ public abstract class AbstractBullet {
     //get the speed of the bullet
     public float getSpeed(){
         return speed;
+    }
+
+    public void updateRemove(){
+        remove = true;
     }
 
     /**
@@ -102,21 +132,56 @@ public abstract class AbstractBullet {
         return bulletTex;
     }
 
-    //What do I need
-    // A way to spawn bullets to the screen (Then probably add them to a bullet list)
-    // Spawning bullets next to the players gun
-    // Updating the bullets position
-    // Disposing of the bullet
-    // How am I going to handle angles? Like pythag for sure but shall I use an origin point
+    /**
+     * Calculates the amount the bullet should move in the x and the y per frame
+     * @param mouseX
+     * @param mouseY
+     */
+    public void calculateMovement(float mouseX, float mouseY){
 
-    // Could make this into an abstract class
+        // Will work out the values i need foe the X coordinates to work out hypotenuse
+        // This will be the mouseX - current bulletX, then squared and added to
+        // the mouseY - current bulletY
+        // The squareroot of the sum of these values squared is the hypotenuse hypo
+        float xDifference = mouseX - bulletX;
+        float yDifference = mouseY - bulletY;
+        float hypo = (float)Math.sqrt((xDifference * xDifference) + (yDifference * yDifference));
 
-    // Get bullet to spawn on click
-    // Get bullet to spawn at the players gun
-    // Get bullet to travel in x and y positions straigh line
-    // Get bullets to travel in a direction
-    // Add bullets to a bullet list
-    // Collision detection for a single bullet
-    // On collision reduce health of entity
-    // Transfer this to a bullet list
+
+        moveX = (xDifference/hypo) * speed;
+        moveY = (yDifference/hypo) * speed;
+    }
+
+    /** Checks whether a bullet is off the screen and if it is marks remove as true */
+    private void removeOffscreenBullet(){
+
+        // I the bullet X is less than 0 or greater than the graphics width then return remove as true
+        // This should not be hardcoded, need a better way of doing this
+        if(bulletX < originX - boundary || bulletX > originX + boundary){
+            remove = true;
+        }
+
+        if(bulletY < originY - boundary || bulletY > originY + boundary){
+            remove = true;
+        }
+    }
+
+    public float getWidth(){
+        return width;
+    }
+
+    public float getHeight(){
+        return height;
+    }
+
+    // To Do
+
+    // Then collision detection
+    // Should be a case of getting the x of the bullet and comparing
+    // the x and the x plus width with all the entities int he bullet list
+    // Same idea with the y i think for now
+    // Then if they collide do something, o health first then humanity
+
+    // Then i can work on other guns like machine gun and shotgun
+    // Think I may need to make states or strategies for this
 }

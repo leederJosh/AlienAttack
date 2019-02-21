@@ -9,6 +9,9 @@ public class HandGunBullet extends AbstractBullet {
 
     public HandGunBullet(float posX, float posY){
         super(posX, posY);
-        speed = 1;
+        width = 15;
+        height = 15;
+        speed = 5;
+        bulletDamage = 25;
     }
 }
