@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
 <module rename-to="html">
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
+<module rename-to="html">
+>>>>>>> dd976ff4a39baa7a1f78997f93df7140588716c3
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 	<inherits name='com.badlogic.gdx.physics.box2d.box2d-gwt' />
 	<inherits name='com.badlogic.gdx.controllers.controllers-gwt' />
@@ -10,9 +16,18 @@
 	<inherits name='com.kotcrab.vis.vis-ui' />
 	<inherits name='libgdx-utils' />
 	<inherits name='libgdx-utils-box2d' />
+<<<<<<< HEAD
 
 	<inherits name='MainGame' />
 	<entry-point class='com.mygdx.game.client.HtmlLauncher' />
 	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
 	<set-configuration-property name="gdx.assetpath" value="../core/assets" />
 </module>
+=======
+
+	<inherits name='MainGame' />
+	<entry-point class='com.mygdx.game.client.HtmlLauncher' />
+	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
+	<set-configuration-property name="gdx.assetpath" value="../core/assets" />
+</module>
+>>>>>>> dd976ff4a39baa7a1f78997f93df7140588716c3

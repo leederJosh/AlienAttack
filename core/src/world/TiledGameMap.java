@@ -16,11 +16,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.game.AlienGame;
-import com.mygdx.game.entities.Entity;
-import com.mygdx.game.entities.EntityList;
-import com.mygdx.game.entities.Friendly;
-
-import java.util.ArrayList;
 
 public class TiledGameMap extends GameMap{
     private
@@ -32,8 +27,6 @@ public class TiledGameMap extends GameMap{
     SpriteBatch imageBatch;
     BitmapFont font;
     SpriteBatch text;
-
-    private DialogNode currentDialog;
 
     public TiledGameMap(SpriteBatch batch) {
         super(batch);
@@ -126,26 +119,6 @@ public class TiledGameMap extends GameMap{
         font.draw(text, "HP:", 15, (float) drawHeightText);
         //font.draw(text, "EXP:", 15, (float) drawHeightText - 10)
         font.draw(text, "HUMANITY:", 275, (float) drawHeightText);
-        text.end();
-
-        //drawing the dialog box
-        sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.setColor(Color.WHITE);
-        sr.rect(10, 5, 500, 100);
-        sr.end();
-        text.begin();
-
-        //TODO: Add dialog changes here.
-        ArrayList<Entity> entities = EntityList.getListEntities();
-        Friendly friendly = null;
-        for (Entity e : entities) {
-            if (e instanceof Friendly) {
-                friendly = (Friendly) e;
-                break;
-            }
-        }
-        font.draw(text, "DIALOG", 10, 115);
-        font.draw(text, friendly.getHitDialog().getText(), 15, 90);
         text.end();
 
         /////////////////////////////////////////////////
