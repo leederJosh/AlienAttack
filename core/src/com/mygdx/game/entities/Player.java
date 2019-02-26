@@ -22,7 +22,7 @@ public class Player extends Entity {
             weapon,
             weaponLeft;
     private static final float Animation_speed = 0.5f;
-    private int humanity;
+    public static int humanity;
     //animation
     private SpriteBatch spriteBatch;
     private Texture
@@ -107,14 +107,29 @@ public class Player extends Entity {
         //this will apply the gravity
         super.update(deltaTime, gravity);
 
-        //moving left (negative speed so we move left)
-        if (Gdx.input.isKeyPressed(Keys.A)) {
-            moveX(-SPEED * deltaTime);
+        //check the humanity level
+        if (humanity < 90) {
+            //then swap the keys (punish the player for a low humanity score)
+            if (Gdx.input.isKeyPressed(Keys.A)) {
+                //move right
+                moveX(SPEED * deltaTime);
+            }
+            //move left
+            if (Gdx.input.isKeyPressed(Keys.D)) {
+                moveX(-SPEED * deltaTime);
+            }
         }
+        //otherwise, move normally
+        else {
+            //moving left (negative speed so we move left)
+            if (Gdx.input.isKeyPressed(Keys.A)) {
+                moveX(-SPEED * deltaTime);
+            }
 
-        //moving right (positive speed so we move right)
-        if (Gdx.input.isKeyPressed(Keys.D)) {
-            moveX(SPEED * deltaTime);
+            //moving right (positive speed so we move right)
+            if (Gdx.input.isKeyPressed(Keys.D)) {
+                moveX(SPEED * deltaTime);
+            }
         }
 
         //Deduct health when the player is on top of an enemy

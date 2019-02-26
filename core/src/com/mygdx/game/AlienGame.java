@@ -57,8 +57,6 @@ public class AlienGame extends Game {
     public OptionScreen optionScreen;
     public CreditScreen creditScreen;
 
-
-
     @Override
     public void create () {
 

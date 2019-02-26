@@ -16,6 +16,14 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.game.AlienGame;
+import com.mygdx.game.entities.Enemy;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.EntityList;
+import com.mygdx.game.entities.Friendly;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class TiledGameMap extends GameMap{
     private
@@ -27,6 +35,8 @@ public class TiledGameMap extends GameMap{
     SpriteBatch imageBatch;
     BitmapFont font;
     SpriteBatch text;
+
+    private DialogNode currentDialog;
 
     public TiledGameMap(SpriteBatch batch) {
         super(batch);
@@ -121,12 +131,43 @@ public class TiledGameMap extends GameMap{
         font.draw(text, "HUMANITY:", 275, (float) drawHeightText);
         text.end();
 
+        //drawing the dialog box
+        sr.begin(ShapeRenderer.ShapeType.Filled);
+        sr.setColor(Color.WHITE);
+        sr.rect(10, 5, 500, 100);
+        sr.end();
+        text.begin();
+        font.draw(text, "DIALOG", 10, 115);
+
+        //TODO: Add dialog changes here.
+        TreeMap<Double, Entity> entities = EntityList.getMapEntities();
+
+        //Iterate through the tree map to find the closest entity.
+        for(Map.Entry<Double,Entity> entry : entities.entrySet()) {
+            Entity e = entry.getValue();
+
+            //The dialog will be different depending on which entity is closest
+            if (e instanceof Friendly) {
+                //Add friendly dialog to the dialog box
+                font.draw(text, ((Friendly) e).getHitDialog().getText(), 15, 90);
+                break;
+            } else if (e instanceof Enemy) {
+                //Add enemy dialog to the dialog box
+                font.draw(text, ((Enemy) e).getDialog().getText(), 15, 90);
+                break;
+            }
+        }
+        text.end();
+
         /////////////////////////////////////////////////
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
+        for(Entity entity: EntityList.getListEntities()) {
+            entity.update(delta, -9.8f);
+        }
     }
 
     @Override
