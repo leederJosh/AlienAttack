@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.Game.AlienGame;
 
+import com.mygdx.game.Guns.GunInterface;
+import com.mygdx.game.Guns.HandGun;
+import com.mygdx.game.Guns.ShotGun;
 import com.mygdx.game.Shooting.HandGunBullet;
 import com.mygdx.game.world.GameMap;
 
@@ -34,6 +37,11 @@ public class Player extends Entity {
     private Animation<TextureRegion>
             walkAnimation,
             walkLeftAnimation;
+
+    /** Gun types */
+    private GunInterface currentGun;
+    private GunInterface handGun;
+    private GunInterface shotGun;
 
     public Texture getWeapon() {
         return weapon;
@@ -91,6 +99,12 @@ public class Player extends Entity {
 
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
+
+        //Create a gun for the player to use by default (the Handgun)
+        handGun = new HandGun();
+        shotGun = new ShotGun();
+        //currentGun = handGun;
+        currentGun = shotGun;
     }
 
     @Override
@@ -183,6 +197,19 @@ public class Player extends Entity {
         return JUMP_VELOCITY;
     }
 
+    /**
+     * Current shooting behaviour of the player
+     */
+    public void shoot(float mouseX, float mouseY){
+        currentGun.shoot(mouseX, mouseY);
+    }
+
+    /**
+     * Set the gun to be used by the player
+     */
+    public void setGun(GunInterface gun){
+        currentGun = gun;
+    }
 
 
 }

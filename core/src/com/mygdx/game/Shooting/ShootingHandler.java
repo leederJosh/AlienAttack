@@ -1,7 +1,13 @@
 package com.mygdx.game.Shooting;
 
+import com.mygdx.game.Pickkups.AbstractPickup;
+import com.mygdx.game.Pickkups.HealthPickup;
+import com.mygdx.game.entities.Enemy;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
+import com.mygdx.game.entities.Friendly;
+
+import java.util.ArrayList;
 
 /**
  * Handles bullet collision between bullets and entities
@@ -10,53 +16,76 @@ import com.mygdx.game.entities.EntityList;
  */
 public class ShootingHandler {
 
-    //To Do
-    // Get all the bullets in the current bullet list
-    // Compare the x and y plus the width and height to each entity
-    // If the bullet is over the entity then do things (will depend on the entity type and stuff)
+    /** Holds the entities to remove from the Entity List */
+    private ArrayList<Entity> deadEntities;
+
+    public ShootingHandler(){
+        deadEntities = new ArrayList<Entity>();
+    }
 
     /**
      * Handles what happens when a bullet collides with an entity
+     *
      * @param bulletList
      * @param entityList
      */
-    public void handleBullet(BulletList bulletList, EntityList entityList){
+    public void handleBullet(BulletList bulletList, EntityList entityList) {
 
 
-        for(AbstractBullet bullet: bulletList.getBullets()){
-            for(Entity entity: entityList.getEntities()) {
+        for (Entity entity : entityList.getEntities()) {
+            for (AbstractBullet bullet : bulletList.getBullets()) {
+                {
+                    if (entity.getType().getId().equals("player") == false && entity.getx() > bullet.getBulletX()) {
+
+                        /**
+                         * It seems to be looping through 2 times for every entity to the left of the player
+                         */
+                        // Shooting in all directions
+                        // Now this is confusing so here is a breakdown:
+                        // Check the bullets X plus bullet width is greater than the X of the entity / 2 (so it hits the middle of the entity in all directions)
+                        // AND
+                        // check the bullet Y plus the bullet height is greater than the entity Y
+                        // AND
+                        // Check the bullet Y plus bullet height is less than the entity Y plus entity height
+                        // This is to effectively draw a box around the entity using it's height, it's Y and it's X
+                        // This means that if the bullet hits in this box collision will occur, if not then no collision
+                        // Without the last part it registers a hit if a bullet travels anywhere above the entity
+                        if (bullet.getBulletX() + bullet.getWidth() > entity.getx() + entity.getWidth() / 2
+                                && bullet.getBulletY() + bullet.getHeight() > entity.gety()
+                                && bullet.getBulletY() + bullet.getHeight() < entity.gety() + entity.getHeight()) {
 
 
+                            System.out.print("\nHealth before " + entity.getHealth());
+                            entity.reduceHealth(bullet.getBulletDamage());
 
-                if (entity.getType().getId().equals("player") == false) {
+                            /** Things that need to be added here:
+                             * Handling the drop in humanity depending on the entity type
+                             * How are we going to get the player here? Use index 0 of the list you passed in?
+                             * There is a bug with how the entities despawn on death
+                             * They leave a black rectangle that only goes away after clicking so it is linked to when this method is called and how often
+                             */
 
-                    /**
-                     * The problems are that the bullet spawns and despawns imediately
-                     * Like it's hitting the player and despawning or something
-                     * The bullet shoots and moves as normal if we comment out the removeBullet method
-                     */
-                    // Checks the collisions to the left of the player
-//                    if (bullet.getBulletX() == (entity.getx() + entity.getWidth())){
-//                        //Reduces the health of the entity
-//                        entity.reduceHealth(bullet.getBulletDamage());
-//                        System.out.print("Before bullet removed\n");
-//                        bullet.updateRemove();
-//                        System.out.print("Reducing health\n");
-//                        // Need to handle humanity and stuff here too
-//                    }
-
-                    //Checks the right of the player
-                   if(((bullet.getBulletX()+bullet.getWidth())>=entity.getx())&&(((bullet.getBulletY()+bullet.getHeight())>=entity.gety()))||(bullet.getBulletY()<=(entity.gety()+entity.getHeight()))){
-                       //entity.reduceHealth(bullet.getBulletDamage());
-                        System.out.print("Before bullet removed\n");
-                        //bullet.updateRemove();
-                        System.out.print("Reducing health\n");
-                   }
+                            if(entity.getHealth() <= 0){
+                                deadEntities.add(entity);
+                            }
+                            System.out.print("\nHealth After " + entity.getHealth());
+                            bullet.updateRemove();
+                        }
+                    }
                 }
             }
-            }
-
         }
-
+        removeDeadEntities();
     }
+
+    /**
+     * Remove all the entities in the dead list from the EntityList
+     */
+    public void removeDeadEntities(){
+        for(Entity entity : deadEntities){
+            entity.dispose();
+            EntityList.getEntityList().removeDeadEntity(entity);
+        }
+    }
+}
 

@@ -121,11 +121,14 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
             final float mappedMouseY = Gdx.graphics.getHeight()/2 - rawMouseY + camera.position.y;
             System.out.println(String.format("Mapped mouse coords: (%f, %f)", mappedMouseX, mappedMouseY));
 
-            //Create a bullet object and add it to the bullet list (Done here as the direction of fire doens't matter at this point
-            AbstractBullet bullet = new HandGunBullet(playerX + 15, playerY);
+//            //Create a bullet object and add it to the bullet list (Done here as the direction of fire doens't matter at this point
+//            AbstractBullet bullet = new HandGunBullet(playerX + 15, playerY);
+//
+//            bullet.calculateMovement(mappedMouseX, mappedMouseY);
+//            BulletList.getBulletList().addBullet(bullet);
 
-            bullet.calculateMovement(mappedMouseX, mappedMouseY);
-            BulletList.getBulletList().addBullet(bullet);
+            // This handles the player shooting
+            player.shoot(mappedMouseX, mappedMouseY);
 
 
 

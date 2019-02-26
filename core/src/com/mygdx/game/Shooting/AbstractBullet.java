@@ -24,7 +24,7 @@ public abstract class AbstractBullet {
     private Texture bulletTex;
     /** Whether or not hte bullet needs to be removed */
     private boolean remove;
-    /** Asset managet to get the texture */
+    /** Asset manager to get the texture */
     AssetManager manager = new AssetManager();
     /** The speed the bullet travels at */
     protected float speed;
@@ -37,17 +37,23 @@ public abstract class AbstractBullet {
     /** Keeps the bullet original Y position so that it can be removed later */
     private float originY;
     /** The bundaries for the X and Y of the bullet */
-    private static float boundary = 1000;
+    private static float boundary = 10000;
     /** Width of the bullet */
     protected float width;
     /** Width of the bullet */
     protected float height;
+    /** How much the bullet will spread per tick */
+    protected int degreeOfSpread;
+    /** The type of the bullet */
+    protected BulletType bulletType;
 
 
     //Constructor
-    public AbstractBullet(float posX, float posY){
+    public AbstractBullet(float posX, float posY, BulletType bulletType){
         bulletX = posX;
         bulletY = posY;
+
+        this.bulletType = bulletType;
 
         originX = posX;
         originY = posY;
@@ -110,15 +116,8 @@ public abstract class AbstractBullet {
     }
 
     /**
-     *  Detects a collision between a bullet and an entity
-     */
-    public void checkBulletCollision(){
-        //Need an if statement to check whether the x and y of the bullet plus it's size (size of asset) overlap with an entity in the entity list
-    }
-
-    /**
      * Whether a bullet should be removed or not
-     * @return @remove
+     * @return remove
      */
     public boolean toRemove(){
         return remove;
@@ -139,7 +138,7 @@ public abstract class AbstractBullet {
      */
     public void calculateMovement(float mouseX, float mouseY){
 
-        // Will work out the values i need foe the X coordinates to work out hypotenuse
+        // Will work out the values i need for the X coordinates to work out hypotenuse
         // This will be the mouseX - current bulletX, then squared and added to
         // the mouseY - current bulletY
         // The squareroot of the sum of these values squared is the hypotenuse hypo
@@ -149,7 +148,7 @@ public abstract class AbstractBullet {
 
 
         moveX = (xDifference/hypo) * speed;
-        moveY = (yDifference/hypo) * speed;
+        moveY = (yDifference/hypo) * speed + degreeOfSpread;
     }
 
     /** Checks whether a bullet is off the screen and if it is marks remove as true */
@@ -157,11 +156,11 @@ public abstract class AbstractBullet {
 
         // I the bullet X is less than 0 or greater than the graphics width then return remove as true
         // This should not be hardcoded, need a better way of doing this
-        if(bulletX < originX - boundary || bulletX > originX + boundary){
+        if(bulletX <  boundary * -1 || bulletX >  boundary){
             remove = true;
         }
 
-        if(bulletY < originY - boundary || bulletY > originY + boundary){
+        if(bulletY < boundary * -1 || bulletY > boundary){
             remove = true;
         }
     }

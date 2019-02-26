@@ -11,7 +11,6 @@ public class Enemy extends Entity {
     private static final int speed = 60;
     //speed on x axis
     private static final int jumpVelocity = 5;
-    Texture image;
     private float maxXMovement = 5;
 
     public Enemy(float x, float y, GameMap map) {
@@ -28,6 +27,5 @@ public class Enemy extends Entity {
         //we scale the image so that it is the same size as we specified in entityType
         //current image is
     }
-
 
 }

@@ -1,5 +1,6 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -20,12 +21,18 @@ public abstract class Entity {
             MIN_HEALTH = 0;
     private boolean isDead;
 
+    Texture image;
+
+
 
     public void setHealth(int health) {
         this.health = health;
     }
 
     public boolean isDead() {
+        if(health < 0 ){
+            isDead = true;
+        }
         return isDead;
     }
 
@@ -123,4 +130,9 @@ public abstract class Entity {
     public void increaseHealth(int amount) {
         health += amount;
     }
+
+    public void dispose(){
+        image.dispose();
+    }
+
 }

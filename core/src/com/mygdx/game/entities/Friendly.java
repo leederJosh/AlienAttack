@@ -8,8 +8,6 @@ import com.mygdx.game.world.GameMap;
 
 public class Friendly extends Entity {
 
-    private Texture image;
-
     public Friendly(float x, float y, GameMap map) {
         super(x, y, EntityType.FRIENDLY, map);
         String path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");

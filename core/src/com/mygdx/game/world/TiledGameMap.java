@@ -15,6 +15,9 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.game.Game.AlienGame;
+import com.mygdx.game.Shooting.BulletList;
+import com.mygdx.game.Shooting.ShootingHandler;
+import com.mygdx.game.entities.EntityList;
 
 public class TiledGameMap extends GameMap{
     private
@@ -26,6 +29,7 @@ public class TiledGameMap extends GameMap{
     SpriteBatch imageBatch;
     BitmapFont font;
     SpriteBatch text;
+    ShootingHandler shootingHandler;
 
     public TiledGameMap(SpriteBatch batch) {
         super(batch);
@@ -39,6 +43,8 @@ public class TiledGameMap extends GameMap{
         this.imageBatch = new SpriteBatch();
         this.font = new BitmapFont(Gdx.files.internal(path + "/8bit9.fnt"));
         this.text = new SpriteBatch();
+
+        shootingHandler = new ShootingHandler();
     }
 
     @Override
@@ -125,7 +131,17 @@ public class TiledGameMap extends GameMap{
 
     @Override
     public void update(float delta) {
+
         super.update(delta);
+
+        //Handles the bullet collisions
+        shootingHandler.handleBullet(BulletList.getBulletList(), EntityList.getEntityList());
+
+        //To remove the bullets
+        BulletList.getBulletList().removeBullets();
+
+        //To remove the dead entities
+        //EntityList.getEntityList().removeDeadEntities();
     }
 
     @Override

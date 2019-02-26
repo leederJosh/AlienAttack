@@ -9,6 +9,8 @@ public class EntityList {
     //private static ArrayList<Entity> myEntities;
     private static TreeMap<Double, Entity> entityMap;
     private static ArrayList<Entity> entityArrayList;
+    /** Holds dead entities to remove */
+    private static ArrayList<Entity> entitiesToRemove;
 
     //Private constructor
     private EntityList() {
@@ -20,6 +22,7 @@ public class EntityList {
     public static EntityList getEntityList() {
         if(entityList == null){
             entityList = new EntityList();
+            entitiesToRemove = new ArrayList<Entity>();
         }
         return entityList;
     }
@@ -94,16 +97,19 @@ public class EntityList {
             double hyp = Math.sqrt((xDifference * xDifference) + (yDifference * yDifference));
             updateEntityMap(hyp, entityArrayList.get(i));
         }
-
-		/*//Add entities to EntityList
-		for (Entity e : entityArrayList) {
-			updateEntityList(e);
-		}*/
     }
 
     public static void clear() {
         entityArrayList.clear();
         entityMap.clear();
 
+    }
+
+    /**
+     * Remove a given dead entity from the entity list
+     * Added 22/2/19
+     */
+    public void removeDeadEntity(Entity entity){
+        entityArrayList.remove(entity);
     }
 }

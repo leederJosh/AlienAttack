@@ -119,23 +119,16 @@ public abstract class GameMap {
             entity.update(delta, -9.8f);
         }
 
-        if(BulletList.getBulletList().getBullets().size() != 0){
-            for(AbstractBullet bullet: BulletList.getBulletList().getBullets()){
+        if(BulletList.getBulletList().getBullets().size() != 0) {
+            for (AbstractBullet bullet : BulletList.getBulletList().getBullets()) {
 
-                if(bullet.toRemove() == true){
+                if (bullet.toRemove() == true) {
                     BulletList.getBulletList().addBulletToRemove(bullet);
                 }
                 bullet.bulletMovement();
-               // System.out.print("There is a bullet in the bullet list\n");
+                // System.out.print("There is a bullet in the bullet list\n");
             }
-
         }
-
-        //Handles the bullet collisions
-        shootingHandler.handleBullet(BulletList.getBulletList(), EntityList.getEntityList());
-
-        //To remove the bullets
-        BulletList.getBulletList().removeBullets();
     }
     public abstract void dispose ();
 
