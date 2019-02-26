@@ -7,14 +7,18 @@ package com.mygdx.game.Shooting;
  */
 public class HandGunBullet extends AbstractBullet {
 
-    BulletType bulletType = human;
 
     public HandGunBullet(float posX, float posY){
-        super(posX, posY,);
+        super(posX, posY, BulletType.HUMAN);
         width = 15;
         height = 15;
         speed = 5;
         bulletDamage = 25;
+    }
+
+    @Override
+    public void act() {
+
     }
 
     // To do for other guns

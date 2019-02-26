@@ -28,6 +28,8 @@ public abstract class GameMap {
 
     private ShootingHandler shootingHandler;
 
+    /** Asset handler */
+    private AssetHandler assetHandler;
 
     public Player getPlayer() {
         return player;
@@ -79,6 +81,9 @@ public abstract class GameMap {
 
         // Handles the shooting
         shootingHandler = new ShootingHandler();
+
+        //Create the assetHandler
+        assetHandler.getAssetHandler();
 
     }
     //made so we can call the methods in alien game

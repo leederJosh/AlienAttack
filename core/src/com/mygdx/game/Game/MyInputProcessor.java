@@ -23,6 +23,7 @@ import com.mygdx.game.entities.EntityList;
 import com.mygdx.game.entities.EntityType;
 import com.mygdx.game.entities.Friendly;
 import com.mygdx.game.entities.Player;
+import com.mygdx.game.world.AssetHandler;
 
 //TODO: For melee enemies, check to see if on top of enemy by using the enemy with hypotenuse 0.
 public class MyInputProcessor<T> implements Comparable, InputProcessor {
@@ -100,8 +101,9 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
             //entity.reduceHealth();
 
             //Play a gunshot sound effect
-            sound = Gdx.audio.newSound(Gdx.files.internal(path + "/pistol.mp3"));
-            sound.play();
+//            sound = Gdx.audio.newSound(Gdx.files.internal(path + "/pistol.mp3"));
+//            sound.play();
+            AssetHandler.getAssetHandler().handGunSound();
             //Sound effect from http://soundbible.com/2120-9mm-Gunshot.html
 
             System.out.println("fire gun");

@@ -1,13 +1,14 @@
 package com.mygdx.game.Game;
 
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.PrefixFileHandleResolver;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.mygdx.game.Pickkups.PickupHandler;
 import com.mygdx.game.Screens.*;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.assets.loaders.resolvers.PrefixFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.Shooting.BulletList;
 import com.mygdx.game.entities.EntityList;
+import com.mygdx.game.world.AssetHandler;
 import com.mygdx.game.world.GameMap;
 import com.mygdx.game.world.TiledGameMap;
 
@@ -69,18 +71,19 @@ public class AlienGame extends Game {
     @Override
     public void create () {
 
-        //TODO: Remove this after pathing is done.
-        System.out.println(PROJECT_PATH);
-
         //Creates the singletons
+        AssetHandler.getAssetHandler();
         EntityList.getEntityList();
         BulletList.getBulletList();
+
 
         //Create the pickupHandler object
         pickupHandler = new PickupHandler();
 
-        assets = new AssetManager(new PrefixFileHandleResolver(new InternalFileHandleResolver(), AlienGame.PROJECT_PATH));
+        //assets = new AssetManager(new PrefixFileHandleResolver(new InternalFileHandleResolver(), AlienGame.PROJECT_PATH));
 
+
+        //assets= new AssetManager();
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, V_WIDTH, V_HEIGHT);
@@ -105,7 +108,8 @@ public class AlienGame extends Game {
         /////////////////////////////////////
         //NATHAN
         sr = new ShapeRenderer();
-        weapon = new Texture(path + "/Pistol.png");
+        //weapon = new Texture(path + "/Pistol.png");
+        weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
         float w = Gdx.graphics.getWidth();
         float y = Gdx.graphics.getHeight();
         camera = new OrthographicCamera();
@@ -177,7 +181,7 @@ public class AlienGame extends Game {
     public void dispose () {
         batch.dispose();
         font24.dispose();
-        assets.dispose();
+        AssetHandler.getAssetHandler().dispose();
         loadingScreen.dispose();
         splashScreen.dispose();
         mainMenuScreen.dispose();
@@ -196,7 +200,9 @@ public class AlienGame extends Game {
         System.out.println(PROJECT_PATH);
         String path = PROJECT_PATH.replace("desktop", "core/assets/fonts");
         System.out.println(path);
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(PROJECT_PATH + "/pixelFont.ttf"));
+        //FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(PROJECT_PATH + "pixelFont.ttf"));
+        //FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(path + "/pixelFont.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(AssetHandler.getAssetHandler().getAssetManager().getFileHandleResolver().resolve("core/assets/pixelFont.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
         FreeTypeFontGenerator.FreeTypeFontParameter paramsTitle = new FreeTypeFontGenerator.FreeTypeFontParameter();
         FreeTypeFontGenerator.FreeTypeFontParameter paramsButton = new FreeTypeFontGenerator.FreeTypeFontParameter();

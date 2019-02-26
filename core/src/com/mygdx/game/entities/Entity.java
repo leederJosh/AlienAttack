@@ -131,8 +131,12 @@ public abstract class Entity {
         health += amount;
     }
 
+    /**
+     * THIS IS THE BUG WITH THE ENTITIES DYING SUDDENLY AT THE SAME TIME. NEED A BETTER WAY TO DO THIS
+     * DO I HAVE TO DISPOSE AND THEN IMMEDIATLEY RELOAD THEM?
+     */
     public void dispose(){
-        image.dispose();
+        //image.dispose();
     }
 
 }

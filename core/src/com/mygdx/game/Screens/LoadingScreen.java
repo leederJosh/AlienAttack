@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.Game.AlienGame;
+import com.mygdx.game.world.AssetHandler;
 
 public class LoadingScreen implements Screen {
 
@@ -31,17 +32,19 @@ public class LoadingScreen implements Screen {
         path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
         this.shapeRenderer = new ShapeRenderer();
-        this.bg = new Texture(path + "/alienred.jpg");
+        //this.bg = new Texture(path + "/alienred.jpg");
+        this.bg = AssetHandler.getAssetHandler().getTexture("alienred.jpg");
         this.stage = new Stage(new StretchViewport(game.V_WIDTH, game.V_HEIGHT,game.camera));
 
 
     }
 
 
+    /** THIS IS NO LONGER NEEDED WITH THE ASSET MANAGER */
     private void queueAssets() {
-        game.assets.load("/assets/logonew.png", Texture.class);
-        game.assets.load("/assets/uiskin.atlas", TextureAtlas.class);
-        game.assets.load("/assets/alienred.jpg", Texture.class);
+        //game.assets.load(path + "/logonew.png", Texture.class);
+        path.replace("assets", "UI");
+        //game.assets.load(path + "/uiskin.atlas", TextureAtlas.class);
     }
 
 
@@ -56,10 +59,12 @@ public class LoadingScreen implements Screen {
     }
 
     private void update(float delta) {
-        progress = MathUtils.lerp(progress, game.assets.getProgress(), 0.08f);
-        if(game.assets.update() && progress >= game.assets.getProgress() - 0.1f) {
-            game.setScreen(game.splashScreen);
-        }
+        //progress = MathUtils.lerp(progress, game.assets.getProgress(), 0.08f);
+//        if(game.assets.update() && progress >= game.assets.getProgress() - 0.1f) {
+//            game.setScreen(game.splashScreen);
+//        }
+
+        game.setScreen(game.splashScreen);
         stage.act();
     }
 

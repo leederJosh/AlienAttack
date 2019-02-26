@@ -1,9 +1,11 @@
 package com.mygdx.game.world;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -15,9 +17,19 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.game.Game.AlienGame;
+import com.mygdx.game.Shooting.AbstractBullet;
 import com.mygdx.game.Shooting.BulletList;
 import com.mygdx.game.Shooting.ShootingHandler;
 import com.mygdx.game.entities.EntityList;
+import com.mygdx.game.entities.Enemy;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.EntityList;
+import com.mygdx.game.entities.Friendly;
+import world.DialogNode;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class TiledGameMap extends GameMap{
     private
@@ -31,17 +43,24 @@ public class TiledGameMap extends GameMap{
     SpriteBatch text;
     ShootingHandler shootingHandler;
 
+    private DialogNode currentDialog;
+
     public TiledGameMap(SpriteBatch batch) {
         super(batch);
         String path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
-        tiledMap = new TmxMapLoader().load(path + "/AlleyWay.tmx");
+        tiledMap = AssetHandler.getAssetHandler().loadLevel("AlleyWay.tmx");
+        //tiledMap = new TmxMapLoader().load(  "core/assets/AlleyWay.tmx");
+        /**This might not work */
+        //tiledMap = new TmxMapLoader().load(AssetHandler.getAssetHandler().loadLevel("AlleyWay.tmx").toString());
         //this will be what renders the tiled map
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         System.out.println("Tiled Game Map made");
-        this.weapon = new Texture(path + "/Pistol.png");
+        //this.weapon = new Texture(path + "/Pistol.png");
+        this.weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
         this.sr = new ShapeRenderer();
         this.imageBatch = new SpriteBatch();
-        this.font = new BitmapFont(Gdx.files.internal(path + "/8bit9.fnt"));
+        this.font = new BitmapFont(Gdx.files.internal( "core/assets/8bit9.fnt"));
+        //this.font = AssetHandler.getAssetHandler().getBitMapFont("8bit9.fnt");
         this.text = new SpriteBatch();
 
         shootingHandler = new ShootingHandler();
@@ -126,6 +145,34 @@ public class TiledGameMap extends GameMap{
         font.draw(text, "HUMANITY:", 275, (float) drawHeightText);
         text.end();
 
+        //drawing the dialog box
+        sr.begin(ShapeRenderer.ShapeType.Filled);
+        sr.setColor(Color.WHITE);
+        sr.rect(10, 5, 500, 100);
+        sr.end();
+        text.begin();
+        font.draw(text, "DIALOG", 10, 115);
+
+        //TODO: Add dialog changes here.
+        TreeMap<Double, Entity> entities = EntityList.getMapEntities();
+
+        //Iterate through the tree map to find the closest entity.
+        for(Map.Entry<Double,Entity> entry : entities.entrySet()) {
+            Entity e = entry.getValue();
+
+            //The dialog will be different depending on which entity is closest
+            if (e instanceof Friendly) {
+                //Add friendly dialog to the dialog box
+                font.draw(text, ((Friendly) e).getHitDialog().getText(), 15, 90);
+                break;
+            } else if (e instanceof Enemy) {
+                //Add enemy dialog to the dialog box
+                font.draw(text, ((Enemy) e).getDialog().getText(), 15, 90);
+                break;
+            }
+        }
+        text.end();
+
         /////////////////////////////////////////////////
     }
 
@@ -142,6 +189,9 @@ public class TiledGameMap extends GameMap{
 
         //To remove the dead entities
         //EntityList.getEntityList().removeDeadEntities();
+        for(Entity entity: EntityList.getListEntities()) {
+            entity.update(delta, -9.8f);
+        }
     }
 
     @Override

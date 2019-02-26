@@ -34,7 +34,9 @@ public class ShootingHandler {
 
         for (Entity entity : entityList.getEntities()) {
             for (AbstractBullet bullet : bulletList.getBullets()) {
-                {
+                if(bullet.bulletType == BulletType.ALIEN){
+                    bullet.act();
+                }
                     if (entity.getType().getId().equals("player") == false && entity.getx() > bullet.getBulletX()) {
 
                         /**
@@ -57,6 +59,8 @@ public class ShootingHandler {
 
                             System.out.print("\nHealth before " + entity.getHealth());
                             entity.reduceHealth(bullet.getBulletDamage());
+                            //This is necessary so entities are only affected by bullets once
+                            bullet.setDamage(0);
 
                             /** Things that need to be added here:
                              * Handling the drop in humanity depending on the entity type
@@ -72,7 +76,6 @@ public class ShootingHandler {
                             bullet.updateRemove();
                         }
                     }
-                }
             }
         }
         removeDeadEntities();

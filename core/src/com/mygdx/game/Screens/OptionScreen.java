@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.Game.AlienGame;
+import com.mygdx.game.world.AssetHandler;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
@@ -34,9 +35,11 @@ public class OptionScreen implements Screen {
         this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
         this.stage = new Stage(new StretchViewport(game.V_WIDTH, game.V_HEIGHT,game.camera));
-        this.bg = new Texture(path + "/alienred.jpg");
-        this.wasd = new Texture(path + "/keys.png");
+        //this.bg = new Texture(path + "/alienred.jpg");
+        //this.wasd = new Texture(path + "/keys.png");
 
+        this.bg = AssetHandler.getAssetHandler().getTexture("alienred.jpg");
+        this.wasd = AssetHandler.getAssetHandler().getTexture("keys.png");
 
     }
 
@@ -52,9 +55,11 @@ public class OptionScreen implements Screen {
 
         //Made this work on windows by taking out path from the get statement, instead added "/assets" to the name of the file i want to get
         this.skin = new Skin();
-        this.skin.addRegions(game.assets.get( "/assets/uiskin.atlas", TextureAtlas.class));
+        //this.skin.addRegions(game.assets.get( "/assets/uiskin.atlas", TextureAtlas.class));
+        this.skin.addRegions(AssetHandler.getAssetHandler().getTextureAtlas("uiskin.atlas"));
         this.skin.add("default-font", game.fontB24);
-        this.skin.load(Gdx.files.internal( "uiskin.json"));
+        //this.skin.load(Gdx.files.internal( "uiskin.json"));
+        this.skin.load(AssetHandler.getAssetHandler().getAssetManager().getFileHandleResolver().resolve("uiskin.json"));
         initButtons();
 
 

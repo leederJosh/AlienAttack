@@ -1,17 +1,17 @@
 package com.mygdx.game.Guns;
 
 import com.mygdx.game.Shooting.AbstractBullet;
+import com.mygdx.game.Shooting.AlienHandgunBullet;
 import com.mygdx.game.Shooting.BulletList;
 import com.mygdx.game.Shooting.HandGunBullet;
 import com.mygdx.game.entities.EntityList;
 
 /**
- * Concrete handgun behaviour class
- * Handles the creation of a HandGun object and adds it to the bulletList
- * @Author Josh Leeder
- * @Date 25/02/19
+ * Creates an AlienHandGun bullet and adds it to the BulletList
+ * @Autor Josh Leeder
+ * @Date 26/02/19
  */
-public class HandGun implements GunInterface{
+public class AlienHandGun implements GunInterface {
 
 
 
@@ -33,7 +33,7 @@ public class HandGun implements GunInterface{
         }
 
         // Make the bullet, calculate how it should move per tick and add it to the bullet list
-        AbstractBullet bullet = new HandGunBullet(playerX + direction, playerY);
+        AbstractBullet bullet = new AlienHandgunBullet(playerX + direction, playerY);
         bullet.calculateMovement(mappedMouseX, mappedMouseY);
         BulletList.getBulletList().addBullet(bullet);
     }

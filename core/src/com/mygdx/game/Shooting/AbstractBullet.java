@@ -2,8 +2,10 @@ package com.mygdx.game.Shooting;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.world.AssetHandler;
 
 /**
  * A class to encapsulate general bullet behavior
@@ -60,7 +62,8 @@ public abstract class AbstractBullet {
 
         // manager.load("assets/bullet.png", Texture.class);
         // This is the problem at the moment
-        bulletTex = new Texture ("assets/bullet.png");
+        //bulletTex = new Texture ((FileHandle) AssetHandler.assetHandler.getAssetManager().get("assets/bullet.png"));
+        bulletTex = AssetHandler.getAssetHandler().getTexture("bullet.png");
     }
 
     /**
@@ -111,7 +114,7 @@ public abstract class AbstractBullet {
      */
     public void render(SpriteBatch batch, float posX, float posY){
         //Not sure if this will work yet
-        bulletTex = new Texture(Gdx.files.internal("/core/assets/bullet.png"));
+        bulletTex = new Texture(("bullet.png"));
         //batch.draw(bulletTex, posX, posY);
     }
 
@@ -172,6 +175,20 @@ public abstract class AbstractBullet {
     public float getHeight(){
         return height;
     }
+
+    /**
+     * Set the damage of a bullet
+     * @param damage
+     */
+    public void setDamage(int damage){
+        bulletDamage = damage;
+    }
+
+
+    /**
+     * Abstract method to be implemented in AlienGuns
+     */
+    public abstract void act();
 
     // To Do
 

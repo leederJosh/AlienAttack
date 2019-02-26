@@ -26,6 +26,7 @@ import com.mygdx.game.Game.MyInputProcessor;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
 
+import com.mygdx.game.world.AssetHandler;
 import com.mygdx.game.world.GameMap;
 
 public class PlayScreen implements Screen {
@@ -69,9 +70,11 @@ public class PlayScreen implements Screen {
 
         //Changed for windows, string path has been taken out and "/assets" has been added to the file name
         this.skin = new Skin();
-        this.skin.addRegions(game.assets.get( "/assets/uiskin.atlas", TextureAtlas.class));
+        //this.skin.addRegions(game.assets.get( "/assets/uiskin.atlas", TextureAtlas.class));
+        this.skin.addRegions(AssetHandler.getAssetHandler().getTextureAtlas("uiskin.atlas"));
         this.skin.add("default-font", game.fontB24);
-        this.skin.load(Gdx.files.internal( "assets/uiskin.json"));
+        //this.skin.load(Gdx.files.internal( "core/assets/uiskin.json"));
+        this.skin.load(AssetHandler.getAssetHandler().resolveJson("uiskin.json"));
         initButtons();
 
     }

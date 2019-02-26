@@ -8,10 +8,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.Game.AlienGame;
 
+import com.mygdx.game.Guns.AlienHandGun;
 import com.mygdx.game.Guns.GunInterface;
 import com.mygdx.game.Guns.HandGun;
 import com.mygdx.game.Guns.ShotGun;
 import com.mygdx.game.Shooting.HandGunBullet;
+import com.mygdx.game.world.AssetHandler;
 import com.mygdx.game.world.GameMap;
 
 public class Player extends Entity {
@@ -26,7 +28,7 @@ public class Player extends Entity {
             weapon,
             weaponLeft;
     private static final float Animation_speed = 0.5f;
-    private int humanity;
+    public static int humanity;
     //animation
     private SpriteBatch spriteBatch;
     private Texture
@@ -42,6 +44,7 @@ public class Player extends Entity {
     private GunInterface currentGun;
     private GunInterface handGun;
     private GunInterface shotGun;
+    private GunInterface alienHandGun;
 
     public Texture getWeapon() {
         return weapon;
@@ -68,12 +71,17 @@ public class Player extends Entity {
 
         String path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         //we can pass the entity type in directly since we know it is going to be a player
-        this.image = new Texture(path + "/MoveRightMiddleBig.png");
+        //this.image = new Texture(path + "/MoveRightMiddleBig.png");
+        this.image = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveRightMiddleBig.png");
         this.humanity = 100;
-        this.weapon = new Texture (path + "/Pistol.png");
-        this.weaponLeft = new Texture (path + "/PistolLeft.png");
+        //this.weapon = new Texture (path + "/Pistol.png");
 
-        this.walkSheet = new Texture (path + "/SpriteSheets/MainCharacterRight.png");
+        this.weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
+        //this.weaponLeft = new Texture (path + "/PistolLeft.png");
+        this.weaponLeft = AssetHandler.getAssetHandler().getTexture("PistolLeft.png");
+
+        //this.walkSheet = new Texture (path + "/SpriteSheets/MainCharacterRight.png");
+        this.walkSheet = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterRight.png");
         TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth()/FRAME_COLS, walkSheet.getHeight()/FRAME_ROWS);
         TextureRegion[] walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
 
@@ -85,7 +93,8 @@ public class Player extends Entity {
         }
         walkAnimation = new Animation<TextureRegion>(0.33f, walkFrames);
 
-        this.walkSheetLeft = new Texture (path + "/SpriteSheets/MainCharacterLeft.png");
+        //this.walkSheetLeft = new Texture (path + "/SpriteSheets/MainCharacterLeft.png");
+        this.walkSheetLeft = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterLeft.png");
         TextureRegion[][] tmp2 = TextureRegion.split(walkSheetLeft, walkSheetLeft.getWidth()/FRAME_COLS, walkSheetLeft.getHeight()/FRAME_ROWS);
         TextureRegion[] walkLeftFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
 
@@ -103,8 +112,10 @@ public class Player extends Entity {
         //Create a gun for the player to use by default (the Handgun)
         handGun = new HandGun();
         shotGun = new ShotGun();
+        alienHandGun = new AlienHandGun();
         //currentGun = handGun;
-        currentGun = shotGun;
+        //currentGun = shotGun;
+        currentGun = alienHandGun;
     }
 
     @Override
@@ -122,14 +133,29 @@ public class Player extends Entity {
         //this will apply the gravity
         super.update(deltaTime, gravity);
 
-        //moving left (negative speed so we move left)
-        if (Gdx.input.isKeyPressed(Keys.A)) {
-            moveX(-SPEED * deltaTime);
+        //check the humanity level
+        if (humanity < 90) {
+            //then swap the keys (punish the player for a low humanity score)
+            if (Gdx.input.isKeyPressed(Keys.A)) {
+                //move right
+                moveX(SPEED * deltaTime);
+            }
+            //move left
+            if (Gdx.input.isKeyPressed(Keys.D)) {
+                moveX(-SPEED * deltaTime);
+            }
         }
+        //otherwise, move normally
+        else {
+            //moving left (negative speed so we move left)
+            if (Gdx.input.isKeyPressed(Keys.A)) {
+                moveX(-SPEED * deltaTime);
+            }
 
-        //moving right (positive speed so we move right)
-        if (Gdx.input.isKeyPressed(Keys.D)) {
-            moveX(SPEED * deltaTime);
+            //moving right (positive speed so we move right)
+            if (Gdx.input.isKeyPressed(Keys.D)) {
+                moveX(SPEED * deltaTime);
+            }
         }
 
         //Deduct health when the player is on top of an enemy
@@ -166,12 +192,7 @@ public class Player extends Entity {
             batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
         } else {
             if (Gdx.input.isKeyPressed(Keys.D)) {
-                //Makes a new bullet to be shot
-                HandGunBullet bullet = new HandGunBullet(pos.x, pos.y);
                 batch.draw(weapon, pos.x, pos.y);
-                //Draws the bullet to be shot
-                // These shouldn't be hardcoded, just dooing it to test the bullet
-                batch.draw(bullet.getBulletTex(), pos.x + 15 , pos.y + 15, 10, 10);
             }
             if (Gdx.input.isKeyPressed(Keys.A)) {
                 batch.draw(weaponLeft, pos.x - 22, pos.y + 2);

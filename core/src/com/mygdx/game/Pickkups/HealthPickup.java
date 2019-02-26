@@ -2,6 +2,7 @@ package com.mygdx.game.Pickkups;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.entities.Player;
+import com.mygdx.game.world.AssetHandler;
 
 /**
  * Health pickups that are dropped randomly on an ememy dying
@@ -16,7 +17,8 @@ public class HealthPickup extends AbstractPickup{
 
     public HealthPickup(float pickupX, float pickupY){
         super(pickupX, pickupY);
-        pickupTex = new Texture("assets/Healthico.png");
+        //pickupTex = new Texture("assets/Healthico.png");
+        pickupTex = AssetHandler.getAssetHandler().getTexture("Healthico.png");
         healthValue = 25;
     }
 

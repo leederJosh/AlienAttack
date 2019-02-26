@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.Game.AlienGame;
+import com.mygdx.game.world.AssetHandler;
 
 public class CreditScreen implements Screen {
 
@@ -36,7 +37,8 @@ public class CreditScreen implements Screen {
         this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
         this.stage = new Stage(new StretchViewport(game.V_WIDTH, game.V_HEIGHT,game.camera));
-        this.bg = new Texture(path + "/alienred.jpg");
+        //this.bg = new Texture(path + "/alienred.jpg");
+        this.bg = AssetHandler.getAssetHandler().getTexture("alienred.jpg");
 
 
     }
@@ -53,9 +55,11 @@ public class CreditScreen implements Screen {
 
         //Made it work on windows by taking out the string path
         this.skin = new Skin();
-        this.skin.addRegions(game.assets.get("/assets/uiskin.atlas", TextureAtlas.class));
+        //this.skin.addRegions(game.assets.get("/assets/uiskin.atlas", TextureAtlas.class));
+        this.skin.addRegions(AssetHandler.getAssetHandler().getTextureAtlas("uiskin.atlas"));
         this.skin.add("default-font", game.fontB24);
-        this.skin.load(Gdx.files.internal("assets/uiskin.json"));
+        //this.skin.load(Gdx.files.internal("assets/uiskin.json"));
+        this.skin.load(AssetHandler.getAssetHandler().getAssetManager().getFileHandleResolver().resolve("uiskin.json"));
         initButtons();
 
     }
