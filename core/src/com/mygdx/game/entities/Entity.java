@@ -1,9 +1,11 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import world.GameMap;
+import com.mygdx.game.Pickkups.AbstractPickup;
+import com.mygdx.game.world.GameMap;
 
 public abstract class Entity {
     //keeps track of x and y
@@ -19,12 +21,18 @@ public abstract class Entity {
             MIN_HEALTH = 0;
     private boolean isDead;
 
+    Texture image;
+
+
 
     public void setHealth(int health) {
         this.health = health;
     }
 
     public boolean isDead() {
+        if(health < 0 ){
+            isDead = true;
+        }
         return isDead;
     }
 
@@ -117,4 +125,18 @@ public abstract class Entity {
     public void reduceHealth(int amount) {
         health -= amount;
     }
+
+    //Is this appropriate to be here or should it be in player?
+    public void increaseHealth(int amount) {
+        health += amount;
+    }
+
+    /**
+     * THIS IS THE BUG WITH THE ENTITIES DYING SUDDENLY AT THE SAME TIME. NEED A BETTER WAY TO DO THIS
+     * DO I HAVE TO DISPOSE AND THEN IMMEDIATLEY RELOAD THEM?
+     */
+    public void dispose(){
+        //image.dispose();
+    }
+
 }

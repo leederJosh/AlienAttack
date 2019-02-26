@@ -5,17 +5,18 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.AlienGame;
+import com.mygdx.game.Game.AlienGame;
 
+import com.mygdx.game.world.AssetHandler;
+import com.mygdx.game.world.GameMap;
 import world.DialogNode;
-import world.GameMap;
+//import world.GameMap;
 
 public class Enemy extends Entity {
 
     private static final int speed = 60;
     //speed on x axis
     private static final int jumpVelocity = 5;
-    Texture image;
     private float maxXMovement = 5;
     //Happy dialog tree.
     private ArrayList<DialogNode<CharSequence>> dialog;
@@ -25,7 +26,8 @@ public class Enemy extends Entity {
         super(x, y, EntityType.ENEMY, map);
         //we can pass the entity type in directly since we know it is going to be a player
         String path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
-        image = new Texture(path + "/AlienLeftFace.png");
+        //image = new Texture(path + "/AlienLeftFace.png");
+        image = AssetHandler.getAssetHandler().getTexture("AlienLeftFace.png");
         dialog = new ArrayList<DialogNode<CharSequence>>();
         dialog.add(new DialogNode<CharSequence>("Blorg"));
         dialog.add(new DialogNode<CharSequence>("Reeeee"));
@@ -59,5 +61,4 @@ public class Enemy extends Entity {
         DialogNode output = dialog.get(dialogIndex);
         return output;
     }
-
 }

@@ -6,9 +6,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.mygdx.game.AlienGame;
+import com.mygdx.game.Game.AlienGame;
 
-import world.GameMap;
+import com.mygdx.game.Guns.AlienHandGun;
+import com.mygdx.game.Guns.GunInterface;
+import com.mygdx.game.Guns.HandGun;
+import com.mygdx.game.Guns.ShotGun;
+import com.mygdx.game.Shooting.HandGunBullet;
+import com.mygdx.game.world.AssetHandler;
+import com.mygdx.game.world.GameMap;
 
 public class Player extends Entity {
 
@@ -33,6 +39,12 @@ public class Player extends Entity {
     private Animation<TextureRegion>
             walkAnimation,
             walkLeftAnimation;
+
+    /** Gun types */
+    private GunInterface currentGun;
+    private GunInterface handGun;
+    private GunInterface shotGun;
+    private GunInterface alienHandGun;
 
     public Texture getWeapon() {
         return weapon;
@@ -59,12 +71,17 @@ public class Player extends Entity {
 
         String path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         //we can pass the entity type in directly since we know it is going to be a player
-        this.image = new Texture(path + "/MoveRightMiddleBig.png");
+        //this.image = new Texture(path + "/MoveRightMiddleBig.png");
+        this.image = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveRightMiddleBig.png");
         this.humanity = 100;
-        this.weapon = new Texture (path + "/Pistol.png");
-        this.weaponLeft = new Texture (path + "/PistolLeft.png");
+        //this.weapon = new Texture (path + "/Pistol.png");
 
-        this.walkSheet = new Texture (path + "/SpriteSheets/MainCharacterRight.png");
+        this.weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
+        //this.weaponLeft = new Texture (path + "/PistolLeft.png");
+        this.weaponLeft = AssetHandler.getAssetHandler().getTexture("PistolLeft.png");
+
+        //this.walkSheet = new Texture (path + "/SpriteSheets/MainCharacterRight.png");
+        this.walkSheet = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterRight.png");
         TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth()/FRAME_COLS, walkSheet.getHeight()/FRAME_ROWS);
         TextureRegion[] walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
 
@@ -76,7 +93,8 @@ public class Player extends Entity {
         }
         walkAnimation = new Animation<TextureRegion>(0.33f, walkFrames);
 
-        this.walkSheetLeft = new Texture (path + "/SpriteSheets/MainCharacterLeft.png");
+        //this.walkSheetLeft = new Texture (path + "/SpriteSheets/MainCharacterLeft.png");
+        this.walkSheetLeft = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterLeft.png");
         TextureRegion[][] tmp2 = TextureRegion.split(walkSheetLeft, walkSheetLeft.getWidth()/FRAME_COLS, walkSheetLeft.getHeight()/FRAME_ROWS);
         TextureRegion[] walkLeftFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
 
@@ -90,6 +108,14 @@ public class Player extends Entity {
 
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
+
+        //Create a gun for the player to use by default (the Handgun)
+        handGun = new HandGun();
+        shotGun = new ShotGun();
+        alienHandGun = new AlienHandGun();
+        //currentGun = handGun;
+        //currentGun = shotGun;
+        currentGun = alienHandGun;
     }
 
     @Override
@@ -192,6 +218,19 @@ public class Player extends Entity {
         return JUMP_VELOCITY;
     }
 
+    /**
+     * Current shooting behaviour of the player
+     */
+    public void shoot(float mouseX, float mouseY){
+        currentGun.shoot(mouseX, mouseY);
+    }
+
+    /**
+     * Set the gun to be used by the player
+     */
+    public void setGun(GunInterface gun){
+        currentGun = gun;
+    }
 
 
 }

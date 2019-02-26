@@ -2,15 +2,18 @@ package com.mygdx.game.entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.AlienGame;
+import com.mygdx.game.Game.AlienGame;
 
+import com.mygdx.game.world.AssetHandler;
+import com.mygdx.game.world.GameMap;
 import world.DialogNode;
-import world.GameMap;
+//import world.GameMap;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Friendly extends Entity {
+
 
     private Texture image;
     //Happy dialog tree.
@@ -19,10 +22,12 @@ public class Friendly extends Entity {
     private ArrayList<DialogNode<CharSequence>> isHitDialog;
     private int dialogIndex;
 
+
     public Friendly(float x, float y, GameMap map) {
         super(x, y, EntityType.FRIENDLY, map);
         String path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
-        this.image = new Texture(path + "/civilianLeftFace.png");
+        //this.image = new Texture(path + "/civilianLeftFace.png");
+        this.image = AssetHandler.getAssetHandler().getTexture("civilianLeftFace.png");
         //Give the friendly lower health (testing).
         //TODO: Change health back to normal amount.
         this.health = 20;
