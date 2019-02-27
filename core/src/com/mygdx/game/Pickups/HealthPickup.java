@@ -1,6 +1,7 @@
-package com.mygdx.game.Pickkups;
+package com.mygdx.game.Pickups;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.mygdx.game.Pickups.AbstractPickup;
 import com.mygdx.game.entities.Player;
 import com.mygdx.game.world.AssetHandler;
 
@@ -10,7 +11,7 @@ import com.mygdx.game.world.AssetHandler;
  * @date 14/02/19
  */
 
-public class HealthPickup extends AbstractPickup{
+public class HealthPickup extends AbstractPickup {
 
     private int healthValue;
 

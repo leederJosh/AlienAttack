@@ -1,9 +1,8 @@
-package com.mygdx.game.Pickkups;
+package com.mygdx.game.Pickups;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.Shooting.AbstractBullet;
 import com.mygdx.game.entities.Player;
 
 import java.util.Random;

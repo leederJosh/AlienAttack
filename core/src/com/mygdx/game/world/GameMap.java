@@ -5,17 +5,12 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Game.MyInputProcessor;
-import com.mygdx.game.Pickkups.AbstractPickup;
-import com.mygdx.game.Pickkups.HealthPickup;
-import com.mygdx.game.Pickkups.PickupHandler;
+import com.mygdx.game.Pickups.AbstractPickup;
+import com.mygdx.game.Pickups.PickupHandler;
 import com.mygdx.game.Shooting.AbstractBullet;
 import com.mygdx.game.Shooting.BulletList;
 import com.mygdx.game.Shooting.ShootingHandler;
-import com.mygdx.game.entities.Enemy;
-import com.mygdx.game.entities.Entity;
-import com.mygdx.game.entities.EntityList;
-import com.mygdx.game.entities.Friendly;
-import com.mygdx.game.entities.Player;
+import com.mygdx.game.entities.*;
 
 public abstract class GameMap {
 

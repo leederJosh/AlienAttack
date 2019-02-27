@@ -1,4 +1,4 @@
-package com.mygdx.game.Pickkups;
+package com.mygdx.game.Pickups;
 
 import java.util.ArrayList;
 

@@ -1,11 +1,7 @@
 package com.mygdx.game.Shooting;
 
-import com.mygdx.game.Pickkups.AbstractPickup;
-import com.mygdx.game.Pickkups.HealthPickup;
-import com.mygdx.game.entities.Enemy;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
-import com.mygdx.game.entities.Friendly;
 
 import java.util.ArrayList;
 

@@ -1,29 +1,19 @@
 package com.mygdx.game.Game;
 
-import java.util.ArrayList;
-
-
-import java.util.HashMap;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.Input.Keys;
-import com.mygdx.game.Pickkups.AbstractPickup;
-import com.mygdx.game.Pickkups.HealthPickup;
-import com.mygdx.game.Pickkups.PickupHandler;
-import com.mygdx.game.Shooting.AbstractBullet;
-import com.mygdx.game.Shooting.BulletList;
-import com.mygdx.game.Shooting.HandGunBullet;
-import com.mygdx.game.entities.Enemy;
-import com.mygdx.game.entities.Entity;
-import com.mygdx.game.entities.EntityList;
-import com.mygdx.game.entities.EntityType;
-import com.mygdx.game.entities.Friendly;
-import com.mygdx.game.entities.Player;
+import com.mygdx.game.Pickups.AbstractPickup;
+import com.mygdx.game.Pickups.HealthPickup;
+import com.mygdx.game.Pickups.PickupHandler;
+import com.mygdx.game.entities.*;
 import com.mygdx.game.world.AssetHandler;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 //TODO: For melee enemies, check to see if on top of enemy by using the enemy with hypotenuse 0.
 public class MyInputProcessor<T> implements Comparable, InputProcessor {

@@ -1,10 +1,5 @@
 package com.mygdx.game.Game;
 
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.assets.loaders.resolvers.PrefixFileHandleResolver;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
-import com.mygdx.game.Pickkups.PickupHandler;
-import com.mygdx.game.Screens.*;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.mygdx.game.Pickups.PickupHandler;
+import com.mygdx.game.Screens.*;
 import com.mygdx.game.Shooting.BulletList;
 import com.mygdx.game.entities.EntityList;
 import com.mygdx.game.world.AssetHandler;

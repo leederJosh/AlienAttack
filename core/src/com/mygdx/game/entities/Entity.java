@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import com.mygdx.game.Pickkups.AbstractPickup;
+import com.mygdx.game.Pickups.AbstractPickup;
 import com.mygdx.game.world.GameMap;
 
 public abstract class Entity {
