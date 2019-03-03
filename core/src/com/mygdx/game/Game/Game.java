@@ -1,4 +1,4 @@
-package com.mygdx.game.Game;
+package src.com.mygdx.game.Game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -24,6 +24,7 @@ public class Game extends ApplicationAdapter {
 		batch.draw(img, 0, 0);
 		batch.end();
 	}
+
 
 	@Override
 	public void dispose () {

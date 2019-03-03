@@ -1,9 +1,6 @@
 package com.mygdx.game.Guns;
 
-import com.mygdx.game.Shooting.AbstractBullet;
-import com.mygdx.game.Shooting.BulletList;
-import com.mygdx.game.Shooting.HandGunBullet;
-import com.mygdx.game.Shooting.ShotGunBullet;
+import com.mygdx.game.Shooting.*;
 import com.mygdx.game.entities.EntityList;
 
 import java.util.Random;
@@ -51,7 +48,7 @@ public class ShotGun implements GunInterface{
             }
 
             // Make the bullets, calculate how they should move per tick and add them to the bullet list
-            AbstractBullet bullet = new ShotGunBullet(playerX + direction, playerY);
+            AbstractBullet bullet = new ShotGunBullet(playerX + direction, playerY, BulletType.PLAYER);
             bullet.calculateMovement(mappedMouseX, mappedMouseY + degreeOfSpread);
             BulletList.getBulletList().addBullet(bullet);
 

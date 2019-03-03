@@ -12,11 +12,12 @@ import com.mygdx.game.Guns.AlienHandGun;
 import com.mygdx.game.Guns.GunInterface;
 import com.mygdx.game.Guns.HandGun;
 import com.mygdx.game.Guns.ShotGun;
-import com.mygdx.game.Shooting.HandGunBullet;
+import com.mygdx.game.world.AbstractLevel;
 import com.mygdx.game.world.AssetHandler;
-import com.mygdx.game.world.GameMap;
 
 public class Player extends Entity {
+
+    public static Player playerInsance = null;
 
     private static final int
             SPEED = 60,
@@ -45,6 +46,7 @@ public class Player extends Entity {
     private GunInterface handGun;
     private GunInterface shotGun;
     private GunInterface alienHandGun;
+    private boolean isFinished;
 
     public Texture getWeapon() {
         return weapon;
@@ -58,18 +60,11 @@ public class Player extends Entity {
         return image;
     }
 
-    public int getHumanity() {
-        return humanity;
-    }
 
-    public void decreaseHumanity(int amount) {
-        humanity -= amount;
-    }
 
-    public Player(float x, float y, GameMap map) {
+    public Player(float x, float y, AbstractLevel map) {
         super(x, y, EntityType.PLAYER, map);
 
-        String path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         //we can pass the entity type in directly since we know it is going to be a player
         //this.image = new Texture(path + "/MoveRightMiddleBig.png");
         this.image = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveRightMiddleBig.png");
@@ -113,9 +108,10 @@ public class Player extends Entity {
         handGun = new HandGun();
         shotGun = new ShotGun();
         alienHandGun = new AlienHandGun();
-        //currentGun = handGun;
+        currentGun = handGun;
         //currentGun = shotGun;
-        currentGun = alienHandGun;
+        //currentGun = alienHandGun;
+        isFinished = false;
     }
 
     @Override
@@ -180,12 +176,19 @@ public class Player extends Entity {
         else if (humanity > MAX_HUMANITY) {
             humanity = 100;
         }
+        
+        //Check to see if the player has finished the level
+        if (pos.x > 500) {
+            isFinished = true;
+        }
     }
 
     //control space provides us with a list of all the methods we have access to
     @Override
     public void render(SpriteBatch batch) {
+        batch.begin();
         batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
+
         //we scale the image so that it is the same size as we specified in entityType
         //current image is
         if (Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D)) {
@@ -208,6 +211,7 @@ public class Player extends Entity {
                 batch.draw(currentFrame2, pos.x, pos.y, getWidth(), getHeight());
             }
         }
+        batch.end();
     }
 
     public static int getSpeed() {
@@ -218,19 +222,34 @@ public class Player extends Entity {
         return JUMP_VELOCITY;
     }
 
-    /**
-     * Current shooting behaviour of the player
-     */
+    /** Current shooting behaviour of the player */
     public void shoot(float mouseX, float mouseY){
         currentGun.shoot(mouseX, mouseY);
     }
 
-    /**
-     * Set the gun to be used by the player
-     */
+    /** Set the gun to be used by the player */
     public void setGun(GunInterface gun){
         currentGun = gun;
     }
 
+    public int getHumanity() {
+        return humanity;
+    }
+
+    public void decreaseHumanity(int amount) {
+        humanity -= amount;
+    }
+
+    public void increaseHumanity(int amount) {
+        humanity += amount;
+    }
+
+    public boolean hasPlayerFinished() { return isFinished; }
+
+    public void setPlayerFinished(boolean b) { isFinished = b; }
+
+    public void setPlayerMap(AbstractLevel abstractLevel){
+        map = abstractLevel;
+    }
 
 }

@@ -4,8 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import com.mygdx.game.Pickkups.AbstractPickup;
-import com.mygdx.game.world.GameMap;
+import com.mygdx.game.world.AbstractLevel;
 
 public abstract class Entity {
     //keeps track of x and y
@@ -13,7 +12,7 @@ public abstract class Entity {
     protected EntityType type;
     //speed along the y axis
     protected float velocityY = 0;
-    protected GameMap map;
+    protected AbstractLevel map;
     protected boolean grounded = false;
     protected int health = 50;
     protected final int
@@ -30,13 +29,13 @@ public abstract class Entity {
     }
 
     public boolean isDead() {
-        if(health < 0 ){
+        if(health <= 0 ){
             isDead = true;
         }
         return isDead;
     }
 
-    public Entity(float x, float y, EntityType type, GameMap map) {
+    public Entity(float x, float y, EntityType type, AbstractLevel map) {
         this.pos = new Vector2(x,y);
         this.type = type;
         this.map = map;
@@ -51,7 +50,7 @@ public abstract class Entity {
         //the new y value will be affected by velocityY which is basically the amount we will be moving per second in the y axis
         //positive moving up, negative moving down
 
-        if(map.doesRectCollideWithMap(pos.x, newY, getWidth(), getHeight())) {
+        if(map.doesRectCollideWithMap(pos.x, newY, getWidth(), getHeight(), map.getTiledMap())) {
             if(velocityY < 0) {
                 //we are checking if the entity is moving down when colliding with the map
                 this.pos.y = (float) Math.floor(pos.y); //math.floor is opposite to ceiling and rounds down
@@ -77,10 +76,10 @@ public abstract class Entity {
 
     public abstract void render(SpriteBatch batch);
 
-    protected void moveX(float amount) {
+    public void moveX(float amount) {
         //good way to check collision so all entities have access
         float newX = this.pos.x + amount;
-        if (!map.doesRectCollideWithMap(newX, pos.y, getWidth(), getHeight()))
+        if (!map.doesRectCollideWithMap(newX, pos.y, getWidth(), getHeight(), map.getTiledMap()))
             this.pos.x = newX;
         //we are getting the theoretical new x of the player if they get to move
         //but will not move if there is a collision, otherwise we will set the new x
@@ -139,4 +138,19 @@ public abstract class Entity {
         //image.dispose();
     }
 
+    public Texture getTexture(){
+        return image;
+    }
+
+    public void setLevel(AbstractLevel map) {
+        this.map = map;
+    }
+
+    public void setx(int i) {
+        this.pos.x = i;
+    }
+
+    public void sety(int i) {
+        this.pos.y = i;
+    }
 }

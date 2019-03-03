@@ -1,19 +1,10 @@
 package com.mygdx.game.Screens;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,9 +16,10 @@ import com.mygdx.game.Game.AlienGame;
 import com.mygdx.game.Game.MyInputProcessor;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
+import com.mygdx.game.entities.Player;
+import com.mygdx.game.world.*;
 
-import com.mygdx.game.world.AssetHandler;
-import com.mygdx.game.world.GameMap;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class PlayScreen implements Screen {
 
@@ -35,28 +27,32 @@ public class PlayScreen implements Screen {
     private Stage stage;
     private Skin skin;
     private TextButton buttonMainMenu;
-    private GameMap gameMap;
+    private AbstractLevel currentMap;
     public OrthographicCamera camera;
     public SpriteBatch batch;
-    public static final int V_WIDTH = 512;
-    public static final int V_HEIGHT = 512;
-    private ArrayList<Entity> entities;
-    private GameMap map;
     private MyInputProcessor inputProcessor;
-    private String path;
+    private int levelCounter;
+    private AbstractLevel[] levels;
+
+    /** Necessary assets */
+    private String uiAtlas = "uiskin.atlas";
+    private String uiJson = "uiskin.json";
 
 
-
-    public PlayScreen (final AlienGame game, GameMap map) {
-        this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
+    public PlayScreen (final AlienGame game) {
         this.game = game;
         this.stage = new Stage(new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), game.camera));
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
-        gameMap = map;
-        this.inputProcessor = new MyInputProcessor(camera, map.getPlayer());
+        this.inputProcessor = new MyInputProcessor(camera, EntityList.getEntityList().getPlayer());
+
+        levels = new AbstractLevel[] {new AlleyWayLevel(), new InsideBuildingLevel()};
+        this.levelCounter = 0;
+        currentMap = levels[levelCounter];
+        currentMap.spawnEnemies();
+        System.out.print("Num of things in entityList " + EntityList.getListEntities().size() + "\n");
     }
 
 
@@ -65,23 +61,20 @@ public class PlayScreen implements Screen {
     public void show() {
         System.out.println("PLAY");
         Gdx.input.setInputProcessor(inputProcessor);
-        //stage.clear();
 
-
-        //Changed for windows, string path has been taken out and "/assets" has been added to the file name
         this.skin = new Skin();
-        //this.skin.addRegions(game.assets.get( "/assets/uiskin.atlas", TextureAtlas.class));
-        this.skin.addRegions(AssetHandler.getAssetHandler().getTextureAtlas("uiskin.atlas"));
+        this.skin.addRegions(AssetHandler.getAssetHandler().getTextureAtlas(uiAtlas));
         this.skin.add("default-font", game.fontB24);
-        //this.skin.load(Gdx.files.internal( "core/assets/uiskin.json"));
-        this.skin.load(AssetHandler.getAssetHandler().resolveJson("uiskin.json"));
+        this.skin.load(AssetHandler.getAssetHandler().resolveJson(uiJson));
         initButtons();
 
     }
 
     public void update(float delta) {
 
-
+        if (((Player) EntityList.getEntities().get(0)).hasPlayerFinished()) {
+            setLevel();
+        }
         stage.act();
     }
 
@@ -89,9 +82,8 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.35f, 0.35f, 0.35f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //stage.clear();
-        gameMap.update(Gdx.graphics.getDeltaTime());
-        gameMap.render(camera, batch);
+        currentMap.update(Gdx.graphics.getDeltaTime());
+        currentMap.render(camera, batch);
 
         for(Entity entity: EntityList.getListEntities()) {
             entity.update(delta, -9.8f);
@@ -140,5 +132,25 @@ public class PlayScreen implements Screen {
         stage.addActor(buttonMainMenu);
     }
 
+    public void setLevel(){
+        if(((Player)EntityList.getEntities().get(0)).hasPlayerFinished()) {
+            Player player = ((Player) EntityList.getEntities().get(0));
+            EntityList.purge();
+            EntityList.updateEntityList(player);
+            EntityList.getEntityList().getPlayer().setPlayerFinished(false);
+        }
+
+        levelCounter++;
+        if (!(levelCounter > levels.length - 1)) {
+            currentMap = levels[levelCounter];
+            EntityList.getEntities().get(0).setx(25);
+            EntityList.getEntities().get(0).sety(400);
+            EntityList.getEntities().get(0).setLevel(currentMap);
+            currentMap.spawnEnemies();
+        }
+        else { levelCounter--; }
+
+        System.out.print("Num of things in entityList " + EntityList.getListEntities().size() + "\n");
+    }
 
 }

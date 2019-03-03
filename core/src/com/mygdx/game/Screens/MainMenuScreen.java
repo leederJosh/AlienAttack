@@ -5,14 +5,12 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -24,8 +22,8 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.Game.AlienGame;
 
 
+import com.mygdx.game.world.AlleyWayLevel;
 import com.mygdx.game.world.AssetHandler;
-import com.mygdx.game.world.TiledGameMap;
 
 
 public class MainMenuScreen implements Screen {
@@ -34,29 +32,27 @@ public class MainMenuScreen implements Screen {
     private Texture bg;
     private Stage stage;
     private TextButton buttonPlay, buttonOption, buttonCredit, buttonExit;
-
     private Skin skin;
     private ShapeRenderer shapeRenderer;
-
     public OrthographicCamera camera;
     public SpriteBatch batch;
-
     private boolean isInGame;
 
-    private TiledGameMap tiledGameMap;
+    /** Textures from the assetManager */
+    private String alienTex = "alienred.jpg";
+    private String uiAtlas = "uiskin.atlas";
+    private String uiJson = "core/assets/uiskin.json";
 
-    private String path;
+
 
 
 
 
     public MainMenuScreen( final AlienGame game) {
-        this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
         this.stage = new Stage(new StretchViewport(game.V_WIDTH, game.V_HEIGHT,game.camera));
         this.shapeRenderer = new ShapeRenderer();
-       // this.bg = new Texture(path + "/alienred.jpg");
-        this.bg = AssetHandler.getAssetHandler().getTexture("alienred.jpg");
+        this.bg = AssetHandler.getAssetHandler().getTexture(alienTex);
         this.camera = new OrthographicCamera();
         this.batch = new SpriteBatch();
         this.isInGame = false;
@@ -69,19 +65,15 @@ public class MainMenuScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         stage.clear();
 
-        path.replace("assets", "UI");
-
         this.skin = new Skin();
-        //this.skin.addRegions(game.assets.get(path + "/uiskin.atlas", TextureAtlas.class));
-        this.skin.addRegions(AssetHandler.getAssetHandler().getTextureAtlas("uiskin.atlas"));
+        this.skin.addRegions(AssetHandler.getAssetHandler().getTextureAtlas(uiAtlas));
         this.skin.add("default-font", game.fontB24);
-        //this.skin.load(Gdx.files.internal(path + "/uiskin.json"));
-        this.skin.load(AssetHandler.getAssetHandler().getAssetManager().getFileHandleResolver().resolve("core/assets/uiskin.json"));
+        this.skin.load(AssetHandler.getAssetHandler().getAssetManager().getFileHandleResolver().resolve(uiJson));
 
         initButtons();
     }
 
-    public void update(float delta) {
+    public void update() {
         stage.act();
     }
 
@@ -90,7 +82,7 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClearColor(0.35f, 0.35f, 0.35f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        update(delta);
+        update();
 
 
         game.batch.begin();
@@ -98,9 +90,6 @@ public class MainMenuScreen implements Screen {
             game.batch.draw(bg, 0, 0);
             game.font40.draw(game.batch, "The Final Stand", 70, 440);
             game.font24.draw(game.batch, "Screen: MAIN MENU", 20, 20);
-        }
-        else {
-            tiledGameMap.render(camera, batch);
         }
         game.batch.end();
         stage.draw();
@@ -142,7 +131,7 @@ public class MainMenuScreen implements Screen {
                 game.setScreen(game.playScreen);
 
                 //isInGame = true;
-                //game.setScreen(TiledGameMap());
+                //game.setScreen(AlleyWayLevel());
             }
         });
 

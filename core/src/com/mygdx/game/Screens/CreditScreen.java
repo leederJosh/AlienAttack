@@ -1,16 +1,9 @@
 package com.mygdx.game.Screens;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,6 +14,8 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.Game.AlienGame;
 import com.mygdx.game.world.AssetHandler;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+
 public class CreditScreen implements Screen {
 
     private AlienGame game;
@@ -28,22 +23,17 @@ public class CreditScreen implements Screen {
     private Skin skin;
     private TextButton buttonMainMenu;
     private Texture bg;
-    private String path;
-
-
+    /** Assets needed from the assetManager */
+    private String alienTexture = "alienred.jpg";
+    private String atlasSkin = "uiskin.atlas";
+    private String jsonSkin = "uiskin.json";
 
 
     public CreditScreen (final AlienGame game) {
-        this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
         this.stage = new Stage(new StretchViewport(game.V_WIDTH, game.V_HEIGHT,game.camera));
-        //this.bg = new Texture(path + "/alienred.jpg");
-        this.bg = AssetHandler.getAssetHandler().getTexture("alienred.jpg");
-
-
+        this.bg = AssetHandler.getAssetHandler().getTexture(alienTexture);
     }
-
-
 
     @Override
     public void show() {
@@ -51,20 +41,14 @@ public class CreditScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         stage.clear();
 
-        path.replace("assets", "UI");
-
-        //Made it work on windows by taking out the string path
         this.skin = new Skin();
-        //this.skin.addRegions(game.assets.get("/assets/uiskin.atlas", TextureAtlas.class));
-        this.skin.addRegions(AssetHandler.getAssetHandler().getTextureAtlas("uiskin.atlas"));
+        this.skin.addRegions(AssetHandler.getAssetHandler().getTextureAtlas(atlasSkin));
         this.skin.add("default-font", game.fontB24);
-        //this.skin.load(Gdx.files.internal("assets/uiskin.json"));
-        this.skin.load(AssetHandler.getAssetHandler().getAssetManager().getFileHandleResolver().resolve("uiskin.json"));
+        this.skin.load(AssetHandler.getAssetHandler().getAssetManager().getFileHandleResolver().resolve(jsonSkin));
         initButtons();
-
     }
 
-    public void update(float delta) {
+    public void update() {
         stage.act();
     }
 
@@ -73,12 +57,8 @@ public class CreditScreen implements Screen {
         Gdx.gl.glClearColor(0.35f, 0.35f, 0.35f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        update(delta);
-
         game.batch.begin();
-
         game.batch.draw(bg, 0, 0);
-
         game.font40.draw(game.batch,"Credits", 170, 480);
         game.font40.draw(game.batch,"The Final Stand", 60, 420);
         game.fontT16.draw(game.batch,"-------------------------------------------------", 10, 380);
@@ -90,7 +70,6 @@ public class CreditScreen implements Screen {
         game.fontT16.draw(game.batch,"MENU DESIGN        EHSAN", 30, 180);
         game.fontT16.draw(game.batch,"LEVEL DESIGN        HASNAATH", 30, 150);
         game.fontT16.draw(game.batch,"WEBSITE DESIGN     ABDUL", 30, 120);
-
         game.batch.end();
 
         stage.draw();

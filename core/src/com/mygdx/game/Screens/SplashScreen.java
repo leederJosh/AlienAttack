@@ -10,9 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.Game.AlienGame;
 import com.mygdx.game.world.AssetHandler;
-
-//import com.mygdx.game.AlienGame;
-
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 
@@ -22,19 +19,17 @@ public class SplashScreen implements Screen {
     private Stage stage;
     private Image splashImg;
     private Texture bg;
-    private String path;
+
+    /** Necessary assets */
+    private String alienTex = "alienred.jpg";
+    private String splashTexture = "logonew.png";
 
 
     public SplashScreen(final AlienGame game) {
-        this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
         this.stage = new Stage(new StretchViewport(AlienGame.V_WIDTH, AlienGame.V_HEIGHT, game.camera));
-        //this.bg = new Texture(path + "/alienred.jpg");
-        this.bg = AssetHandler.getAssetHandler().getTexture("alienred.jpg");
-
-
+        this.bg = AssetHandler.getAssetHandler().getTexture(alienTex);
     }
-
 
     @Override
     public void show() {
@@ -48,8 +43,7 @@ public class SplashScreen implements Screen {
             }
         };
 
-        //Texture splashTex = game.assets.get(path + "/logonew.png", Texture.class);
-        Texture splashTex = AssetHandler.getAssetHandler().getTexture("logonew.png");
+        Texture splashTex = AssetHandler.getAssetHandler().getTexture(splashTexture);
         splashImg = new Image(splashTex);
         splashImg.setOrigin(splashImg.getWidth() / 2 , splashImg.getHeight() / 2);
         splashImg.setPosition(stage.getWidth()/2 - 50, stage.getHeight() / 2 + 32);
@@ -80,7 +74,6 @@ public class SplashScreen implements Screen {
     public void update(float delta) {
         stage.act(delta);
     }
-
 
 
     @Override

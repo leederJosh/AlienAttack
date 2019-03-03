@@ -26,8 +26,6 @@ public abstract class AbstractBullet {
     private Texture bulletTex;
     /** Whether or not hte bullet needs to be removed */
     private boolean remove;
-    /** Asset manager to get the texture */
-    AssetManager manager = new AssetManager();
     /** The speed the bullet travels at */
     protected float speed;
     /**The amount the bullet will move in the X per frame */
@@ -190,14 +188,7 @@ public abstract class AbstractBullet {
      */
     public abstract void act();
 
-    // To Do
-
-    // Then collision detection
-    // Should be a case of getting the x of the bullet and comparing
-    // the x and the x plus width with all the entities int he bullet list
-    // Same idea with the y i think for now
-    // Then if they collide do something, o health first then humanity
-
-    // Then i can work on other guns like machine gun and shotgun
-    // Think I may need to make states or strategies for this
+    public void setRemove(){
+        remove = true;
+    }
 }

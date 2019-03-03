@@ -2,7 +2,7 @@ package com.mygdx.game.entities;
 
 public enum EntityType {
     //creating all entity types
-    PLAYER("player", 14, 32, 40), ENEMY("enemy", 14, 32, 40), FRIENDLY("friendly", 14, 32, 40);
+    PLAYER("player", 14, 32, 40), ENEMY("enemy", 14, 32, 40), FRIENDLY("friendly", 14, 32, 40), BOSS("enemy", 60, 64, 40);
     private String id;
     private int width, height;
     private float weight;

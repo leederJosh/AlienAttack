@@ -8,5 +8,10 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		new LwjglApplication(new AlienGame(), config);
+
+		/** Stops the screen from resizing and gets rid of the grey boarder */
+		config.width = AlienGame.V_WIDTH;
+		config.width = AlienGame.V_HEIGHT;
+		config.resizable = false;
 	}
 }

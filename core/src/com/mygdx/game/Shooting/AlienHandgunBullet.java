@@ -19,7 +19,7 @@ public class AlienHandgunBullet  extends AbstractBullet {
         width = 3;
         height = 3;
         speed = 5;
-        bulletDamage = 25;
+        bulletDamage = 5;
         generator = new Random();
     }
 

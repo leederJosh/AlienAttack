@@ -1,6 +1,7 @@
 package com.mygdx.game.entities;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class EntityList {
@@ -11,11 +12,16 @@ public class EntityList {
     private static ArrayList<Entity> entityArrayList;
     /** Holds dead entities to remove */
     private static ArrayList<Entity> entitiesToRemove;
+    /** List to remove from map */
+    private static ArrayList<Double> mapRemover;
+    /** Keeps the instance of the player */
+    private static Player player;
 
     //Private constructor
     private EntityList() {
         this.entityMap = new TreeMap<Double, Entity>();
         this.entityArrayList = new ArrayList<Entity>();
+        mapRemover = new ArrayList<Double>();
     }
 
     //Gets instance or makes a new one
@@ -53,7 +59,7 @@ public class EntityList {
 
         //If the map has more entites in it, then the arrayList is more up to date (ie update the TreeMap)
         if (tempList.size() > entityArrayList.size()) {
-            //Remove all entities in EntityList
+            //Remove all entities in EntityMap
             entityMap.clear();
             //Add entities to EntityList
             for (Entity e : entityArrayList) {
@@ -99,7 +105,7 @@ public class EntityList {
         }
     }
 
-    public static void clear() {
+    public static void purge() {
         entityArrayList.clear();
         entityMap.clear();
 
@@ -109,7 +115,42 @@ public class EntityList {
      * Remove a given dead entity from the entity list
      * Added 22/2/19
      */
-    public void removeDeadEntity(Entity entity){
-        entityArrayList.remove(entity);
+    public void addToRemoval(Entity entity){
+        entitiesToRemove.add(entity);
+    }
+
+    /**
+     * Remove a given dead entity from the entity list
+     * Added 22/2/19
+     */
+    public void removeDeadEntities(){
+
+        // This seems long but is necessary for concurrency errors in the map
+        for(Entity entity : entitiesToRemove){
+            //entityArrayList.remove(entity);
+            for(Map.Entry<Double, Entity> entry : entityMap.entrySet()){
+                if(entry.getValue().equals(entity)){
+                    mapRemover.add(entry.getKey());
+                }
+            }
+
+            //Also removes the entity from the list
+            entityArrayList.remove(entity);
+        }
+
+        for(Double key : mapRemover){
+            entityMap.remove(key);
+        }
+
+        mapRemover.clear();
+        entitiesToRemove.clear();
+    }
+
+    public static void setPlayer(Player newPlayer){
+        player = newPlayer;
+    }
+
+    public Player getPlayer(){
+        return player;
     }
 }

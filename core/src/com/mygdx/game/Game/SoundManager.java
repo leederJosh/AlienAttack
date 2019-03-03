@@ -71,7 +71,6 @@ public class SoundManager implements Sound {
     @Override
     public void stop(long soundId) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -83,19 +82,16 @@ public class SoundManager implements Sound {
     @Override
     public void resume(long soundId) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void setLooping(long soundId, boolean looping) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void setPitch(long soundId, float pitch) {
         // TODO Auto-generated method stub
-
     }
 
     @Override

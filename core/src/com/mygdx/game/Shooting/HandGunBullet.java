@@ -8,8 +8,8 @@ package com.mygdx.game.Shooting;
 public class HandGunBullet extends AbstractBullet {
 
 
-    public HandGunBullet(float posX, float posY){
-        super(posX, posY, BulletType.HUMAN);
+    public HandGunBullet(float posX, float posY, BulletType type){
+        super(posX, posY, type);
         width = 15;
         height = 15;
         speed = 5;

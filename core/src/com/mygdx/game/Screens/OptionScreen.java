@@ -26,24 +26,22 @@ public class OptionScreen implements Screen {
     private TextButton musicImg;
     private Texture bg;
     private Texture wasd;
-    private String path;
+
+    /** Necessary assets */
+    private String alienTex = "alienred.jpg";
+    private String keys = "keys.png";
+    private String uiAtlas = "uiskin.atlas";
+    private String uiJson = "uiskin.json";
 
 
 
 
     public OptionScreen (final AlienGame game) {
-        this.path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
         this.stage = new Stage(new StretchViewport(game.V_WIDTH, game.V_HEIGHT,game.camera));
-        //this.bg = new Texture(path + "/alienred.jpg");
-        //this.wasd = new Texture(path + "/keys.png");
-
-        this.bg = AssetHandler.getAssetHandler().getTexture("alienred.jpg");
-        this.wasd = AssetHandler.getAssetHandler().getTexture("keys.png");
-
+        this.bg = AssetHandler.getAssetHandler().getTexture(alienTex);
+        this.wasd = AssetHandler.getAssetHandler().getTexture(keys);
     }
-
-
 
     @Override
     public void show() {
@@ -51,20 +49,11 @@ public class OptionScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         stage.clear();
 
-        path.replace("assets", "UI");
-
-        //Made this work on windows by taking out path from the get statement, instead added "/assets" to the name of the file i want to get
         this.skin = new Skin();
-        //this.skin.addRegions(game.assets.get( "/assets/uiskin.atlas", TextureAtlas.class));
-        this.skin.addRegions(AssetHandler.getAssetHandler().getTextureAtlas("uiskin.atlas"));
+        this.skin.addRegions(AssetHandler.getAssetHandler().getTextureAtlas(uiAtlas));
         this.skin.add("default-font", game.fontB24);
-        //this.skin.load(Gdx.files.internal( "uiskin.json"));
-        this.skin.load(AssetHandler.getAssetHandler().getAssetManager().getFileHandleResolver().resolve("uiskin.json"));
+        this.skin.load(AssetHandler.getAssetHandler().getAssetManager().getFileHandleResolver().resolve(uiJson));
         initButtons();
-
-
-
-
     }
 
     public void update(float delta) {
@@ -79,10 +68,8 @@ public class OptionScreen implements Screen {
         update(delta);
 
         game.batch.begin();
-
         game.batch.draw(bg, 0, 0);
         game.batch.draw(wasd, 20, 100);
-
         game.font40.draw(game.batch,"Option", 170, 480);
         game.font40.draw(game.batch,"The Final Stand", 60, 420);
         game.fontT16.draw(game.batch,"-------------------------------------------------", 10, 380);
@@ -95,8 +82,6 @@ public class OptionScreen implements Screen {
         game.fontT16.draw(game.batch,"WASD / ARROW KEYS TO MOVE", 140, 150);
         game.fontT16.draw(game.batch,"MOUSE LEFT CLICK TO SHOOT", 140, 120);
         game.batch.end();
-
-
 
         stage.draw();
     }

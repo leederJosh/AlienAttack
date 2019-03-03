@@ -108,6 +108,9 @@ public class AssetHandler {
         assetManager.load(assetPath + "civilianLeftFace.png", Texture.class);
         assetManager.load(assetPath + "AlienLeftFace.png", Texture.class);
 
+        //Boss
+        assetManager.load(assetPath + "BossLeftThree.png", Texture.class);
+
         //Player animation textures
         assetManager.load(assetPath + "SpriteSheets/MoveRightMiddleBig.png", Texture.class);
         assetManager.load(assetPath + "SpriteSheets/MainCharacterRight.png", Texture.class);
@@ -152,7 +155,16 @@ public class AssetHandler {
      */
     public TiledMap loadLevel(String level){
 
+        //  I treid this to get the levels to load from core/assets but no luck
+        // For some reason it is loading them from the root folder (click on alien attack once)
+//        System.out.print("The below is the path\n");
+//        System.out.print(Gdx.files.internal(assetPath).toString() + "/" + level + "\n");
+//        String fileToGet = Gdx.files.internal(assetPath).toString() + "/" + level;
+////        Gdx.files.internal(assetPath).toString()
+//        return mapLoader.load( fileToGet);
+
         return mapLoader.load( assetPath + level);
+
     }
 
     /**
@@ -165,17 +177,6 @@ public class AssetHandler {
         //assetManager.finishLoadingAsset(texture);
         return assetManager.get(assetPath + texture, Texture.class);
     }
-
-//    /**
-//     * Return a given font asset from the Asset Manager
-//     * @param font
-//     * @return
-//     */
-//    public BitmapFont getBitMapFont(String font){
-//        //return assetManager.get(assetPath + font, BitmapFont.class);
-//        return bitMapLoader.loadSync(assetManager, assetPath + font, assetManager.getFileHandleResolver().resolve(font), bitMapLoader.paramater);
-//    }
-
 
     /**
      * Return a given font asset from the Asset Manager

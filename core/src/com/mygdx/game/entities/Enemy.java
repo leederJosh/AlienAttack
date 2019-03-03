@@ -1,16 +1,14 @@
 package com.mygdx.game.entities;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Game.AlienGame;
 
 import com.mygdx.game.world.AssetHandler;
-import com.mygdx.game.world.GameMap;
+import com.mygdx.game.world.AbstractLevel;
 import world.DialogNode;
-//import world.GameMap;
+//import world.AbstractLevel;
 
 public class Enemy extends Entity {
 
@@ -22,10 +20,9 @@ public class Enemy extends Entity {
     private ArrayList<DialogNode<CharSequence>> dialog;
     private int dialogIndex;
 
-    public Enemy(float x, float y, GameMap map) {
+    public Enemy(float x, float y, AbstractLevel map) {
         super(x, y, EntityType.ENEMY, map);
         //we can pass the entity type in directly since we know it is going to be a player
-        String path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         //image = new Texture(path + "/AlienLeftFace.png");
         image = AssetHandler.getAssetHandler().getTexture("AlienLeftFace.png");
         dialog = new ArrayList<DialogNode<CharSequence>>();
@@ -40,7 +37,9 @@ public class Enemy extends Entity {
     //control space provides us with a list of all the methods we have access to
     @Override
     public void render(SpriteBatch batch) {
+        batch.begin();
         batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
+        batch.end();
         //we scale the image so that it is the same size as we specified in entityType
         //current image is
     }

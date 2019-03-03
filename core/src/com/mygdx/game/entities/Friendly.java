@@ -4,12 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Game.AlienGame;
 
+import com.mygdx.game.world.AbstractLevel;
 import com.mygdx.game.world.AssetHandler;
-import com.mygdx.game.world.GameMap;
 import world.DialogNode;
-//import world.GameMap;
+//import world.AbstractLevel;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class Friendly extends Entity {
@@ -23,9 +22,8 @@ public class Friendly extends Entity {
     private int dialogIndex;
 
 
-    public Friendly(float x, float y, GameMap map) {
+    public Friendly(float x, float y, AbstractLevel map) {
         super(x, y, EntityType.FRIENDLY, map);
-        String path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         //this.image = new Texture(path + "/civilianLeftFace.png");
         this.image = AssetHandler.getAssetHandler().getTexture("civilianLeftFace.png");
         //Give the friendly lower health (testing).
@@ -47,11 +45,14 @@ public class Friendly extends Entity {
         isHitDialog.add(new DialogNode<CharSequence>("Don't shoot!"));
         isHitDialog.add(new DialogNode<CharSequence>("Why did you shoot me?"));
         isHitDialog.get(0).addChild(isHitDialog.get(1));
+
     }
 
     @Override
     public void render(SpriteBatch batch) {
+        batch.begin();
         batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
+        batch.end();
         //we scale the image so that it is the same size as we specified in entityType
         //current image is
     }

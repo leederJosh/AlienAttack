@@ -5,9 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.Game.AlienGame;
@@ -15,55 +13,32 @@ import com.mygdx.game.world.AssetHandler;
 
 public class LoadingScreen implements Screen {
 
-
-
     private final AlienGame game;
     private ShapeRenderer shapeRenderer;
     private float progress;
     private Texture bg;
     private Stage stage;
-    private String path;
 
-
-
+    /** Assets needed from the assetHandler */
+    private String alienTex = "alienred.jpg";
 
 
     public LoadingScreen(final AlienGame game){
-        path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
         this.game = game;
         this.shapeRenderer = new ShapeRenderer();
-        //this.bg = new Texture(path + "/alienred.jpg");
-        this.bg = AssetHandler.getAssetHandler().getTexture("alienred.jpg");
+        this.bg = AssetHandler.getAssetHandler().getTexture(alienTex);
         this.stage = new Stage(new StretchViewport(game.V_WIDTH, game.V_HEIGHT,game.camera));
-
-
     }
-
-
-    /** THIS IS NO LONGER NEEDED WITH THE ASSET MANAGER */
-    private void queueAssets() {
-        //game.assets.load(path + "/logonew.png", Texture.class);
-        path.replace("assets", "UI");
-        //game.assets.load(path + "/uiskin.atlas", TextureAtlas.class);
-    }
-
 
     @Override
     public void show() {
         System.out.println("LOADING");
         Gdx.input.setInputProcessor(stage);
         this.progress = 0f;
-        queueAssets();
         stage.clear();
-
     }
 
-    private void update(float delta) {
-        //progress = MathUtils.lerp(progress, game.assets.getProgress(), 0.08f);
-//        if(game.assets.update() && progress >= game.assets.getProgress() - 0.1f) {
-//            game.setScreen(game.splashScreen);
-//        }
-
+    private void update() {
         game.setScreen(game.splashScreen);
         stage.act();
     }
@@ -73,9 +48,7 @@ public class LoadingScreen implements Screen {
         Gdx.gl.glClearColor(0.35f, 0.35f, 0.35f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        update(delta);
-
-
+        update();
 
         game.batch.begin();
         game.batch.draw(bg, 0, 0);
