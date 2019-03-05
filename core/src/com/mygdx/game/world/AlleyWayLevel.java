@@ -22,7 +22,7 @@ public class AlleyWayLevel extends AbstractLevel {
     @Override
     public void spawnEnemies() {
 
-        EntityList.updateEntityList(new Enemy(30, 400, this));
+        EntityList.updateEntityList(new Enemy(75, 400, this));
     }
 
     @Override

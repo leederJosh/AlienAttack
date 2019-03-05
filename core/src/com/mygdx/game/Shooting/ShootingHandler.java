@@ -32,10 +32,15 @@ public class ShootingHandler {
         for (Entity entity : entityList.getEntities()) {
             for (AbstractBullet bullet : BulletList.getBulletList().getBullets()) {
 
-                //AI for the bullets
+                //AI for enemy bullets
                 if(bullet.bulletType == BulletType.ALIEN){
                     bullet.act();
                 }
+
+                //TODO
+                // THERE ARE TWO BUGS
+                // 1. When the player shoots to the right anywhere on the screen it damages the enemy
+                // 2. When the enemy shoots to the left it seems to despawn immediatley (but also seems to damage the player
 
                 // Handles bullets shot by aliens that hit the player
                 // IF the bullet is an Alien bullet (shot by an alien)
@@ -43,42 +48,45 @@ public class ShootingHandler {
                 // Reduce player health
                 if(isAlienBullet(bullet) == true && bulletHasCollided(EntityList.getEntityList().getPlayer(), bullet)){
                     EntityList.getEntityList().getPlayer().reduceHealth(15);
+                    bullet.setDamage(0);
+                    bullet.updateRemove();
                 }
+                else if(isAlienBullet(bullet) == false && bulletHasCollided(entity, bullet) && entity.getType().getId().equals("player") == false){
 
-                // This handles the player bullets that will hit the enemies
-                // So the player cannot shoot themselves
-                if (entity.getType().getId().equals("player") == false) {
+                    // This handles the player bullets that will hit the enemies
+                    // So the player cannot shoot themselves
+                    if (entity.getType().getId().equals("player") == false) {
 
-                    // Checks if a bullet has collided with an entity
-                    if (bulletHasCollided(entity, bullet) == true) {
+                        // Checks if a bullet has collided with an entity
+                        if (bulletHasCollided(entity, bullet) == true) {
 
-                        // Ensures that aliens cannot shoot each other
-                        if(isEnemy(entity) == true && isAlienBullet(bullet) == true){
+                            // Ensures that aliens cannot shoot each other
+                            if (entity.getType().getId().equals("enemy") && isAlienBullet(bullet) == true) {
 
-                        }
-                        else {
+                            } else {
 
-                            // Checks what type the entity is to alter humanity
-                            entity.reduceHealth(bullet.getBulletDamage());
+                                // Checks what type the entity is to alter humanity
+                                entity.reduceHealth(bullet.getBulletDamage());
 
-                            //This is necessary so entities are only affected by bullets once
-                            bullet.setDamage(0);
+                                //This is necessary so entities are only affected by bullets once
+                                bullet.setDamage(0);
 
-                            // Reduce humanity when a friendly is hit
-                            if (entity.getType().equals("friendly")) {
-                                EntityList.getEntityList().getPlayer().decreaseHumanity(5);
-                            }
-
-                            // If the entity is dead add it to a dead entity list
-                            if (entity.getHealth() <= 0) {
-                                deadEntities.add(entity);
-
-                                // If the entity is dead and an enemy then increase player humanity
-                                if (isEnemy(entity) == true) {
-                                    EntityList.getEntityList().getPlayer().increaseHumanity(15);
+                                // Reduce humanity when a friendly is hit
+                                if (entity.getType().equals("friendly")) {
+                                    EntityList.getEntityList().getPlayer().decreaseHumanity(5);
                                 }
+
+                                // If the entity is dead add it to a dead entity list
+                                if (entity.getHealth() <= 0) {
+                                    deadEntities.add(entity);
+
+                                    // If the entity is dead and an enemy then increase player humanity
+                                    if (isEnemy(entity) == true) {
+                                        EntityList.getEntityList().getPlayer().increaseHumanity(15);
+                                    }
+                                }
+                                bullet.updateRemove();
                             }
-                            bullet.updateRemove();
                         }
                     }
                 }

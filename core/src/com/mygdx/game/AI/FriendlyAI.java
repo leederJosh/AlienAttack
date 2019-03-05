@@ -15,16 +15,6 @@ public class FriendlyAI extends AI {
     }
 
     @Override
-    public void moveRight() {
-
-    }
-
-    @Override
-    public void moveLeft() {
-
-    }
-
-    @Override
     public void act(Entity entity) {
 
     }

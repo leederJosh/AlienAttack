@@ -33,21 +33,25 @@ public abstract class AI {
     private float xPerTick = 1;
 
 
-    public abstract void moveRight();
-    public abstract void moveLeft();
-
     /**
      * Moves the entity in a direction
      * @param entity
      */
     public void moveEntity(Entity entity){
 
-        xOrigin = entity.getx();
+//        xOrigin = entity.getx();
+//
+//        if(entity.getx() >= xOrigin + xToTravel){
+//            moveRight = false;
+//        }
+//        else if (entity.getx() <= xOrigin){
+//            moveRight = true;
+//        }
 
-        if(entity.getx() >= xOrigin + xToTravel){
+        if(entity.getx() > entity.getxDestination()){
             moveRight = false;
         }
-        else if (entity.getx() <= xOrigin){
+        else if(entity.getx() < entity.getxOrigin()){
             moveRight = true;
         }
 
@@ -56,6 +60,20 @@ public abstract class AI {
         }
         else {
             entity.moveX(-xPerTick);
+        }
+    }
+
+    protected void checkMoveDirection(Entity entity){
+
+        //Needs to check if the current entity X is GREATER than the xDestination
+        // IF it is set moveRight to false
+        // IF the entity x is less than the X origin the set moveRight to true
+
+        if(entity.getx() > entity.getxDestination()){
+            moveRight = false;
+        }
+        else if(entity.getx() < entity.getxOrigin()){
+            moveRight = true;
         }
     }
 

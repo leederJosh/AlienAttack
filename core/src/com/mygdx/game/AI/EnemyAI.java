@@ -27,16 +27,6 @@ public class EnemyAI extends AI {
         shootingChance = 60;
     }
 
-    @Override
-    public void moveRight() {
-
-    }
-
-    @Override
-    public void moveLeft() {
-
-    }
-
     /**
      * Spawns a bullet that is aimed towards the player
      * @param entity
@@ -49,7 +39,7 @@ public class EnemyAI extends AI {
         float entityY = entity.gety();
         float playerX = EntityList.getEntityList().getPlayer().getx();
         float playerY = EntityList.getEntityList().getPlayer().gety();
-        int direction = 15; //Spawn the bullet to the right of the entity by default
+        int direction = 13; //Spawn the bullet to the right of the entity by default
         Random generator = new Random();
 
         if(entity.getType().equals("player") == false){

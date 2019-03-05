@@ -20,6 +20,10 @@ public abstract class Entity {
             MIN_HEALTH = 0;
     private boolean isDead;
 
+    private float xOrigin;
+    private float xDestination;
+    private float xBoundary = 75;
+
     Texture image;
 
 
@@ -40,6 +44,8 @@ public abstract class Entity {
         this.type = type;
         this.map = map;
         this.isDead = false;
+        xOrigin = x;
+        xDestination = x + xBoundary;
     }
 
     public void update (float deltaTime, float gravity) {
@@ -152,5 +158,12 @@ public abstract class Entity {
 
     public void sety(int i) {
         this.pos.y = i;
+    }
+
+    public float getxOrigin(){
+        return xOrigin;
+    }
+    public float getxDestination(){
+        return xDestination;
     }
 }
