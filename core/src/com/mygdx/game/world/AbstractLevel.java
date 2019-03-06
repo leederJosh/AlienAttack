@@ -18,9 +18,9 @@ import com.mygdx.game.Pickups.AbstractPickup;
 import com.mygdx.game.Pickups.PickupHandler;
 import com.mygdx.game.Shooting.AbstractBullet;
 import com.mygdx.game.Shooting.BulletList;
-import com.mygdx.game.Shooting.BulletType;
 import com.mygdx.game.Shooting.ShootingHandler;
 import com.mygdx.game.entities.*;
+import com.mygdx.game.tiles.Tile;
 import world.DialogNode;
 
 import java.util.Map;

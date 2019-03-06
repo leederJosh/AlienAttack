@@ -1,10 +1,10 @@
-package com.mygdx.game.world;
+package com.mygdx.game.tiles;
 
 import java.util.HashMap;
 
 //enum is a set of constant objects
 //TileType in tutorial video
-public enum Tile {
+public enum Tile implements  TileInterface {
 
     Black(1, false, "Black"),
     GreyBuildingTile(2, false, "GreyBuildingTile"),
