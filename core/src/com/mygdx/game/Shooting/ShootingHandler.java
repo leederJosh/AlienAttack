@@ -14,16 +14,19 @@ import java.util.ArrayList;
  */
 public class ShootingHandler {
 
-    /** Holds the entities to remove from the Entity List */
+    /**
+     * Holds the entities to remove from the Entity List
+     */
     private ArrayList<Entity> deadEntities;
 
-    public ShootingHandler(){
+    public ShootingHandler() {
         deadEntities = new ArrayList<Entity>();
     }
 
     /**
      * Handles what happens when a bullet collides with an entity
      * Compares a given bullet list and a given entity list
+     *
      * @param bulletList
      * @param entityList
      */
@@ -37,16 +40,11 @@ public class ShootingHandler {
                     bullet.act();
                 }
 
-                //TODO
-                // THERE ARE TWO BUGS
-                // 1. When the player shoots to the right anywhere on the screen it damages the enemy
-                // 2. When the enemy shoots to the left it seems to despawn immediatley (but also seems to damage the player
-
                 // Handles bullets shot by aliens that hit the player
                 // IF the bullet is an Alien bullet (shot by an alien)
                 // AND the bullet has collided with the player
                 // Reduce player health
-                if(isAlienBullet(bullet) == true && bulletHasCollided(EntityList.getEntityList().getPlayer(), bullet)){
+                if(isAlienBullet(bullet) == true && bulletHasCollided(EntityList.getEntityList().getPlayer(), bullet) == true){
                     EntityList.getEntityList().getPlayer().reduceHealth(15);
                     bullet.setDamage(0);
                     bullet.updateRemove();
@@ -103,8 +101,8 @@ public class ShootingHandler {
     /**
      * Remove all the entities in the dead list from the EntityList
      */
-    public void removeDeadEntities(){
-        for(Entity entity : deadEntities){
+    public void removeDeadEntities() {
+        for (Entity entity : deadEntities) {
             entity.dispose();
             EntityList.getEntityList().addToRemoval(entity);
         }
@@ -112,61 +110,92 @@ public class ShootingHandler {
 
     /**
      * Returns true if a given entity is of type enemy
+     *
      * @param entity
      * @return boolean
      */
-    private boolean isEnemy(Entity entity){
+    private boolean isEnemy(Entity entity) {
 
-        if(entity.getType().equals("enemy")){
+        if (entity.getType().equals("enemy")) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
     /**
      * Returns true if the given bullet is of type alien (shot by an alien)
+     *
      * @param bullet
      * @return
      */
-    private boolean isAlienBullet(AbstractBullet bullet){
-        if(bullet.bulletType.getId().equals("alien")){
+    private boolean isAlienBullet(AbstractBullet bullet) {
+        if (bullet.bulletType.getId().equals("alien")) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
     /**
      * Returns true when the hit box of a given bullet overlaps the hitbox of a given entity
+     *
      * @param entity
      * @param bullet
      * @return boolean
      */
-    private boolean bulletHasCollided(Entity entity, AbstractBullet bullet){
+    private boolean bulletHasCollided(Entity entity, AbstractBullet bullet) {
 
-        // Shooting in all directions
-        // Now this is confusing so here is a breakdown:
-        // Check the bullets X plus bullet width is greater than the X of the entity / 2 (so it hits the middle of the entity in all directions)
-        // AND
-        // check the bullet Y plus the bullet height is greater than the entity Y
-        // AND
-        // Check the bullet Y plus bullet height is less than the entity Y plus entity height
-        // This is to effectively draw a box around the entity using it's height, it's Y and it's X
-        // This means that if the bullet hits in this box collision will occur, if not then no collision
-        // Without the last part it registers a hit if a bullet travels anywhere above the entity
-        if (bullet.getBulletX() + bullet.getWidth() > entity.getx() + entity.getWidth() / 2
-                && bullet.getBulletY() + bullet.getHeight() > entity.gety()
-                && bullet.getBulletY() + bullet.getHeight() < entity.gety() + entity.getHeight()){
+        boolean hasCollided = false;
 
-            return true;
+        //Bullet variables to use
+        float bulletWidth = bullet.getWidth();
+        float bulletHeight = bullet.getHeight();
+        float bulletX = bullet.getBulletX();
+        float bulletY = bullet.getBulletY();
+
+        //Entity variables to use
+        float entityWidth = entity.getWidth();
+        float entityHeight = entity.getHeight();
+        float entityX = entity.getx();
+        float entityY = entity.gety();
+
+        //Hit boxes (mostly to make the IFs easier to read
+        float entityXHitBox = entityX + entityWidth;
+        float entityYHitBox = entityY + entityHeight;
+        float bulletXHitBox = bulletX + bulletWidth;
+        float bulletYHitBox = bulletY + bulletHeight;
+
+        // Shoot to the right
+        if (bulletXHitBox > entityX && bulletXHitBox < entityXHitBox) {
+
+            // Shoot up
+            if (bulletYHitBox > entityY && bulletYHitBox < entityYHitBox) {
+
+                hasCollided = true;
+            }
+            // Shoot down
+            else if (bulletY < entityYHitBox && bulletY > entityY) {
+
+                hasCollided = true;
+            }
 
         }
-        else{
-            return false;
+        //Shoot to the left
+        else if (bulletX < entityXHitBox && bulletX > entityX) {
+
+            // Shoot up
+            if (bulletYHitBox > entityY && bulletYHitBox < entityYHitBox) {
+
+                hasCollided = true;
+            }
+            // Shoot down
+            else if (bulletY < entityYHitBox && bulletY > entityY) {
+
+                hasCollided = true;
+            }
         }
+
+        return hasCollided;
     }
 }
-
