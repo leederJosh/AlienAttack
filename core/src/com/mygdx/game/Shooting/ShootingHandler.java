@@ -26,71 +26,74 @@ public class ShootingHandler {
     /**
      * Handles what happens when a bullet collides with an entity
      * Compares a given bullet list and a given entity list
+     * Returns true if an entity has died
      *
-     * @param bulletList
-     * @param entityList
+     * @param entity
      */
-    public void handleBullet(BulletList bulletList, EntityList entityList) {
+    public boolean handleBullet(Entity entity) {
 
-        for (Entity entity : entityList.getEntities()) {
-            for (AbstractBullet bullet : BulletList.getBulletList().getBullets()) {
+        boolean entityHasDied = false;
 
-                //AI for enemy bullets
-                if(bullet.bulletType == BulletType.ALIEN){
-                    bullet.act();
-                }
+        for (AbstractBullet bullet : BulletList.getBulletList().getBullets()) {
 
-                // Handles bullets shot by aliens that hit the player
-                // IF the bullet is an Alien bullet (shot by an alien)
-                // AND the bullet has collided with the player
-                // Reduce player health
-                if(isAlienBullet(bullet) == true && bulletHasCollided(EntityList.getEntityList().getPlayer(), bullet) == true){
-                    EntityList.getEntityList().getPlayer().reduceHealth(15);
-                    bullet.setDamage(0);
-                    bullet.updateRemove();
-                }
-                else if(isAlienBullet(bullet) == false && bulletHasCollided(entity, bullet) && entity.getType().getId().equals("player") == false){
+            //AI for enemy bullets
+            if(bullet.bulletType == BulletType.ALIEN){
+                bullet.act();
+            }
 
-                    // This handles the player bullets that will hit the enemies
-                    // So the player cannot shoot themselves
-                    if (entity.getType().getId().equals("player") == false) {
+            // Handles bullets shot by aliens that hit the player
+            // IF the bullet is an Alien bullet (shot by an alien)
+            // AND the bullet has collided with the player
+            // Reduce player health
+            if(isAlienBullet(bullet) == true && bulletHasCollided(EntityList.getEntityList().getPlayer(), bullet) == true){
+                EntityList.getEntityList().getPlayer().reduceHealth(15);
+                bullet.setDamage(0);
+                bullet.updateRemove();
+            }
+            else if(isAlienBullet(bullet) == false && bulletHasCollided(entity, bullet) && entity.getType().getId().equals("player") == false){
 
-                        // Checks if a bullet has collided with an entity
-                        if (bulletHasCollided(entity, bullet) == true) {
+                // This handles the player bullets that will hit the enemies
+                // So the player cannot shoot themselves
+                if (entity.getType().getId().equals("player") == false) {
 
-                            // Ensures that aliens cannot shoot each other
-                            if (entity.getType().getId().equals("enemy") && isAlienBullet(bullet) == true) {
+                    // Checks if a bullet has collided with an entity
+                    if (bulletHasCollided(entity, bullet) == true) {
 
-                            } else {
+                        // Ensures that aliens cannot shoot each other
+                        if (entity.getType().getId().equals("enemy") && isAlienBullet(bullet) == true) {
 
-                                // Checks what type the entity is to alter humanity
-                                entity.reduceHealth(bullet.getBulletDamage());
+                        } else {
 
-                                //This is necessary so entities are only affected by bullets once
-                                bullet.setDamage(0);
+                            // Checks what type the entity is to alter humanity
+                            entity.reduceHealth(bullet.getBulletDamage());
 
-                                // Reduce humanity when a friendly is hit
-                                if (entity.getType().equals("friendly")) {
-                                    EntityList.getEntityList().getPlayer().decreaseHumanity(5);
-                                }
+                            //This is necessary so entities are only affected by bullets once
+                            bullet.setDamage(0);
 
-                                // If the entity is dead add it to a dead entity list
-                                if (entity.getHealth() <= 0) {
-                                    deadEntities.add(entity);
-
-                                    // If the entity is dead and an enemy then increase player humanity
-                                    if (isEnemy(entity) == true) {
-                                        EntityList.getEntityList().getPlayer().increaseHumanity(15);
-                                    }
-                                }
-                                bullet.updateRemove();
+                            // Reduce humanity when a friendly is hit
+                            if (entity.getType().equals("friendly")) {
+                                EntityList.getEntityList().getPlayer().decreaseHumanity(5);
                             }
+
+                            // If the entity is dead add it to a dead entity list
+                            if (entity.getHealth() <= 0) {
+
+                                // If the entity is dead and an enemy then increase player humanity
+                                if (isEnemy(entity) == true) {
+                                    EntityList.getEntityList().getPlayer().increaseHumanity(15);
+                                }
+
+                                deadEntities.add(entity);
+                                entityHasDied = true;
+                            }
+                            bullet.updateRemove();
                         }
                     }
                 }
             }
         }
         removeDeadEntities();
+        return entityHasDied;
     }
 
     //TODO

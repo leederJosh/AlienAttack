@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.mygdx.game.Pickups.PickupHandler;
 import com.mygdx.game.Screens.*;
 import com.mygdx.game.Shooting.BulletList;
 import com.mygdx.game.entities.Enemy;
@@ -177,45 +178,3 @@ public class AlienGame extends Game {
     }
 
 }
-
-// This was to draw the HUD but now is in the levels - Josh
-//        //interface attempt
-//        batch.begin();
-//        //draw the bars here
-//        sr.begin(ShapeRenderer.ShapeType.Filled);
-//        //health
-//        sr.setColor(Color.RED); //uses gdx.color
-//        sr.rect(15, 450, 100, 10);
-//
-//        sr.setColor(Color.GREEN);
-//        sr.rect(15, 450, 90, 10);
-//        //humanity
-//        sr.setColor(Color.GRAY);
-//        sr.rect(275, 450, 100, 10);
-//
-//        sr.setColor(Color.ORANGE);
-//        sr.rect(275, 450, 90, 10);
-//        //experience
-//        sr.setColor(Color.GRAY);
-//        sr.rect(15, 440, 100, 5);
-//
-//        sr.setColor(Color.BLUE);
-//        sr.rect(15, 440, 90, 5);
-//        sr.end();
-//
-//        sr.begin(ShapeRenderer.ShapeType.Line);
-//        //outlines (weapon and bars)
-//        //weapon
-//        sr.setColor(Color.GREEN);
-//        sr.rect(575, 425, 50, 50);
-//        batch.draw(weapon, 575, 425);
-//        //health
-//        sr.setColor(Color.BLACK);
-//        sr.rect(15, 450, 100, 10);
-//        //humanity
-//        sr.rect(275, 450, 100, 10);
-//        //experience
-//        sr.rect(15, 440, 100, 5);
-//        sr.end();
-//        batch.end();
-/////////////////////////////////////////////////

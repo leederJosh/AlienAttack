@@ -121,7 +121,8 @@ public abstract class AbstractLevel {
         for (AbstractPickup pickup: pickupHandler.getActivePickups()){
             pickup.render(batch, pickup.getPickupX(), pickup.getPickupY());
         }
-        //pickup.render(batch, player.getx(), player.gety());
+
+        //pickupHandler.render(batch, player.getx(), player.gety());
 
         //If the bulletList contains a bullet it will be rendered here
         //This will not be removed as of yet
@@ -218,24 +219,31 @@ public abstract class AbstractLevel {
     }
     public void update (float delta) {
 
-        //need to apply gravity (used earths gravity in this case)
-        for(Entity entity: EntityList.getListEntities()) {
-            entity.update(delta, -9.8f);
-        }
-
+        //To remove the dead entities
         EntityList.getEntityList().removeDeadEntities();
 
-        //Handles the bullet collisions
-        shootingHandler.handleBullet(bulletList, EntityList.getEntityList());
+        //need to apply gravity (used earths gravity in this case)
+        // This loop gets all entities and performs various actions on them within the level
+        for(Entity entity: EntityList.getListEntities()) {
+            entity.update(delta, -9.8f);
+
+
+            // AI handler that acts on every entity except for player
+            if(entity.getType().getId().equals("player") == false){
+                aiHandler.makeEntityAct(entity);
+            }
+
+            //Handles the bullet collisions
+            if(shootingHandler.handleBullet(entity) == true){
+                //Has a chance to add a pickup to the pickUp handler if an entity has dies
+                pickupHandler.addPickUp(entity);
+            }
+
+
+        }
 
         //To remove the bullets
         BulletList.getBulletList().removeBullets();
-
-        //To remove the dead entities
-        //EntityList.getEntityList().removeDeadEntities();
-        for(Entity entity: EntityList.getListEntities()) {
-            entity.update(delta, -9.8f);
-        }
 
         // Checks to see which bullets in the bullet list needs to be removed and makes bullets move
         if(BulletList.getBulletList().getBullets().size() != 0) {
@@ -248,13 +256,8 @@ public abstract class AbstractLevel {
             }
         }
 
-        // AI handler that acts on every entity except for player
-        for(Entity entity: EntityList.getListEntities()) {
-            if(entity.getType().getId().equals("player") == false){
-                aiHandler.makeEntityAct(entity);
-            }
-        }
-
+        //Handles any collision between player and pickup
+        pickupHandler.hasCollidedWithPickUp();
     }
 
     public boolean checkPlayerHasFinished() {
