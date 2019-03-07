@@ -72,7 +72,7 @@ public class ShootingHandler {
 
                             // Reduce humanity when a friendly is hit
                             if (entity.getType().equals("friendly")) {
-                                EntityList.getEntityList().getPlayer().decreaseHumanity(5);
+                                EntityList.getEntityList().getPlayer().getHumanity().decreaseHumanity(5);
                             }
 
                             // If the entity is dead add it to a dead entity list
@@ -80,7 +80,7 @@ public class ShootingHandler {
 
                                 // If the entity is dead and an enemy then increase player humanity
                                 if (isEnemy(entity) == true) {
-                                    EntityList.getEntityList().getPlayer().increaseHumanity(15);
+                                    EntityList.getEntityList().getPlayer().getHumanity().decreaseHumanity(15);
                                 }
 
                                 deadEntities.add(entity);

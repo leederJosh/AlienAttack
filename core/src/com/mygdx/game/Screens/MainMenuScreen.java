@@ -7,6 +7,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.game.Game.AlienGame;
 
 
+import com.mygdx.game.Game.MusicManager;
 import com.mygdx.game.world.AlleyWayLevel;
 import com.mygdx.game.world.AssetHandler;
 
@@ -43,6 +45,10 @@ public class MainMenuScreen implements Screen {
     private String uiAtlas = "uiskin.atlas";
     private String uiJson = "core/assets/uiskin.json";
 
+    /** Music from the assetManager */
+    private String musicName = "MenuScreen.mp3";
+    private MusicManager musicManager;
+
 
 
 
@@ -56,6 +62,8 @@ public class MainMenuScreen implements Screen {
         this.camera = new OrthographicCamera();
         this.batch = new SpriteBatch();
         this.isInGame = false;
+
+        musicManager = new MusicManager(AssetHandler.getAssetHandler().getMusic(musicName));
     }
 
 
@@ -93,6 +101,9 @@ public class MainMenuScreen implements Screen {
         }
         game.batch.end();
         stage.draw();
+
+        musicManager.setLooping(true);
+        musicManager.play();
     }
 
     @Override
@@ -119,6 +130,7 @@ public class MainMenuScreen implements Screen {
     public void dispose() {
         stage.dispose();
         shapeRenderer.dispose();
+        musicManager.dispose();
     }
     private void initButtons() {
         buttonPlay = new TextButton("Play", skin, "default");
@@ -130,6 +142,10 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(game.playScreen);
 
+                //Trying to get music to fade out (this doesn't work and it is probably best to put this in the music manager)
+                for(musicManager.getVolume(); musicManager.getVolume() > 0 ; musicManager.setVolume(Gdx.graphics.getDeltaTime() * 5)){
+                    musicManager.stop();
+                }
                 //isInGame = true;
                 //game.setScreen(AlleyWayLevel());
             }

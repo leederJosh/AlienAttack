@@ -10,6 +10,7 @@ import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.PrefixFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -115,16 +116,8 @@ public class AssetHandler {
         assetManager.load(assetPath + "SpriteSheets/MoveRightMiddleBig.png", Texture.class);
         assetManager.load(assetPath + "SpriteSheets/MainCharacterRight.png", Texture.class);
         assetManager.load(assetPath + "SpriteSheets/MainCharacterLeft.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/25MainCharacter.png", Texture.class);
 
-
-        /** Fonts */
-        //assetManager.load("/8bit9.fnt", BitmapFont.class);
-        //assetManager.load("/pixelFont.ttf", FreeType.class);
-
-        /** Maps */
-        //assetManager.load("/AlleyWay.tmx", TiledMap.class);
-
-        /** Screens */
 
         /** Texture Atlas */
         assetManager.load(assetPath + "uiskin.atlas", TextureAtlas.class);
@@ -134,6 +127,9 @@ public class AssetHandler {
 
         /** Buttons */
         assetManager.load(assetPath + "logonew.png", Texture.class);
+
+        /** Music */
+        assetManager.load(assetPath + "Music/MenuScreen.mp3", Music.class);
 
         // Wait for the assetmanager to finish loading all the assets
         assetManager.finishLoading();
@@ -194,6 +190,10 @@ public class AssetHandler {
     public void handGunSound(){
         sound = Gdx.audio.newSound(Gdx.files.internal(assetPath + "pistol.mp3"));
         sound.play();
+    }
+
+    public Music getMusic(String fileName){
+        return assetManager.get(assetPath + "Music/" + fileName);
     }
 
 

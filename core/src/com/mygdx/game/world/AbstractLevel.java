@@ -143,7 +143,7 @@ public abstract class AbstractLevel {
 
         //Get player's health and humanity values for the UI bars.
         playerHealth = EntityList.getEntityList().getPlayer().getHealth();
-        playerHumanity = EntityList.getEntityList().getPlayer().getHumanity();
+        playerHumanity = EntityList.getEntityList().getPlayer().getHumanity().getHumanityValue();
 
         //draw the bars here
         sr.begin(ShapeRenderer.ShapeType.Filled);
