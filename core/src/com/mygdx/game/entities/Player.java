@@ -100,8 +100,8 @@ public class Player extends Entity {
 
         //currentGun = handGun;
         //currentGun = shotGun;
-        currentGun = alienHandGun;
-        //currentGun = alienRifle;
+        //currentGun = alienHandGun;
+        currentGun = alienRifle;
         isFinished = false;
     }
 

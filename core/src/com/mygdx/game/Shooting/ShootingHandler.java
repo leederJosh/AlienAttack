@@ -34,6 +34,8 @@ public class ShootingHandler {
 
         boolean entityHasDied = false;
 
+        ArrayList<AbstractBullet>aliienRifleBulletsToAdd = new ArrayList<AbstractBullet>();
+
         for (AbstractBullet bullet : BulletList.getBulletList().getBullets()) {
 
             // Makes the alien bullets act
@@ -91,12 +93,25 @@ public class ShootingHandler {
                 }
 
                 //Handles the entity dying
-                // NOT IS ONLY IN AT THE MOMENT TO STOP GAME CRASHING OUT
+                // NOT PLAYER IS ONLY IN AT THE MOMENT TO STOP GAME CRASHING OUT
                 if(entity.getHealth() <= 0 && !entityType.equals("player")){
                     deadEntities.add(entity);
                     entityHasDied = true;
+
+                    // If the gun is an alien rifle spawn 4 other bullets on killing an entity
+                    if(bullet instanceof AlienRifleBullet){
+                        for(AbstractBullet bullet1 :((AlienRifleBullet) bullet).spawnExtraBullets(entity)){
+                            aliienRifleBulletsToAdd.add(bullet1);
+                        }
+                        System.out.print("\nALIEN RIFLE ACTING");
+                    }
                 }
             }
+        }
+
+        // Add the ALIEN RIFLE BULLETS HERE
+        for(AbstractBullet rifleBullets: aliienRifleBulletsToAdd){
+            BulletList.getBulletList().addBullet(rifleBullets);
         }
         removeDeadEntities();
         return entityHasDied;
