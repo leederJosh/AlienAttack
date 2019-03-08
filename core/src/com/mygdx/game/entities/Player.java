@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.mygdx.game.Guns.AlienHandGun;
-import com.mygdx.game.Guns.GunInterface;
-import com.mygdx.game.Guns.HandGun;
-import com.mygdx.game.Guns.ShotGun;
+import com.mygdx.game.Guns.*;
 import com.mygdx.game.world.AbstractLevel;
 import com.mygdx.game.world.AssetHandler;
 
@@ -50,6 +47,7 @@ public class Player extends Entity {
     private GunInterface handGun;
     private GunInterface shotGun;
     private GunInterface alienHandGun;
+    private GunInterface alienRifle;
     private boolean isFinished;
 
 
@@ -98,9 +96,12 @@ public class Player extends Entity {
         handGun = new HandGun();
         shotGun = new ShotGun();
         alienHandGun = new AlienHandGun();
-        currentGun = handGun;
+        alienRifle = new AlienRifle();
+
+        //currentGun = handGun;
         //currentGun = shotGun;
-        //currentGun = alienHandGun;
+        currentGun = alienHandGun;
+        //currentGun = alienRifle;
         isFinished = false;
     }
 

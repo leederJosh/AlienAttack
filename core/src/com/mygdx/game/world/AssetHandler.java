@@ -52,13 +52,6 @@ public class AssetHandler {
     /** Handgun sound file */
     Sound sound;
 
-
-    /**
-     * At the moment it won't load textures, it was having problems with Pistol.png until I put path in to the load and get
-     * After that it had problems with PistolLeft which is some improvements
-     */
-
-
     private AssetHandler(){
         // Create the asset Manager
         assetManager = new AssetManager(new PrefixFileHandleResolver(new InternalFileHandleResolver(), path.toString()));
@@ -72,12 +65,6 @@ public class AssetHandler {
 
         //Create the level loader
         mapLoader = new TmxMapLoader();
-        //assetManager = new AssetManager(new InternalFileHandleResolver());
-        // assetManager.setLoader(Texture.class, null, TextureLoader.TextureParameter );
-
-        //assets = new AssetManager(new PrefixFileHandleResolver(new InternalFileHandleResolver(PROJECT_PATH)));
-
-        //path = new File("/core/assets/");
         loadAllAssets();
     }
 
@@ -151,13 +138,13 @@ public class AssetHandler {
      */
     public TiledMap loadLevel(String level){
 
-        //  I treid this to get the levels to load from core/assets but no luck
-        // For some reason it is loading them from the root folder (click on alien attack once)
-//        System.out.print("The below is the path\n");
-//        System.out.print(Gdx.files.internal(assetPath).toString() + "/" + level + "\n");
-//        String fileToGet = Gdx.files.internal(assetPath).toString() + "/" + level;
-////        Gdx.files.internal(assetPath).toString()
-//        return mapLoader.load( fileToGet);
+//         I tried this to get the levels to load from core/assets but no luck
+//         For some reason it is loading them from the root folder (click on alien attack once)
+//         System.out.print("The below is the path\n");
+//         System.out.print(Gdx.files.internal(assetPath).toString() + "/" + level + "\n");
+//         String fileToGet = Gdx.files.internal(assetPath).toString() + "/" + level;
+//         Gdx.files.internal(assetPath).toString()
+//         return mapLoader.load( fileToGet);
 
         return mapLoader.load( assetPath + level);
 
@@ -169,8 +156,6 @@ public class AssetHandler {
      * @return
      */
     public Texture getTexture(String texture){
-
-        //assetManager.finishLoadingAsset(texture);
         return assetManager.get(assetPath + texture, Texture.class);
     }
 
@@ -196,18 +181,4 @@ public class AssetHandler {
         return assetManager.get(assetPath + "Music/" + fileName);
     }
 
-
-
-
-
-
-
-
-
-
-    // TODO
-    // Load all the assets of the game in the assetManger
-    // Dispose of all assets in the game
-    // Create an assetHandler object in Game ITiled game map or gamp map?)
-    // Change all of the
 }

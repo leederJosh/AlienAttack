@@ -1,6 +1,5 @@
 package com.mygdx.game.tiles;
 
-import java.util.HashMap;
 
 /**
  * An interface for enforcing behaviour needed in all enums implementing this interface
@@ -9,18 +8,14 @@ import java.util.HashMap;
  */
 public interface TileInterface {
 
+    int TILE_SIZE = 16;
 
-    public int getId();
+    int getId();
 
-    public boolean isCollidable();
+    boolean isCollidable();
 
-    public String getName();
+    String getName();
 
-    public float getDamage();
-
-    //TODO
-    // ADD THIS TO ALL THE CONRETE TILE CLASSES AS IT CANNOT BE IN THE INTERFACE
-    //public static Tile getTileByid(int id);
-
+    float getDamage();
 
 }

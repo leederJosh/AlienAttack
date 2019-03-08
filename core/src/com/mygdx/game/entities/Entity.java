@@ -56,7 +56,7 @@ public abstract class Entity {
         //the new y value will be affected by velocityY which is basically the amount we will be moving per second in the y axis
         //positive moving up, negative moving down
 
-        if(map.doesRectCollideWithMap(pos.x, newY, getWidth(), getHeight(), map.getTiledMap())) {
+        if(map.doesRectCollideWithMap(pos.x, newY, getWidth(), getHeight())) {
             if(velocityY < 0) {
                 //we are checking if the entity is moving down when colliding with the map
                 this.pos.y = (float) Math.floor(pos.y); //math.floor is opposite to ceiling and rounds down
@@ -85,7 +85,7 @@ public abstract class Entity {
     public void moveX(float amount) {
         //good way to check collision so all entities have access
         float newX = this.pos.x + amount;
-        if (!map.doesRectCollideWithMap(newX, pos.y, getWidth(), getHeight(), map.getTiledMap()))
+        if (!map.doesRectCollideWithMap(newX, pos.y, getWidth(), getHeight()))
             this.pos.x = newX;
         //we are getting the theoretical new x of the player if they get to move
         //but will not move if there is a collision, otherwise we will set the new x

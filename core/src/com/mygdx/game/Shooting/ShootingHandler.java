@@ -36,70 +36,71 @@ public class ShootingHandler {
 
         for (AbstractBullet bullet : BulletList.getBulletList().getBullets()) {
 
-            //AI for enemy bullets
-            if(bullet.bulletType == BulletType.ALIEN){
+            // Makes the alien bullets act
+            if(bullet instanceof AlienHandgunBullet){
                 bullet.act();
             }
 
-            // Handles bullets shot by aliens that hit the player
-            // IF the bullet is an Alien bullet (shot by an alien)
-            // AND the bullet has collided with the player
-            // Reduce player health
-            if(isAlienBullet(bullet) == true && bulletHasCollided(EntityList.getEntityList().getPlayer(), bullet) == true){
-                EntityList.getEntityList().getPlayer().reduceHealth(15);
-                bullet.setDamage(0);
-                bullet.updateRemove();
-            }
-            else if(isAlienBullet(bullet) == false && bulletHasCollided(entity, bullet) && entity.getType().getId().equals("player") == false){
+            String entityType = entity.getType().getId();
+            String bulletType = bullet.bulletType.getId();
 
-                // This handles the player bullets that will hit the enemies
-                // So the player cannot shoot themselves
-                if (entity.getType().getId().equals("player") == false) {
+            // If the bullet has collided with an entity
+            if(bulletHasCollided(entity, bullet)){
 
-                    // Checks if a bullet has collided with an entity
-                    if (bulletHasCollided(entity, bullet) == true) {
+                int bulletDamage = bullet.getBulletDamage();
 
-                        // Ensures that aliens cannot shoot each other
-                        if (entity.getType().getId().equals("enemy") && isAlienBullet(bullet) == true) {
+                // Handles player bullet hitting enemy
+                if(bulletType.equals("player") && entityType.equals("enemy")){
 
-                        } else {
-
-                            // Checks what type the entity is to alter humanity
-                            entity.reduceHealth(bullet.getBulletDamage());
-
-                            //This is necessary so entities are only affected by bullets once
-                            bullet.setDamage(0);
-
-                            // Reduce humanity when a friendly is hit
-                            if (entity.getType().equals("friendly")) {
-                                EntityList.getEntityList().getPlayer().getHumanity().decreaseHumanity(5);
-                            }
-
-                            // If the entity is dead add it to a dead entity list
-                            if (entity.getHealth() <= 0) {
-
-                                // If the entity is dead and an enemy then increase player humanity
-                                if (isEnemy(entity) == true) {
-                                    EntityList.getEntityList().getPlayer().getHumanity().decreaseHumanity(15);
-                                }
-
-                                deadEntities.add(entity);
-                                entityHasDied = true;
-                            }
-                            bullet.updateRemove();
-                        }
+                    entity.reduceHealth(bulletDamage);
+                    if(entity.getHealth() <= 0){
+                        EntityList.getEntityList().getPlayer().getHumanity().increaseHumanity(15);
                     }
+
+                    bullet.setDamage(0);
+                    BulletList.getBulletList().addBulletToRemove(bullet);
+                }
+                // Handles player bullet hitting a friendly
+                else if(bulletType.equals("player") && entityType.equals("friendly")){
+
+                    entity.reduceHealth(bulletDamage);
+                    EntityList.getEntityList().getPlayer().getHumanity().decreaseHumanity(10);
+
+                    bullet.setDamage(0);
+                    BulletList.getBulletList().addBulletToRemove(bullet);
+
+                }
+                // Handles player bullet hitting player
+                else if(bulletType.equals("player") && entityType.equals("player")){
+                    // DO NOTHING
+                }
+                //Handles enemy bullet hitting the player
+                else if(bulletType.equals("enemy") && entityType.equals("player")){
+                    EntityList.getEntityList().getPlayer().reduceHealth(bulletDamage);
+
+                    bullet.setDamage(0);
+                    BulletList.getBulletList().addBulletToRemove(bullet);
+                }
+                // Handles enemy bullet hitting enemy
+                else if(bulletType.equals("enemy") && entityType.equals("enemy")){
+                    //DO NOTHING
+                }
+                // Handles enemy bullet hitting friendly
+                else if(bulletType.equals("enemy") && entityType.equals("friendly")){
+                    //DO NOTHING
+                }
+
+                //Handles the entity dying
+                // NOT IS ONLY IN AT THE MOMENT TO STOP GAME CRASHING OUT
+                if(entity.getHealth() <= 0 && !entityType.equals("player")){
+                    deadEntities.add(entity);
+                    entityHasDied = true;
                 }
             }
         }
         removeDeadEntities();
         return entityHasDied;
     }
-
-    //TODO
-    // The aliens can shoot themselves
-    // Need to handle this (IE make the bullets)
-    //
 
     /**
      * Remove all the entities in the dead list from the EntityList
@@ -108,35 +109,6 @@ public class ShootingHandler {
         for (Entity entity : deadEntities) {
             entity.dispose();
             EntityList.getEntityList().addToRemoval(entity);
-        }
-    }
-
-    /**
-     * Returns true if a given entity is of type enemy
-     *
-     * @param entity
-     * @return boolean
-     */
-    private boolean isEnemy(Entity entity) {
-
-        if (entity.getType().equals("enemy")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Returns true if the given bullet is of type alien (shot by an alien)
-     *
-     * @param bullet
-     * @return
-     */
-    private boolean isAlienBullet(AbstractBullet bullet) {
-        if (bullet.bulletType.getId().equals("alien")) {
-            return true;
-        } else {
-            return false;
         }
     }
 

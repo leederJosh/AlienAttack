@@ -7,7 +7,7 @@ package com.mygdx.game.Shooting;
  */
 public enum BulletType {
 
-    ALIEN("alien"), PLAYER("player");
+    ALIEN("alien"), PLAYER("player"), ENEMY("enemy");
     private String id;
 
     private BulletType(String id) {

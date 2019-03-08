@@ -65,7 +65,7 @@ public class EnemyAI extends AI {
                         direction *= -1;
                     }
 
-                    AbstractBullet enemyBullet = new HandGunBullet(entityX + direction, entityY, BulletType.ALIEN);
+                    AbstractBullet enemyBullet = new HandGunBullet(entityX + direction, entityY, BulletType.ENEMY);
                     enemyBullet.calculateMovement(playerX, playerY);
                     BulletList.getBulletList().addBullet(enemyBullet);
                 }

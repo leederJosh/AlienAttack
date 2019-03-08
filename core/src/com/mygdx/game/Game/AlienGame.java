@@ -55,30 +55,6 @@ public class AlienGame extends Game {
     public CreditScreen creditScreen;
 
 
-
-
-    //TODO - Right refactoring is out of the question (I have tried every way I can and it's not gonna happen)
-    // New plan is:
-    // Create the first level in the AlienGame class and give it to the player
-    // Have a method in each level to spawn entities
-    // Call this method in every level constructor EXCEPT the first
-    // Call it after in Alien game (after the list and the player are created)
-    // Add an object of EVERY level in playScreen and a way to transition between them
-    // Bish, Bash, bosh hope it works
-    // Would mean after transitioning from the first to the second and then back again all levels would be handled by the play screen
-
-    //TODO
-    // PROBLEMS WITH THE ABOVE
-    //  IF we create all the object in the playScreen constructor (with methods for spawning enemies in each levels constructor) all get added to the EntityList at once
-    //  WE will instead have to manually call the currentMap.spawnEntities() method every time we change level DONE THIS
-
-    //TODO
-    // After the above
-    // AI for movement needs to be fixed
-    // AI shooting needs to be fixed (The bullets need to collide and disappear when hitting the player)
-    // They also need to not hit each other
-
-
     @Override
     public void create () {
 

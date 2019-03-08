@@ -15,9 +15,9 @@ import com.mygdx.game.world.AssetHandler;
 public abstract class AbstractBullet {
 
     /** Bullets current x position */
-    private float bulletX;
+    protected float bulletX;
     /** Bullets current y position */
-    private float bulletY;
+    protected float bulletY;
     /** A factor to scale the bullet to depending on the gun */
     private double bulletSize;
     /** The damage a bullet will deal to another entity */
@@ -58,9 +58,6 @@ public abstract class AbstractBullet {
         originX = posX;
         originY = posY;
 
-        // manager.load("assets/bullet.png", Texture.class);
-        // This is the problem at the moment
-        //bulletTex = new Texture ((FileHandle) AssetHandler.assetHandler.getAssetManager().get("assets/bullet.png"));
         bulletTex = AssetHandler.getAssetHandler().getTexture("bullet.png");
     }
 

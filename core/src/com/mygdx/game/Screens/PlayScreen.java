@@ -48,7 +48,7 @@ public class PlayScreen implements Screen {
         camera.update();
         this.inputProcessor = new MyInputProcessor(camera, EntityList.getEntityList().getPlayer());
 
-        levels = new AbstractLevel[] {new AlleyWayLevel(), new InsideBuildingLevel()};
+        levels = new AbstractLevel[] {new AlleyWayLevel(), new InsideBuildingLevel(), new SideWalkRiverLevel()};
         this.levelCounter = 0;
         currentMap = levels[levelCounter];
         currentMap.spawnEnemies();

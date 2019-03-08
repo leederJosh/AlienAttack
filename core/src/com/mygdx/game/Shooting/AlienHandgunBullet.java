@@ -14,10 +14,10 @@ public class AlienHandgunBullet  extends AbstractBullet {
     private Random generator;
 
 
-    public AlienHandgunBullet(float posX, float posY) {
-        super(posX, posY, BulletType.ALIEN);
-        width = 3;
-        height = 3;
+    public AlienHandgunBullet(float posX, float posY, BulletType bulletType) {
+        super(posX, posY, bulletType);
+        width = 7;
+        height = 7;
         speed = 5;
         bulletDamage = 5;
         generator = new Random();
@@ -35,7 +35,7 @@ public class AlienHandgunBullet  extends AbstractBullet {
      * Alien handgun bullet will increase in size over time
      */
     public void act() {
-        if (generator.nextInt(15) == 5){
+        if (generator.nextInt(5) == 1){
             width++;
             height++;
             System.out.print("Width" + width);

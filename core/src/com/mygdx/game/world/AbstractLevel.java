@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.mygdx.game.AI.AIHandler;
@@ -20,7 +19,8 @@ import com.mygdx.game.Shooting.AbstractBullet;
 import com.mygdx.game.Shooting.BulletList;
 import com.mygdx.game.Shooting.ShootingHandler;
 import com.mygdx.game.entities.*;
-import com.mygdx.game.tiles.Tile;
+import com.mygdx.game.tiles.AlleyWayTiles;
+import com.mygdx.game.tiles.TileInterface;
 import world.DialogNode;
 
 import java.util.Map;
@@ -59,6 +59,10 @@ public abstract class AbstractLevel {
     /** Camera */
     protected Camera cam;
     protected MyInputProcessor inputProcessor;
+
+    /** Tiles */
+    public enum currentTiles{};
+
     private Player player; // Should be moved to game
 
 
@@ -85,6 +89,7 @@ public abstract class AbstractLevel {
         imageBatch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal( "core/assets/8bit9.fnt"));
         text = new SpriteBatch();
+
 
 
     }
@@ -275,12 +280,7 @@ public abstract class AbstractLevel {
      * @return
      */
     //called getTileByLocation on video tutorial
-    public Tile getTileByid(int layer, float x, float y) {
-        //gets the location on the screen (game com.mygdx.game.world) and divide it by the tile size
-        //converts it to an integer, it gets the location within the array that the tile exists in
-        //then calls the next method to get the tile from where it is.
-        return this.getTileByCoordinate(layer, (int) (x/Tile.TILE_SIZE), (int) (y/Tile.TILE_SIZE), getTiledMap());
-    }
+    public abstract TileInterface getTileByid(int layer, float x, float y);
 
 
     /**
@@ -291,43 +291,11 @@ public abstract class AbstractLevel {
      * @return
      */
     //allows us to get data based on the map
-    public Tile getTileByCoordinate(int layer, int col, int row, TiledMap tiledMapParam) {
-        //there is different cells in the tilemap which can have tiles within in
-        //this method returns the tile type based on the coordinate of the cell (where in the map) (the tile position)
-        TiledMapTileLayer.Cell cell = ((TiledMapTileLayer) tiledMapParam.getLayers().get(layer)).getCell(col, row);
+    // The below had this paramater before -> TiledMap tiledMapParam
+    public abstract TileInterface getTileByCoordinate(int layer, int col, int row);
 
-        if (cell!= null) {
-            //if it equals null then it means we are clicking on a tile outside the map or one that doesn't exist on that layer
-            TiledMapTile tile = cell.getTile();
+    public abstract boolean doesRectCollideWithMap(float x, float y, int width, int height);
 
-            if(tile != null) {
-                int id = tile.getId();
-                return Tile.getTileByid(id);
-            }
-        }
-        return null;
-    }
-
-    public boolean doesRectCollideWithMap(float x, float y, int width, int height, TiledMap tiledMapParam) {
-        //checking whether the player is outside the map (also checking the width of the player is inside the map)
-        if (x < 0 || y < 0 || x + width > getPixelWidth()|| y + height > getPixelHeight()) {
-            return true;
-        }
-        //triple embedded loop to check for each tile
-        //math.ceil rounds numbers up to the next value, if you dont do this will have weird results if entities are same size as tiles
-        //only check the squares around the entity
-        for(int row = (int) (y / Tile.TILE_SIZE); row < Math.ceil((y + height) / Tile.TILE_SIZE); row++) {
-            for(int col = (int) (x / Tile.TILE_SIZE); col < Math.ceil((x + width) / Tile.TILE_SIZE); col++) {
-                for(int layer = 0; layer < getLayers(); layer++) {
-                    Tile type = getTileByCoordinate(layer, col, row, getTiledMap());
-                    if(type != null && type.isCollidable())
-                        return true;
-                    //tells the game there is a collision
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * Gets the amount of layers in a given map
@@ -339,10 +307,10 @@ public abstract class AbstractLevel {
 
     //gets pixel width and height
     public int getPixelWidth() {
-        return this.getWidth() * Tile.TILE_SIZE;
+        return this.getWidth() * AlleyWayTiles.TILE_SIZE;
     }
     public int getPixelHeight() {
-        return this.getHeight() * Tile.TILE_SIZE;
+        return this.getHeight() * AlleyWayTiles.TILE_SIZE;
     }
     public int getWidth() {
         //given in width of tiles
