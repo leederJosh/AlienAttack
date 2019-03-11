@@ -1,4 +1,4 @@
-package com.mygdx.game.Game;
+package com.mygdx.game.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -10,15 +10,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.mygdx.game.Pickups.PickupHandler;
-import com.mygdx.game.Screens.*;
-import com.mygdx.game.Shooting.BulletList;
-import com.mygdx.game.entities.Enemy;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.screens.*;
+import com.mygdx.game.shooting.BulletList;
+import com.mygdx.game.collisions.MyContactListener;
 import com.mygdx.game.entities.EntityList;
 import com.mygdx.game.entities.Player;
-import com.mygdx.game.world.AbstractLevel;
-import com.mygdx.game.world.AlleyWayLevel;
-import com.mygdx.game.world.AssetHandler;
+import com.mygdx.game.assets.AssetHandler;
 
 /**
  * AlienGame represents the window. Handles the different screens.
@@ -27,8 +26,10 @@ import com.mygdx.game.world.AssetHandler;
  */
 public class AlienGame extends Game {
 
-    /** Level 1 */
-    private AbstractLevel currentMap;
+    /** The levels object for Box2D */ // This is X gravity and Y gravity, leave at zero for now as it seems to cause problems
+    public static World world = new World(new Vector2(0f, -9.81f), false);
+    public static final float ppm = 100;
+
 
     /** Window */
     public OrthographicCamera camera;
@@ -46,7 +47,7 @@ public class AlienGame extends Game {
     public BitmapFont fontT16;
     public BitmapFont fontB24;
 
-    /** Screens */
+    /** screens */
     public LoadingScreen loadingScreen;
     public SplashScreen splashScreen;
     public MainMenuScreen mainMenuScreen;
@@ -67,15 +68,12 @@ public class AlienGame extends Game {
 
         // Camera
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, V_WIDTH, V_HEIGHT);
-
-        // Create level 1, needed for the player
-        currentMap = new AlleyWayLevel();
+        camera.setToOrtho(false, V_WIDTH , V_HEIGHT);
 
         // Create player
-        Player player = new Player(25, 400, currentMap);
-        EntityList.updateEntityList(player);
-        EntityList.setPlayer(player);
+//        Player player = new Player(400, 300);
+//        EntityList.updateEntityList(player);
+//        EntityList.setPlayer(player);
 
 
         initFonts();
@@ -101,6 +99,8 @@ public class AlienGame extends Game {
         //false so it doesn't load from top left
         camera.setToOrtho(true, w, y);
         camera.update();
+
+        //world.setContactListener(new MyContactListener());
     }
 
     @Override
@@ -126,7 +126,7 @@ public class AlienGame extends Game {
         playScreen.dispose();
         optionScreen.dispose();
         creditScreen.dispose();
-        currentMap.dispose();
+        world.dispose();
     }
 
     private void initFonts() {

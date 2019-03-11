@@ -1,36 +1,25 @@
-package com.mygdx.game.Pickups;
+package com.mygdx.game.pickups;
 
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
-
 import java.util.ArrayList;
-
-import static com.mygdx.game.Pickups.AbstractPickup.gen;
+import static com.mygdx.game.pickups.AbstractPickup.gen;
 
 /**
- * Handles the collision with pickups and the actions to take when collisions occure
+ * Handles the collision with pickups and the actions to take when collisions occur
  * @author Josh Leeder
  * @date 1/02/19
  */
 public class PickupHandler {
 
-    //TODO
-    // Use the collision detection from the shooting handler
-    // If the player walks over it then call the pickup.act to make the pickup do something to the player
 
-    /**
-     * A list of the pickups on the screen
-     */
+    /** A list of the pickups on the screen */
     private ArrayList<AbstractPickup> activePickups;
 
-    /**
-     * A list of pickups to remove
-     */
+    /** A list of pickups to remove */
     private ArrayList<AbstractPickup> pickupsToRemove;
 
-    /**
-     * Whether a pickup should drop or not
-     */
+    /** Whether a pickup should drop or not */
     protected boolean toDrop;
 
 
@@ -39,75 +28,6 @@ public class PickupHandler {
         pickupsToRemove = new ArrayList<AbstractPickup>();
     }
 
-    /**
-     * Add to active pickups list
-     *
-     * @param entity
-     */
-    public void addPickUp(Entity entity) {
-
-        if (dropItem() == true) {
-
-            //IF pickupToDrop returns 0 then spawn a HEALTH pickup
-            if (pickupToDrop() == 0) {
-                activePickups.add(new HealthPickup(entity.getx(), entity.gety()));
-            }
-        }
-
-    }
-
-    /**
-     * Add a pickup to the list for removal
-     *
-     * @param pickup
-     */
-    private void addPickUpsToRemove(AbstractPickup pickup) {
-        pickupsToRemove.add(pickup);
-    }
-
-    /**
-     * Clears the pickups appropriate to remove from the active pickups list
-     */
-    public void clearPickups() {
-        for (AbstractPickup pickup : pickupsToRemove) {
-            activePickups.remove(pickup);
-        }
-        pickupsToRemove.clear();
-    }
-
-    /**
-     * Returns a list of all pickups on the map
-     */
-    public ArrayList<AbstractPickup> getActivePickups() {
-        return activePickups;
-    }
-
-    /**
-     * The random chance that the pickup will drop
-     *
-     * @return toDrop
-     */
-    private boolean dropItem() {
-
-        toDrop = false;
-        // 1 in 4 chance to drop the pickup
-        // The next int is between 0 and n where n is exclusive
-        if (gen.nextInt(4) == 3) {
-            toDrop = true;
-        }
-        return true;
-    }
-
-
-    /**
-     * Randomly decided which item to drop
-     *
-     * @return
-     */
-    private int pickupToDrop() {
-        //At the moment this is 0 to always spawn a health pickup
-        return gen.nextInt(1);
-    }
 
     /**
      * Detects when a player walks over a pickup and calls the appropriate act method from the pickup
@@ -174,6 +94,70 @@ public class PickupHandler {
             }
         }
         clearPickups();
+    }
+
+    /**
+     * Add a pickup to the list for removal
+     * @param pickup
+     */
+    private void addPickUpsToRemove(AbstractPickup pickup) {
+        pickupsToRemove.add(pickup);
+    }
+
+    /**
+     * Clears the pickups appropriate to remove from the active pickups list
+     */
+    public void clearPickups() {
+        for (AbstractPickup pickup : pickupsToRemove) {
+            activePickups.remove(pickup);
+        }
+        pickupsToRemove.clear();
+    }
+
+    /**
+     * Returns a list of all pickups on the map
+     */
+    public ArrayList<AbstractPickup> getActivePickups() {
+        return activePickups;
+    }
+
+    /**
+     * The random chance that the pickup will drop
+     * @return toDrop
+     */
+    private boolean dropItem() {
+
+        toDrop = false;
+        // 1 in 4 chance to drop the pickup
+        // The next int is between 0 and n where n is exclusive
+        if (gen.nextInt(4) == 3) {
+            toDrop = true;
+        }
+        return true;
+    }
+
+    /**
+     * Randomly decided which item to drop
+     * @return
+     */
+    private int pickupToDrop() {
+        //At the moment this is 0 to always spawn a health pickup
+        return gen.nextInt(1);
+    }
+
+    /**
+     * Add to active pickups list
+     * @param entity
+     */
+    public void addPickUp(Entity entity) {
+
+        if (dropItem() == true) {
+
+            //IF pickupToDrop returns 0 then spawn a HEALTH pickup
+            if (pickupToDrop() == 0) {
+                activePickups.add(new HealthPickup(entity.getx(), entity.gety()));
+            }
+        }
     }
 }
 

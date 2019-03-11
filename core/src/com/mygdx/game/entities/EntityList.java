@@ -7,7 +7,6 @@ import java.util.TreeMap;
 public class EntityList {
 
     private static EntityList entityList = null;
-    //private static ArrayList<Entity> myEntities;
     private static TreeMap<Double, Entity> entityMap;
     private static ArrayList<Entity> entityArrayList;
     /** Holds dead entities to remove */
@@ -72,14 +71,6 @@ public class EntityList {
         }
     }
 
-    //Adds an entity to the TreeMap
-    private static void updateEntityMap(Double key, Entity value) {
-        entityMap.put(key, value);
-    }
-
-    public static TreeMap<Double, Entity> getMapEntities() {
-        return entityMap;
-    }
 
     public static ArrayList<Entity> getListEntities(){
         ArrayList<Entity> output = new ArrayList<Entity>();
@@ -87,7 +78,6 @@ public class EntityList {
         for(Double key : entityMap.keySet()) {
             output.add(entityMap.get(key));
         }
-
         return output;
     }
 
@@ -105,6 +95,7 @@ public class EntityList {
         }
     }
 
+    /** Clears entity list and map */
     public static void purge() {
         entityArrayList.clear();
         entityMap.clear();
@@ -118,6 +109,7 @@ public class EntityList {
     public void addToRemoval(Entity entity){
         entitiesToRemove.add(entity);
     }
+
 
     /**
      * Remove a given dead entity from the entity list
@@ -152,5 +144,14 @@ public class EntityList {
 
     public Player getPlayer(){
         return player;
+    }
+
+    //Adds an entity to the TreeMap
+    private static void updateEntityMap(Double key, Entity value) {
+        entityMap.put(key, value);
+    }
+
+    public static TreeMap<Double, Entity> getMapEntities() {
+        return entityMap;
     }
 }

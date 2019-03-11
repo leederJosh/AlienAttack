@@ -1,11 +1,10 @@
 package com.mygdx.game.entities;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.mygdx.game.world.AssetHandler;
+import com.mygdx.game.assets.AssetHandler;
+import com.mygdx.game.game.AlienGame;
 
 /**
  * A class to track the humanity of the player and change the behaviour of the game accordingly
@@ -29,8 +28,8 @@ public class Humanity {
 
     /** Humanity variables */
     private int humanityValue;
-    private int playerSpeed;
-    private final int defaultPlayerSpeed = 60;
+    private float playerSpeed;
+    private final float defaultPlayerSpeed = 6;
 
     /** Textures for player and weapon */
     private Texture weaponLeft;
@@ -45,15 +44,12 @@ public class Humanity {
 
     public Humanity() {
         humanityValue = 75;
-        playerSpeed = 60;
+        setSpeed();
 
         // Animation
         this.walkSheet = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterRight.png");
         this.walkSheetLeft = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterLeft.png");
-
         player25 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/25MainCharacter.png");
-
-
         setUpAnimations();
     }
 
@@ -64,12 +60,11 @@ public class Humanity {
         if (humanityValue < MIN_HUMANITY) {
             humanityValue = 0;
         } else if (humanityValue > MAX_HUMANITY) {
-            humanityValue = 75;
+            humanityValue = 100;
         }
 
         stateTime += deltaTime;
         setSpeed();
-        handleControls(deltaTime);
     }
 
     /**
@@ -98,38 +93,20 @@ public class Humanity {
 
 
     /**
-     * Handles movement of the player based on the current humanity
+     * Returns true if the player humanity is below 50
      */
-    public void handleControls(float deltaTime) {
-        //check the humanity level
+    public boolean isPlayerBelowHalfHumanity() {
 
-        if (humanityValue < 50) {
-            //then swap the keys (punish the player for a low humanity score)
-            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                //move right
-                EntityList.getEntityList().getPlayer().moveX(playerSpeed * deltaTime);
-            }
-            //move left
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                EntityList.getEntityList().getPlayer().moveX(-playerSpeed * deltaTime);
-            }
+        if(humanityValue < 50){
+            return true;
         }
-        //otherwise, move normally
-        else {
-            //moving left (negative speed so we move left)
-            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                EntityList.getEntityList().getPlayer().moveX(-playerSpeed * deltaTime);
-            }
-
-            //moving right (positive speed so we move right)
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                EntityList.getEntityList().getPlayer().moveX(playerSpeed * deltaTime);
-            }
+        else{
+            return false;
         }
     }
 
 
-    /** GETTERS AND SETTERS BELOW */
+    /** Getters and Setters */
 
     /**
      * Handles the speed the player can move based on their humanity
@@ -137,15 +114,19 @@ public class Humanity {
      */
     private void setSpeed() {
 
-        if (humanityValue > 75) {
-            playerSpeed = 60;
+        if (humanityValue >= 75) {
+            playerSpeed = 1.4f;
         } else if (humanityValue >= 50 && humanityValue <= 74) {
-            playerSpeed = 50;
+            playerSpeed = 1.3f;
         } else if (humanityValue < 50 && humanityValue >= 25) {
-            playerSpeed = 40;
+            playerSpeed = 1.2f;
         } else if (humanityValue < 25) {
-            playerSpeed = 30;
+            playerSpeed = 1.1f;
         }
+    }
+
+    public float getSpeed(){
+        return playerSpeed;
     }
 
     public TextureRegion getAnimation(String direction){
@@ -181,10 +162,6 @@ public class Humanity {
 
         return texRegion;
     }
-
-    //TODO
-    // Need to implement different animations depending on the humanityValue
-    // ALSO the correct direction needs to be given back
 
     public void decreaseHumanity(int amount){
         humanityValue -= amount;
@@ -247,16 +224,7 @@ public class Humanity {
 
         //THE ABOVE WORKS AND LOADS BUT IT LOADS TWO MINI PEOPLE ON TOP OF EACH OTHER
 
-
-
-
-
-
-
-
         stateTime = 0f;
-
-
     }
 }
 

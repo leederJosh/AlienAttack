@@ -1,10 +1,8 @@
-package com.mygdx.game.Shooting;
+package com.mygdx.game.shooting;
 
-import com.badlogic.gdx.physics.bullet.Bullet;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
-import com.mygdx.game.entities.Player;
-
+import com.mygdx.game.game.AlienGame;
 import java.util.ArrayList;
 
 /**
@@ -27,14 +25,13 @@ public class ShootingHandler {
      * Handles what happens when a bullet collides with an entity
      * Compares a given bullet list and a given entity list
      * Returns true if an entity has died
-     *
      * @param entity
      */
     public boolean handleBullet(Entity entity) {
 
         boolean entityHasDied = false;
 
-        ArrayList<AbstractBullet>aliienRifleBulletsToAdd = new ArrayList<AbstractBullet>();
+        ArrayList<AbstractBullet>alienRifleBulletsToAdd = new ArrayList<AbstractBullet>();
 
         for (AbstractBullet bullet : BulletList.getBulletList().getBullets()) {
 
@@ -78,8 +75,8 @@ public class ShootingHandler {
                 }
                 //Handles enemy bullet hitting the player
                 else if(bulletType.equals("enemy") && entityType.equals("player")){
-                    EntityList.getEntityList().getPlayer().reduceHealth(bulletDamage);
 
+                    EntityList.getEntityList().getPlayer().reduceHealth(bulletDamage);
                     bullet.setDamage(0);
                     BulletList.getBulletList().addBulletToRemove(bullet);
                 }
@@ -97,11 +94,12 @@ public class ShootingHandler {
                 if(entity.getHealth() <= 0 && !entityType.equals("player")){
                     deadEntities.add(entity);
                     entityHasDied = true;
+                    AlienGame.world.destroyBody(entity.getB2body());
 
                     // If the gun is an alien rifle spawn 4 other bullets on killing an entity
                     if(bullet instanceof AlienRifleBullet){
                         for(AbstractBullet bullet1 :((AlienRifleBullet) bullet).spawnExtraBullets(entity)){
-                            aliienRifleBulletsToAdd.add(bullet1);
+                            alienRifleBulletsToAdd.add(bullet1);
                         }
                         System.out.print("\nALIEN RIFLE ACTING");
                     }
@@ -110,7 +108,7 @@ public class ShootingHandler {
         }
 
         // Add the ALIEN RIFLE BULLETS HERE
-        for(AbstractBullet rifleBullets: aliienRifleBulletsToAdd){
+        for(AbstractBullet rifleBullets: alienRifleBulletsToAdd){
             BulletList.getBulletList().addBullet(rifleBullets);
         }
         removeDeadEntities();
@@ -129,7 +127,6 @@ public class ShootingHandler {
 
     /**
      * Returns true when the hit box of a given bullet overlaps the hitbox of a given entity
-     *
      * @param entity
      * @param bullet
      * @return boolean

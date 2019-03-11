@@ -1,4 +1,4 @@
-package com.mygdx.game.Screens;
+package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.mygdx.game.Game.AlienGame;
-import com.mygdx.game.world.AssetHandler;
+import com.mygdx.game.game.AlienGame;
+import com.mygdx.game.assets.AssetHandler;
 
 public class LoadingScreen implements Screen {
 
@@ -38,10 +38,6 @@ public class LoadingScreen implements Screen {
         stage.clear();
     }
 
-    private void update() {
-        game.setScreen(game.splashScreen);
-        stage.act();
-    }
 
     @Override
     public void render(float delta) {
@@ -67,6 +63,17 @@ public class LoadingScreen implements Screen {
 
     }
 
+    private void update() {
+        game.setScreen(game.splashScreen);
+        stage.act();
+    }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+        shapeRenderer.dispose();
+    }
+
     @Override
     public void resize(int width, int height) {
 
@@ -86,12 +93,4 @@ public class LoadingScreen implements Screen {
     public void hide() {
 
     }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
-        shapeRenderer.dispose();
-    }
-
-
 }

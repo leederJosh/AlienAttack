@@ -1,10 +1,10 @@
-package com.mygdx.game.AI;
+package com.mygdx.game.ai;
 
 
 import com.mygdx.game.entities.Entity;
 
 /**
- * Friendly AI behaviour, just moves left and right
+ * Friendly ai behaviour, just moves left and right
  * @Author Josh Leeder
  * @Date 27/02/19
  */

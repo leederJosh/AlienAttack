@@ -1,19 +1,14 @@
-package com.mygdx.game.Game;
+package com.mygdx.game.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
-import com.mygdx.game.Pickups.AbstractPickup;
-import com.mygdx.game.Pickups.HealthPickup;
-import com.mygdx.game.Pickups.PickupHandler;
-import com.mygdx.game.entities.*;
-import com.mygdx.game.world.AssetHandler;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.EntityList;
+import com.mygdx.game.entities.Player;
+import com.mygdx.game.assets.AssetHandler;
 
 /**
  * Handles the inputs from the player
@@ -27,41 +22,10 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
     Camera camera;
     Player player;
 
-    // PickupHandler
-    private PickupHandler pickupHandler;
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
 
     @SuppressWarnings("unchecked")
-    public MyInputProcessor(Camera camera, Player player) {
+    public MyInputProcessor(Camera camera) {
         this.camera = camera;
-        this.player = player;
-        pickupHandler = new PickupHandler();
-    }
-
-
-    @Override
-    public boolean keyDown(int keycode) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     @Override
@@ -77,14 +41,23 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
             final float rawMouseY = Gdx.input.getY();
 
             // Map X and Y
-            final float mappedMouseX = rawMouseX - Gdx.graphics.getWidth()/2 + camera.position.x;
-            final float mappedMouseY = Gdx.graphics.getHeight()/2 - rawMouseY + camera.position.y;
+            final float mappedMouseX = (rawMouseX - Gdx.graphics.getWidth()/2 + camera.position.x);
+            final float mappedMouseY = (Gdx.graphics.getHeight()/2 - rawMouseY + camera.position.y);
 
             // This handles the player shooting
-            player.shoot(mappedMouseX, mappedMouseY);
+            EntityList.getEntityList().getPlayer().shoot(mappedMouseX, mappedMouseY); // This is now null after I change the players spawn to a map object
 
         }
         return false;
+    }
+
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     @Override
@@ -115,5 +88,23 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
     public int compareTo(Object arg0) {
         // TODO Auto-generated method stub
         return 0;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        // TODO Auto-generated method stub
+        return false;
     }
 }

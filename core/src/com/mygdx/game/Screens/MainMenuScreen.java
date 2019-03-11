@@ -1,4 +1,4 @@
-package com.mygdx.game.Screens;
+package com.mygdx.game.screens;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
@@ -7,7 +7,6 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,12 +19,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.mygdx.game.Game.AlienGame;
-
-
-import com.mygdx.game.Game.MusicManager;
-import com.mygdx.game.world.AlleyWayLevel;
-import com.mygdx.game.world.AssetHandler;
+import com.mygdx.game.game.AlienGame;
+import com.mygdx.game.assets.MusicManager;
+import com.mygdx.game.assets.AssetHandler;
 
 
 public class MainMenuScreen implements Screen {
@@ -51,10 +47,7 @@ public class MainMenuScreen implements Screen {
 
 
 
-
-
-
-    public MainMenuScreen( final AlienGame game) {
+    public MainMenuScreen(final AlienGame game) {
         this.game = game;
         this.stage = new Stage(new StretchViewport(game.V_WIDTH, game.V_HEIGHT,game.camera));
         this.shapeRenderer = new ShapeRenderer();
@@ -81,9 +74,6 @@ public class MainMenuScreen implements Screen {
         initButtons();
     }
 
-    public void update() {
-        stage.act();
-    }
 
     @Override
     public void render(float delta) {
@@ -91,7 +81,6 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         update();
-
 
         game.batch.begin();
         if (isInGame == false) {
@@ -106,32 +95,11 @@ public class MainMenuScreen implements Screen {
         musicManager.play();
     }
 
-    @Override
-    public void resize(int width, int height) {
-
+    public void update() {
+        stage.act();
     }
 
-    @Override
-    public void pause() {
 
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
-        shapeRenderer.dispose();
-        musicManager.dispose();
-    }
     private void initButtons() {
         buttonPlay = new TextButton("Play", skin, "default");
         buttonPlay.setPosition(160, 310);
@@ -189,6 +157,33 @@ public class MainMenuScreen implements Screen {
         stage.addActor(buttonOption);
         stage.addActor(buttonCredit);
         stage.addActor(buttonExit);
+    }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+        shapeRenderer.dispose();
+        musicManager.dispose();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
 }

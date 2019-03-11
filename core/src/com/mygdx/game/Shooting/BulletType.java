@@ -1,4 +1,4 @@
-package com.mygdx.game.Shooting;
+package com.mygdx.game.shooting;
 
 /**
  * A class to give each bullet a type (Human or Alien)

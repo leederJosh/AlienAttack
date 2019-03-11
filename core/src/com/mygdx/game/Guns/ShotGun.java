@@ -1,8 +1,8 @@
-package com.mygdx.game.Guns;
+package com.mygdx.game.guns;
 
-import com.mygdx.game.Shooting.*;
+import com.mygdx.game.game.AlienGame;
+import com.mygdx.game.shooting.*;
 import com.mygdx.game.entities.EntityList;
-
 import java.util.Random;
 
 /**
@@ -15,6 +15,8 @@ public class ShotGun implements GunInterface{
 
     Random generator;
 
+    // The amount X of the player the bullet will spawn
+    private float direction = 10 / AlienGame.ppm;
 
     @Override
     public void shoot(float mappedMouseX, float mappedMouseY) {
@@ -24,7 +26,6 @@ public class ShotGun implements GunInterface{
         //Get the position of the player to shoot in the right direction
         float playerX = EntityList.getEntities().get(0).getx();
         float playerY = EntityList.getEntities().get(0).gety();
-        int direction = 10;
 
         //Check which way to spawn bullet
         //By default spawn to the right, if the player x is greater than the mouse do this to spawn to the left
@@ -52,9 +53,7 @@ public class ShotGun implements GunInterface{
             bullet.calculateMovement(mappedMouseX, mappedMouseY + degreeOfSpread);
             BulletList.getBulletList().addBullet(bullet);
 
-
         }
-
     }
 
     /**

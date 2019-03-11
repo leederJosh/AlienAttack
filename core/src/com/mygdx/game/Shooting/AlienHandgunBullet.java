@@ -1,6 +1,4 @@
-package com.mygdx.game.Shooting;
-
-import com.badlogic.gdx.Gdx;
+package com.mygdx.game.shooting;
 
 import java.util.Random;
 
@@ -13,12 +11,11 @@ public class AlienHandgunBullet  extends AbstractBullet {
 
     private Random generator;
 
-
     public AlienHandgunBullet(float posX, float posY, BulletType bulletType) {
         super(posX, posY, bulletType);
-        width = 7;
-        height = 7;
-        speed = 5;
+        width = 7 / scale;
+        height = 7 / scale;
+        speed = 5 / scale;
         bulletDamage = 5;
         generator = new Random();
     }
@@ -29,7 +26,6 @@ public class AlienHandgunBullet  extends AbstractBullet {
     public void decreaseDamage() {
 
     }
-
 
     /**
      * Alien handgun bullet will increase in size over time

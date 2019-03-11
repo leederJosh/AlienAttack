@@ -3,97 +3,68 @@ package com.mygdx.game.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-
-import com.mygdx.game.world.AbstractLevel;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.game.AlienGame;
 
 public abstract class Entity {
-    //keeps track of x and y
+
     protected Vector2 pos;
     protected EntityType type;
-    //speed along the y axis
-    protected float velocityY = 0;
-    protected AbstractLevel map;
-    protected boolean grounded = false;
     protected int health = 50;
     protected final int
             MAX_HEALTH = 50,
             MIN_HEALTH = 0;
-    private boolean isDead;
 
     private float xOrigin;
     private float xDestination;
-    private float xBoundary = 75;
+    private float xBoundary = 20 / AlienGame.ppm;
+    protected Texture image;
 
-    Texture image;
+    /** For collision */
+    protected World world = AlienGame.world;
+    protected Body b2body;
+    protected float scale = AlienGame.ppm;
+    protected BodyDef bdef;
+
+    /** Speed of entity */
+    protected final float MAX_SPEED = 1.5f;
+    protected static final float speed = 1;
 
 
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    public boolean isDead() {
-        if(health <= 0 ){
-            isDead = true;
-        }
-        return isDead;
-    }
-
-    public Entity(float x, float y, EntityType type, AbstractLevel map) {
-        this.pos = new Vector2(x,y);
+    public Entity(float x, float y, EntityType type) {
+        this.pos = new Vector2(x, y);
         this.type = type;
-        this.map = map;
-        this.isDead = false;
         xOrigin = x;
         xDestination = x + xBoundary;
     }
 
-    public void update (float deltaTime, float gravity) {
-        float newY = pos.y;
-        //need to make the velocity get affected by gravity (shown below)
-        this.velocityY += gravity * deltaTime * getWeight();
-        newY += this.velocityY * deltaTime;
-        //the new y value will be affected by velocityY which is basically the amount we will be moving per second in the y axis
-        //positive moving up, negative moving down
-
-        if(map.doesRectCollideWithMap(pos.x, newY, getWidth(), getHeight())) {
-            if(velocityY < 0) {
-                //we are checking if the entity is moving down when colliding with the map
-                this.pos.y = (float) Math.floor(pos.y); //math.floor is opposite to ceiling and rounds down
-                grounded = true; //they have hit the ground
-            }
-            this.velocityY = 0;
-        } else {
-            this.pos.y = newY; //if there is no collision then move the player
-            grounded = false;
-        }
-        if (health <= 0) {
-            isDead = true;
-        }
-
-        //Make sure that the health never goes below 0 or above 100.
-        if (health < MIN_HEALTH) {
-            health = 0;
-        }
-        else if (health > MAX_HEALTH) {
-            health = 100;
-        }
-    }
 
     public abstract void render(SpriteBatch batch);
 
-    public void moveX(float amount) {
-        //good way to check collision so all entities have access
-        float newX = this.pos.x + amount;
-        if (!map.doesRectCollideWithMap(newX, pos.y, getWidth(), getHeight()))
-            this.pos.x = newX;
-        //we are getting the theoretical new x of the player if they get to move
-        //but will not move if there is a collision, otherwise we will set the new x
+    public abstract void update (float deltaTime);
+
+    public void moveRight(boolean right, Entity entity){
+
+        // Checks to see if the entity is a player, and if it is gets the speed that is based on humanity
+        float speedOfEntity = entity.getSpeed();
+
+        // Move right by default
+        int direction = 1;
+        if(right != true){
+            direction = -1;
+        }
+        b2body.applyLinearImpulse(new Vector2(((3f * speedOfEntity) * direction) / scale, 0f), b2body.getWorldCenter(), true);
     }
 
-    public Vector2 getPos() {
-        return pos;
+    public void dispose(){
+        //image.dispose();
     }
+
+    /** Getters and Setters */
+
 
     public float getx () {
         return pos.x;
@@ -103,24 +74,24 @@ public abstract class Entity {
         return pos.y;
     }
 
+    public void setx(int i) {
+        this.pos.x = i;
+    }
+
+    public void sety(int i) {
+        this.pos.y = i;
+    }
+
     public EntityType getType() {
         return type;
     }
 
-    public boolean isGrounded() {
-        return grounded;
-    }
-
-    public int getWidth() {
+    public float getWidth() {
         return type.getWidth();
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return type.getHeight();
-    }
-
-    public float getWeight() {
-        return type.getWeight();
     }
 
     public int getHealth() {
@@ -136,34 +107,23 @@ public abstract class Entity {
         health += amount;
     }
 
-    /**
-     * THIS IS THE BUG WITH THE ENTITIES DYING SUDDENLY AT THE SAME TIME. NEED A BETTER WAY TO DO THIS
-     * DO I HAVE TO DISPOSE AND THEN IMMEDIATLEY RELOAD THEM?
-     */
-    public void dispose(){
-        //image.dispose();
-    }
-
     public Texture getTexture(){
         return image;
-    }
-
-    public void setLevel(AbstractLevel map) {
-        this.map = map;
-    }
-
-    public void setx(int i) {
-        this.pos.x = i;
-    }
-
-    public void sety(int i) {
-        this.pos.y = i;
     }
 
     public float getxOrigin(){
         return xOrigin;
     }
+
     public float getxDestination(){
         return xDestination;
     }
+
+    public abstract void defineEntityBox2D(float xPos, float yPos);
+
+    public Body getB2body(){
+        return b2body;
+    }
+
+    public abstract float getSpeed();
 }

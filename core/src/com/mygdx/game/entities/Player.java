@@ -6,22 +6,22 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.mygdx.game.Guns.*;
-import com.mygdx.game.world.AbstractLevel;
-import com.mygdx.game.world.AssetHandler;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.mygdx.game.game.AlienGame;
+import com.mygdx.game.guns.*;
+import com.mygdx.game.assets.AssetHandler;
 
 public class Player extends Entity {
 
-    /** Game stats */
+    /** game stats */
     private float stateTime;
     private static int FRAME_COLS = 4, FRAME_ROWS = 1;
 
     /** Player statistics */
-    private static final int
-            SPEED = 60,
-            JUMP_VELOCITY = 5,
-            MAX_HUMANITY = 100,
-            MIN_HUMANITY = 0;
+    private static final int JUMP_VELOCITY = 5;
 
     /** Textures for player and weapon */
     private Texture
@@ -39,7 +39,6 @@ public class Player extends Entity {
             walkLeftAnimation;
 
     /** Humanity */
-    //public static int humanity;
     private Humanity humanity;
 
     /** Gun types */
@@ -50,17 +49,18 @@ public class Player extends Entity {
     private GunInterface alienRifle;
     private boolean isFinished;
 
+    /** max speed of player */
+    private final float MAX_PLAYER_SPEED = 3f;
 
-    public Player(float x, float y, AbstractLevel map) {
-        super(x, y, EntityType.PLAYER, map);
+
+    public Player(float x, float y) {
+        super(x, y, EntityType.PLAYER);
 
         //Create humanity object
         humanity = new Humanity();
 
-        this.image = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveRightMiddleBig.png");
-        //this.humanity = 100;
-
         // Textures
+        this.image = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveRightMiddleBig.png");
         this.weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
         this.weaponLeft = AssetHandler.getAssetHandler().getTexture("PistolLeft.png");
         this.walkSheet = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterRight.png");
@@ -98,55 +98,21 @@ public class Player extends Entity {
         alienHandGun = new AlienHandGun();
         alienRifle = new AlienRifle();
 
-        //currentGun = handGun;
+        //Gun objects for the player
+        currentGun = handGun;
         //currentGun = shotGun;
         //currentGun = alienHandGun;
-        currentGun = alienRifle;
+        //currentGun = alienRifle;
         isFinished = false;
+
+        // The collision box to be drawn around the player
+        defineEntityBox2D(x, y);
     }
 
-    @Override
-    public void update(float deltaTime, float gravity) {
-
-        humanity.update(deltaTime);
-        //jumping controls, (velocity takes them up gravity brings them back)
-        if(Gdx.input.isKeyPressed(Keys.W) && grounded) {
-            this.velocityY += JUMP_VELOCITY * getWeight();
-        }
-        //if they are holding the space bar whilst jumping they will jump higher
-        //multiply by deltatime so they dont jump too high
-        else if (Gdx.input.isKeyPressed(Keys.W) && !grounded && this.velocityY > 0) {
-            this.velocityY += JUMP_VELOCITY * getWeight() * deltaTime;
-        }
-
-        //this will apply the gravity
-        super.update(deltaTime, gravity);
-
-
-
-        //Deduct health when the player is on top of an enemy (Enemy melee)
-        for (int i = 1; i < EntityList.getListEntities().size(); i++) {
-            Entity e = EntityList.getListEntities().get(i);
-
-            if ((int) pos.x == e.getx() && e instanceof Enemy && (int) pos.y == e.gety()) {
-                System.out.println("playerX: " + pos.x + " entityX: " + e.getx());
-                reduceHealth(10);
-                System.out.println("Health (move on entity): " + health);
-            }
-        }
-
-
-        //Check to see if the player has finished the level
-        if (pos.x > 500) {
-            isFinished = true;
-        }
-    }
 
     //control space provides us with a list of all the methods we have access to
     @Override
     public void render(SpriteBatch batch) {
-
-
 
         batch.begin();
         batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
@@ -177,71 +143,154 @@ public class Player extends Entity {
         batch.end();
     }
 
+    @Override
+    public void update(float deltaTime) {
+
+        // Keeps the sprite in the box
+        pos.x = b2body.getPosition().x - type.getWidth() / 2;
+        pos.y = b2body.getPosition().y - type.getHeight() / 2;
+
+        // Update humanity stats
+        humanity.update(deltaTime);
+
+        //Deduct health when the player is on top of an enemy (Enemy melee)
+        for (int i = 1; i < EntityList.getListEntities().size(); i++) {
+            Entity e = EntityList.getListEntities().get(i);
+
+            if ((int) pos.x == e.getx() && e instanceof Enemy && (int) pos.y == e.gety()) {
+                System.out.println("playerX: " + pos.x + " entityX: " + e.getx());
+                reduceHealth(10);
+                System.out.println("Health (move on entity): " + health);
+            }
+        }
+
+        //Check to see if the player has finished the level
+        if (pos.x > 1500) {
+            isFinished = true;
+        }
+
+        //Make sure that the health never goes below 0 or above 100.
+        if (health < MIN_HEALTH) {
+            health = 0;
+        }
+        else if (health > MAX_HEALTH) {
+            health = 100;
+        }
+
+        handleInput();
+
+       limitInAirSpeed();
+
+    }
+
+
+    private void handleInput(){
+
+        // If the player is below half humanity flip controls
+        if(getHumanity().isPlayerBelowHalfHumanity() == true) {
+
+            // Player moves left
+            if (Gdx.input.isKeyPressed(Keys.D)) {
+                moveRight(false, this);
+            }
+
+            // Player moves right
+            if (Gdx.input.isKeyPressed(Keys.A)) {
+                moveRight(true, this);
+            }
+        }
+        // Else if player above 50 humanity (inclusive) then normal controls
+        else{
+
+            // Player moves left
+            if (Gdx.input.isKeyPressed(Keys.A) && b2body.getLinearVelocity().x <= MAX_SPEED) {
+                moveRight(false, this);
+            }
+
+            // Player moves right
+            if (Gdx.input.isKeyPressed(Keys.D) && b2body.getLinearVelocity().x >= MAX_SPEED * -1) {
+                moveRight(true, this);
+            }
+        }
+
+        // Player jump (only when linear velocity is equal to 0 (This isn't great as the player can have 0 y velocity when in the ceiling)
+        // Might have to try the contact listener again
+        if (Gdx.input.isKeyJustPressed(Keys.W) && b2body.getLinearVelocity().y < 0.1){
+            System.out.println("W");
+            b2body.applyLinearImpulse(new Vector2(0, 4f), b2body.getWorldCenter(), true);
+        }
+    }
+
+
+    /**
+     * Creates a body for the player in the levels (Box2D)
+     */
+    @Override
+    public void defineEntityBox2D(float xPos, float yPos) {
+
+        // Define the box2d body around player
+        bdef = new BodyDef();
+        bdef.position.set(xPos, yPos);
+        bdef.type = BodyDef.BodyType.DynamicBody;
+        b2body = AlienGame.world.createBody(bdef);
+
+        // Add the box2d body to the levels
+        FixtureDef fixtureDef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox((type.getWidth() - type.getWidth() / 2) - 2 / scale, ((type.getHeight() - type.getHeight() / 2) - 4 / scale));
+
+        fixtureDef.shape = shape;
+        fixtureDef.friction = 0.2f;
+        b2body.createFixture(fixtureDef);
+
+        // So we can reference the player when using the contact listener
+        b2body.createFixture(fixtureDef).setUserData(this);
+        shape.dispose();
+    }
+
+
     /** Current shooting behaviour of the player */
     public void shoot(float mouseX, float mouseY){
         currentGun.shoot(mouseX, mouseY);
     }
 
-    public static int getSpeed() {
-        return SPEED;
+    private void limitInAirSpeed(){
+
+        // To stop the player being able to travel quickly in the air
+        if(b2body.getLinearVelocity().y != 0) {
+            // Checks positive x velocity in air
+            if (b2body.getLinearVelocity().x > MAX_PLAYER_SPEED) {
+                b2body.setLinearVelocity(new Vector2(MAX_PLAYER_SPEED, b2body.getLinearVelocity().y));
+            }
+            // Checks negative x velocity in air
+            if (b2body.getLinearVelocity().x < MAX_PLAYER_SPEED * -1) {
+                b2body.setLinearVelocity(new Vector2(MAX_PLAYER_SPEED * -1, b2body.getLinearVelocity().y));
+            }
+        }
     }
 
-    public static int getJumpVelocity() {
-        return JUMP_VELOCITY;
-    }
+    /** Getters and setters */
 
     public void setGun(GunInterface gun){
         currentGun = gun;
     }
 
-//    public int getHumanity() {
-//        return humanity;
-//    }
-//
-//    public void decreaseHumanity(int amount) {
-//        humanity -= amount;
-//    }
-//
-//    public void increaseHumanity(int amount) {
-//        humanity += amount;
-//    }
-
     public boolean hasPlayerFinished() { return isFinished; }
 
     public void setPlayerFinished(boolean b) { isFinished = b; }
-
-    public void setPlayerMap(AbstractLevel abstractLevel){
-        map = abstractLevel;
-    }
-
-    public Texture getWeapon() {
-        return weapon;
-    }
-
-    public void setWeapon(Texture weapon) {
-        this.weapon = weapon;
-    }
-
-    public Texture getImage() {
-        return image;
-    }
 
     public Humanity getHumanity(){
         return humanity;
     }
 
-    public void setPlayerTexture(Texture texture){
-        image = texture;
+    @Override
+    public float getSpeed() {
+        return humanity.getSpeed();
     }
 
-}
+    public BodyDef getBodyDef(){
+        return bdef;
+    }
 
-//TODO
-// HUMANITY
-// WHAT IS HUMANITY GOING TO DO?
-// AFFECT DAMAGE OUTPUT
-// WHAT GUNS CAN BE USED
-// SPEED OF PLAYER
-// HEALTH OF PLAYER
-// MUSIC FOR EACH LEVEL
-// FINISH GUNS
+
+}

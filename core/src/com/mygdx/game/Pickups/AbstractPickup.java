@@ -1,7 +1,8 @@
-package com.mygdx.game.Pickups;
+package com.mygdx.game.pickups;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.game.AlienGame;
 
 import java.util.Random;
 
@@ -20,8 +21,8 @@ public abstract class AbstractPickup {
     protected Texture pickupTex;
 
     /** The dimensions for the pickups */
-    private final float WIDTH = 15;
-    private final float HEIGHT = 15;
+    private final float WIDTH = 15 / AlienGame.ppm;
+    private final float HEIGHT = 15 / AlienGame.ppm;
 
     /** The x coordinates of the pickup */
     private float pickupX;

@@ -1,4 +1,4 @@
-package com.mygdx.game.Screens;
+package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -8,8 +8,8 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.mygdx.game.Game.AlienGame;
-import com.mygdx.game.world.AssetHandler;
+import com.mygdx.game.game.AlienGame;
+import com.mygdx.game.assets.AssetHandler;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 

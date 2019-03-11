@@ -1,4 +1,4 @@
-package com.mygdx.game.Screens;
+package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -6,18 +6,23 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.mygdx.game.Game.AlienGame;
-import com.mygdx.game.Game.MyInputProcessor;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.game.AlienGame;
+import com.mygdx.game.game.MyInputProcessor;
+import com.mygdx.game.assets.AssetHandler;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
 import com.mygdx.game.entities.Player;
-import com.mygdx.game.world.*;
+import com.mygdx.game.levels.*;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
@@ -38,21 +43,31 @@ public class PlayScreen implements Screen {
     private String uiAtlas = "uiskin.atlas";
     private String uiJson = "uiskin.json";
 
+    /** Box2D */
+    private Box2DDebugRenderer box2DDebugRenderer;
+    private Viewport gamePort;
+
 
     public PlayScreen (final AlienGame game) {
         this.game = game;
-        this.stage = new Stage(new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), game.camera));
-        batch = new SpriteBatch();
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.update();
-        this.inputProcessor = new MyInputProcessor(camera, EntityList.getEntityList().getPlayer());
+        gamePort = new FitViewport(AlienGame.V_WIDTH / AlienGame.ppm, AlienGame.V_HEIGHT / AlienGame.ppm, camera);
 
-        levels = new AbstractLevel[] {new AlleyWayLevel(), new InsideBuildingLevel(), new SideWalkRiverLevel()};
+        this.stage = new Stage(new StretchViewport(Gdx.graphics.getWidth() / AlienGame.ppm, Gdx.graphics.getHeight()  / AlienGame.ppm , camera));
+        batch = new SpriteBatch();
+
+        this.inputProcessor = new MyInputProcessor(camera);
+        camera.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
+
+        levels = new AbstractLevel[] {new AlleyWayLevel(), new InsideBuildingLevel()};
         this.levelCounter = 0;
         currentMap = levels[levelCounter];
-        currentMap.spawnEnemies();
-        System.out.print("Num of things in entityList " + EntityList.getListEntities().size() + "\n");
+        currentMap.spawnEntities();
+        System.out.print("(in play screen)Num of things in entityList " + EntityList.getListEntities().size() + "\n");
+        System.out.println("\n(in play screen)This is at position 1 of the entity list: " + EntityList.getListEntities().get(0).getType());
+
+        // Just needed to see Box2d effects for development
+        box2DDebugRenderer = new Box2DDebugRenderer();
     }
 
 
@@ -70,13 +85,23 @@ public class PlayScreen implements Screen {
 
     }
 
-    public void update(float delta) {
 
-        if (((Player) EntityList.getEntities().get(0)).hasPlayerFinished()) {
+    public void update() {
+
+        stage.act();
+
+        //For box2D
+        AlienGame.world.step(1/60f, 6, 2);
+
+        //Centre camera on players Body
+        camera.position.x = EntityList.getEntityList().getPlayer().getB2body().getPosition().x;
+        camera.position.y = EntityList.getEntityList().getPlayer().getB2body().getPosition().y;
+
+        if(currentMap.hasPlayerFinished() == true){
             setLevel();
         }
-        stage.act();
     }
+
 
     @Override
     public void render(float delta) {
@@ -86,12 +111,51 @@ public class PlayScreen implements Screen {
         currentMap.render(camera, batch);
 
         for(Entity entity: EntityList.getListEntities()) {
-            entity.update(delta, -9.8f);
+            entity.update(delta);
         }
 
-        update(delta);
+        update();
         stage.draw();
+
+        box2DDebugRenderer.render(AlienGame.world, camera.combined);
     }
+
+
+    private void initButtons() {
+        buttonMainMenu = new TextButton("Back", skin, "default");
+        buttonMainMenu.setPosition(15, 30);
+        buttonMainMenu.setSize(90, 30);
+        buttonMainMenu.addAction(sequence(alpha(0), parallel(fadeIn(.5f), moveBy(0, -20, 0.5f, Interpolation.pow5Out))));
+        buttonMainMenu.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(game.mainMenuScreen);
+            }
+        });
+        stage.addActor(buttonMainMenu);
+    }
+
+
+    public void setLevel(){
+        if(((Player)EntityList.getEntities().get(0)).hasPlayerFinished()) {
+            Player player = ((Player) EntityList.getEntities().get(0));
+            EntityList.purge();
+            EntityList.updateEntityList(player);
+            EntityList.getEntityList().getPlayer().setPlayerFinished(false);
+        }
+
+        levelCounter++;
+        if (!(levelCounter > levels.length - 1)) {
+            currentMap = levels[levelCounter];
+            EntityList.getEntities().get(0).setx(25);
+            EntityList.getEntities().get(0).sety(400);
+            currentMap.spawnEntities();
+        }
+        else {levelCounter--; }
+
+        System.out.print("Num of things in entityList " + EntityList.getListEntities().size() + "\n");
+    }
+
 
     @Override
     public void resize(int width, int height) {
@@ -118,39 +182,5 @@ public class PlayScreen implements Screen {
         stage.dispose();
     }
 
-    private void initButtons() {
-        buttonMainMenu = new TextButton("Back", skin, "default");
-        buttonMainMenu.setPosition(15, 30);
-        buttonMainMenu.setSize(90, 30);
-        buttonMainMenu.addAction(sequence(alpha(0), parallel(fadeIn(.5f), moveBy(0, -20, 0.5f, Interpolation.pow5Out))));
-        buttonMainMenu.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(game.mainMenuScreen);
-            }
-        });
-        stage.addActor(buttonMainMenu);
-    }
-
-    public void setLevel(){
-        if(((Player)EntityList.getEntities().get(0)).hasPlayerFinished()) {
-            Player player = ((Player) EntityList.getEntities().get(0));
-            EntityList.purge();
-            EntityList.updateEntityList(player);
-            EntityList.getEntityList().getPlayer().setPlayerFinished(false);
-        }
-
-        levelCounter++;
-        if (!(levelCounter > levels.length - 1)) {
-            currentMap = levels[levelCounter];
-            EntityList.getEntities().get(0).setx(25);
-            EntityList.getEntities().get(0).sety(400);
-            EntityList.getEntities().get(0).setLevel(currentMap);
-            currentMap.spawnEnemies();
-        }
-        else { levelCounter--; }
-
-        System.out.print("Num of things in entityList " + EntityList.getListEntities().size() + "\n");
-    }
 
 }

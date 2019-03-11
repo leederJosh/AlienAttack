@@ -1,4 +1,4 @@
-package com.mygdx.game.Shooting;
+package com.mygdx.game.shooting;
 
 /**
  * Behavior for the Shotgun bullet
@@ -9,9 +9,9 @@ public class ShotGunBullet extends AbstractBullet {
 
     public ShotGunBullet(float posX, float posY, BulletType type){
         super(posX, posY, type);
-        width = 10;
-        height = 10;
-        speed = 6;
+        width = 10 / scale;
+        height = 10 / scale;
+        speed = 6 / scale;
         bulletDamage = 15;
     }
 
