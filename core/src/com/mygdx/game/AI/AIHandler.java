@@ -19,7 +19,7 @@ public class AIHandler {
     }
 
     public void makeEntityAct(Entity entity){
-        //friendlyBehaviour.moveEntity(entity);
+        friendlyBehaviour.moveEntity(entity);
        // enemyBehaviour.moveEntity(entity);
         enemyBehaviour.act(entity);
 

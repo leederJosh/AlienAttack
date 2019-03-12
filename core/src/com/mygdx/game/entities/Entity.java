@@ -126,4 +126,8 @@ public abstract class Entity {
     }
 
     public abstract float getSpeed();
+
+    public BodyDef getBdef() {
+        return bdef;
+    }
 }

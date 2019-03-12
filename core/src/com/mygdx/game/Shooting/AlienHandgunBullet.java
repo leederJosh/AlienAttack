@@ -34,8 +34,6 @@ public class AlienHandgunBullet  extends AbstractBullet {
         if (generator.nextInt(5) == 1){
             width++;
             height++;
-            System.out.print("Width" + width);
-            System.out.print("Height" + height);
         }
     }
 }
