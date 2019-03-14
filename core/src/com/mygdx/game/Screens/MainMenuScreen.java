@@ -91,8 +91,8 @@ public class MainMenuScreen implements Screen {
         game.batch.end();
         stage.draw();
 
-        musicManager.setLooping(true);
-        musicManager.play();
+//        musicManager.setLooping(true);
+//        musicManager.play();
     }
 
     public void update() {

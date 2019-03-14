@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.mygdx.game.game.AlienGame;
+import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.assets.AssetHandler;
 import world.DialogNode;
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ public class Enemy extends Entity {
     private ArrayList<DialogNode<CharSequence>> dialog;
     private int dialogIndex;
 
-    public Enemy(float x, float y) {
-        super(x, y, EntityType.ENEMY);
+    public Enemy(float x, float y, World world) {
+        super(x, y, EntityType.ENEMY, world);
 
         // Textures
         image = AssetHandler.getAssetHandler().getTexture("AlienLeftFace.png");
@@ -62,7 +62,7 @@ public class Enemy extends Entity {
         bdef = new BodyDef();
         bdef.position.set(xPos, yPos);
         bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = AlienGame.world.createBody(bdef);
+        b2body = world.createBody(bdef);
 
         // Add the box2d body to the levels
         FixtureDef fixtureDef = new FixtureDef();

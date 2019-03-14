@@ -24,7 +24,7 @@ public abstract class Entity {
     protected Texture image;
 
     /** For collision */
-    protected World world = AlienGame.world;
+    //protected World world = AlienGame.world;
     protected Body b2body;
     protected float scale = AlienGame.ppm;
     protected BodyDef bdef;
@@ -33,10 +33,12 @@ public abstract class Entity {
     protected final float MAX_SPEED = 1.5f;
     protected static final float speed = 1;
 
+    protected World world;
 
-    public Entity(float x, float y, EntityType type) {
+    public Entity(float x, float y, EntityType type, World world) {
         this.pos = new Vector2(x, y);
         this.type = type;
+        this.world = world;
         xOrigin = x;
         xDestination = x + xBoundary;
     }
@@ -59,8 +61,8 @@ public abstract class Entity {
         b2body.applyLinearImpulse(new Vector2(((3f * speedOfEntity) * direction) / scale, 0f), b2body.getWorldCenter(), true);
     }
 
-    public void dispose(){
-        //image.dispose();
+    public void disposeOfBox2d(){
+        world.destroyBody(b2body);
     }
 
     /** Getters and Setters */
@@ -130,4 +132,9 @@ public abstract class Entity {
     public BodyDef getBdef() {
         return bdef;
     }
+
+    public World getWorld(){
+        return world;
+    }
+
 }

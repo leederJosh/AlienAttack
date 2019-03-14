@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.ai.AIHandler;
 import com.mygdx.game.collisions.MapObjectParser;
 import com.mygdx.game.game.AlienGame;
@@ -247,12 +248,27 @@ public abstract class AbstractLevel {
 
         //Handles any collision between player and pickup
         pickupHandler.hasCollidedWithPickUp();
+
+        int index = 0;
+        for(Entity entity : EntityList.getListEntities()){
+            index++;
+            System.out.println("The world of curent entity: " + entity.getWorld());
+        }
+        System.out.println("Abstract level. Entities currently in the list: " + index);
     }
 
     public abstract void dispose ();
+
+    public abstract World getWorld();
 
 
     public  abstract Rectangle getLevelEnd();
 
     public abstract boolean hasPlayerFinished();
+
+    public abstract void spawnPlayer();
+
+    public  void clearEntitiesToSpawn(){
+        entitiesToSpawn.clear();
+    }
 }

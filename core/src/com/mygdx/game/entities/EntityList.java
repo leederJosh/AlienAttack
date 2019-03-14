@@ -1,5 +1,7 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.gdx.physics.box2d.World;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -97,9 +99,12 @@ public class EntityList {
 
     /** Clears entity list and map */
     public static void purge() {
+        for(Entity entity : entityArrayList){
+            World world = entity.getWorld();
+            world.destroyBody(entity.getB2body());
+        }
         entityArrayList.clear();
         entityMap.clear();
-
     }
 
     /**

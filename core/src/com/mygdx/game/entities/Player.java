@@ -7,11 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.mygdx.game.game.AlienGame;
+import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.guns.*;
 import com.mygdx.game.assets.AssetHandler;
 
@@ -54,8 +50,8 @@ public class Player extends Entity {
     private final float MAX_PLAYER_SPEED = 3f;
 
 
-    public Player(float x, float y) {
-        super(x, y, EntityType.PLAYER);
+    public Player(float x, float y, World world) {
+        super(x, y, EntityType.PLAYER, world);
 
         //Create humanity object
         humanity = new Humanity();
@@ -233,7 +229,29 @@ public class Player extends Entity {
         bdef = new BodyDef();
         bdef.position.set(xPos, yPos);
         bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = AlienGame.world.createBody(bdef);
+        b2body = world.createBody(bdef);
+
+        // Add the box2d body to the levels
+        FixtureDef fixtureDef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox((type.getWidth() - type.getWidth() / 2) - 2 / scale, ((type.getHeight() - type.getHeight() / 2) - 4 / scale));
+
+        fixtureDef.shape = shape;
+        fixtureDef.friction = 0.2f;
+        b2body.createFixture(fixtureDef);
+
+        // So we can reference the player when using the contact listener
+        b2body.createFixture(fixtureDef).setUserData(this);
+        shape.dispose();
+    }
+
+    public void reDefinePlayerBox2D(float xPos, float yPos, World newWorld) {
+
+        // Define the box2d body around player
+        bdef = new BodyDef();
+        bdef.position.set(xPos, yPos);
+        bdef.type = BodyDef.BodyType.DynamicBody;
+        b2body = newWorld.createBody(bdef);
 
         // Add the box2d body to the levels
         FixtureDef fixtureDef = new FixtureDef();

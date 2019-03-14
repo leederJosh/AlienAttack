@@ -1,5 +1,6 @@
 package com.mygdx.game.shooting;
 
+import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
 import com.mygdx.game.game.AlienGame;
@@ -94,7 +95,10 @@ public class ShootingHandler {
                 if(entity.getHealth() <= 0 && !entityType.equals("player")){
                     deadEntities.add(entity);
                     entityHasDied = true;
-                    AlienGame.world.destroyBody(entity.getB2body());
+                    World world = entity.getWorld();
+                    world.destroyBody(entity.getB2body());
+                    //entity.dispose();
+                    //AlienGame.world.destroyBody(entity.getB2body());
 
                     // If the gun is an alien rifle spawn 4 other bullets on killing an entity
                     if(bullet instanceof AlienRifleBullet){
@@ -120,7 +124,6 @@ public class ShootingHandler {
      */
     public void removeDeadEntities() {
         for (Entity entity : deadEntities) {
-            entity.dispose();
             EntityList.getEntityList().addToRemoval(entity);
         }
     }

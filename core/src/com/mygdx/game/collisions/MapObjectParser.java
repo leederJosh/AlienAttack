@@ -1,6 +1,7 @@
 package com.mygdx.game.collisions;
 
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
@@ -59,11 +60,10 @@ public class MapObjectParser {
     }
 
     /**
-     * Returns a list of entities spawned at each box of each respective spawn object layer of a map
+     * Parse the player spawn point, will create the player the first time it is called (if the player in EntityList is null)
+     * @param world
      */
-    public ArrayList<Entity> parseEnemySpawnPoints(){
-
-        ArrayList<Entity>entitiesForGivenLevel = new ArrayList<Entity>();
+    public void parsePlayerSpawnPoint(World world){
 
         // Spawns an existing player at a given location this must go first
         // Gets all the rectangle objects from a given map and layer
@@ -75,19 +75,32 @@ public class MapObjectParser {
             float yPos = rectangle.getY() / AlienGame.ppm;
 
             // Creates the player at the first level spawn MIGHT HAVE TO PUT THE ENTITY LIST ADD PLAYER HERE
-            if(EntityList.getEntityList().getPlayer() == null){
-                Player player = new Player(xPos, yPos);
+            if (EntityList.getEntityList().getPlayer() == null) {
+                Player player = new Player(xPos, yPos, world);
                 EntityList.updateEntityList(player);
                 EntityList.setPlayer(player);
 
             }
             // If player is already created then just update the position to the new spawn
-            else{
+            else {
                 EntityList.getEntityList().getPlayer().getBodyDef().position.x = xPos;
                 EntityList.getEntityList().getPlayer().getBodyDef().position.y = yPos;
-            }
+                EntityList.getEntityList().getPlayer().reDefinePlayerBox2D(xPos, yPos, world);
 
+                System.out.println("The player x is now: " + EntityList.getEntityList().getPlayer().getx());
+                System.out.println("The player y is now: " + EntityList.getEntityList().getPlayer().gety());
+            }
         }
+    }
+
+
+    /**
+     * Returns a list of entities spawned at each box of each respective spawn object layer of a map
+     */
+    public ArrayList<Entity> parseEntitySpawnPoints(){
+
+        ArrayList<Entity>entitiesForGivenLevel = new ArrayList<Entity>();
+
 
         // Spawns enemies
         // Gets all the rectangle objects from a given map and layer
@@ -98,8 +111,7 @@ public class MapObjectParser {
             float xPos = rectangle.getX() / AlienGame.ppm;
             float yPos = rectangle.getY() / AlienGame.ppm;
 
-            entitiesForGivenLevel.add(new Enemy(xPos, yPos));
-            //EntityList.updateEntityList(new Enemy(xPos, yPos));
+            entitiesForGivenLevel.add(new Enemy(xPos, yPos, world));
         }
 
         // Spawns friendlies
@@ -111,11 +123,22 @@ public class MapObjectParser {
             float xPos = rectangle.getX() / AlienGame.ppm;
             float yPos = rectangle.getY() / AlienGame.ppm;
 
-            entitiesForGivenLevel.add(new Friendly(xPos, yPos));
+            entitiesForGivenLevel.add(new Friendly(xPos, yPos, world));
         }
 
-        // Spawns boss
-        // Gets all the rectangle objects from a given map and layer
+        return entitiesForGivenLevel;
+    }
+
+
+    /**
+     * Parses a boss spawn point, spawning them at a location and returning them
+     * @return boss
+     */
+    public Entity parseBossSpawn(){
+
+        Entity boss = null;
+        //Spawns boss
+        //Gets all the rectangle objects from a given map and layer
         for (MapObject object : tiledMap.getLayers().get("BossSpawn").getObjects().getByType(RectangleMapObject.class)) {
 
             Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
@@ -123,11 +146,9 @@ public class MapObjectParser {
             float xPos = rectangle.getX() / AlienGame.ppm;
             float yPos = rectangle.getY() / AlienGame.ppm;
 
-            entitiesForGivenLevel.add(new Boss(xPos, yPos));
+            boss = new Boss(xPos, yPos, world);
         }
-
-
-        return entitiesForGivenLevel;
+        return boss;
     }
 
 
@@ -137,17 +158,11 @@ public class MapObjectParser {
      */
     public Rectangle parseTransitionObjects(){
 
-        //TODO
-        // Get the rectangle from the map
-        // Could just add a rectangle to the map at that point
-        // Then compare if the player is inside it (maybe do a timer)
-        // If they are then play screen levels array needs to be incremented (could be done via boolean in the player saying they have finished)
-
         Rectangle rectangleToReturn = new Rectangle();
 
         // Spawns an existing player at a given location this must go first
         // Gets all the rectangle objects from a given map and layer
-        for (MapObject object : tiledMap.getLayers().get("Transition").getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : tiledMap.getLayers().get("LevelTransition").getObjects().getByType(RectangleMapObject.class)) {
 
             Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
 

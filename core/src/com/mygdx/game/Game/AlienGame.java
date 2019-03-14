@@ -27,7 +27,7 @@ import com.mygdx.game.assets.AssetHandler;
 public class AlienGame extends Game {
 
     /** The levels object for Box2D */ // This is X gravity and Y gravity, leave at zero for now as it seems to cause problems
-    public static World world = new World(new Vector2(0f, -9.81f), false);
+    //public static World world = new World(new Vector2(0f, -9.81f), false);
     public static final float ppm = 100;
 
 
@@ -126,7 +126,6 @@ public class AlienGame extends Game {
         playScreen.dispose();
         optionScreen.dispose();
         creditScreen.dispose();
-        world.dispose();
     }
 
     private void initFonts() {

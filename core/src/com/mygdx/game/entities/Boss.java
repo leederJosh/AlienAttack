@@ -4,8 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.mygdx.game.game.AlienGame;
-import com.mygdx.game.levels.AbstractLevel;
+import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.assets.AssetHandler;
 
 
@@ -14,8 +13,8 @@ public class Boss extends Entity  {
     //speed on x axis
     private static final int speed = 60;
 
-    public Boss(float x, float y) {
-        super(x, y, EntityType.BOSS);
+    public Boss(float x, float y, World world) {
+        super(x, y, EntityType.BOSS, world);
         image = AssetHandler.getAssetHandler().getTexture("BossLeftThree.png");
 
         defineEntityBox2D(x,y);
@@ -45,7 +44,7 @@ public class Boss extends Entity  {
         bdef = new BodyDef();
         bdef.position.set(xPos, yPos);
         bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = AlienGame.world.createBody(bdef);
+        b2body = world.createBody(bdef);
 
         // Add the box2d body to the levels
         FixtureDef fixtureDef = new FixtureDef();

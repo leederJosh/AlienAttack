@@ -43,7 +43,7 @@ public abstract class AI{
             //rayCastCallback
 
             // Actually casts the ray from the entity
-            AlienGame.world.rayCast(rayCastCallback, bottomRightPoint, rayExtension);
+            //world.rayCast(rayCastCallback, bottomRightPoint, rayExtension);
 
 //            if(rayCastCallback.)
 

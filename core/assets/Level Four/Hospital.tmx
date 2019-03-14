@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="100" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="111">
  <tileset firstgid="1" name="Furniture" tilewidth="16" tileheight="16" tilecount="1024" columns="32">
   <image source="HospitalLevel/HospitalLevel/Furniture.png" width="512" height="512"/>
  </tileset>
@@ -58,7 +58,17 @@
 1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028,1027,1028
 </data>
  </layer>
- <layer id="2" name="Floor" width="100" height="30">
+ <objectgroup id="11" name="EnemySpawn">
+  <object id="99" x="112" y="400" width="16" height="16"/>
+  <object id="100" x="80" y="288" width="16" height="16"/>
+  <object id="102" x="64" y="32" width="16" height="16"/>
+  <object id="103" x="288" y="32" width="16" height="16"/>
+  <object id="105" x="752" y="32" width="16" height="16"/>
+  <object id="106" x="976" y="144" width="16" height="16"/>
+  <object id="107" x="1232" y="32" width="16" height="16"/>
+  <object id="109" x="1316.5" y="174"/>
+ </objectgroup>
+ <layer id="2" name="FloorTiles" width="100" height="30">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -126,4 +136,75 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="4" name="Floor">
+  <object id="1" x="1" y="1" width="8" height="447"/>
+  <object id="2" x="1594" y="0" width="6" height="447"/>
+  <object id="3" x="1" y="447" width="1596" height="16"/>
+  <object id="5" x="1" y="319" width="126" height="16"/>
+  <object id="6" x="2" y="192" width="302" height="30"/>
+  <object id="7" x="1" y="64" width="109" height="31"/>
+  <object id="8" x="96" y="80" width="47.8" height="16"/>
+  <object id="9" x="128" y="96" width="47.6" height="15.4"/>
+  <object id="10" x="159.8" y="111.6" width="48" height="16"/>
+  <object id="11" x="191.6" y="127" width="48.2" height="17.2"/>
+  <object id="12" x="144" y="384" width="47.8" height="16"/>
+  <object id="13" x="176" y="368" width="48" height="16.2"/>
+  <object id="14" x="208" y="352" width="47.8" height="16.2"/>
+  <object id="15" x="240" y="336" width="48" height="16.2"/>
+  <object id="17" x="271.8" y="319.8" width="351.8" height="30"/>
+  <object id="18" x="608" y="335.6" width="48" height="16"/>
+  <object id="20" x="639.8" y="351.6" width="48" height="16.4"/>
+  <object id="21" x="672" y="368" width="48" height="15.8"/>
+  <object id="22" x="703.8" y="383.8" width="48.2" height="16"/>
+  <object id="24" x="767.8" y="320" width="192.2" height="31.2"/>
+  <object id="25" x="976" y="384" width="48" height="15.6"/>
+  <object id="26" x="1008" y="368" width="47.8" height="16.2"/>
+  <object id="27" x="1040" y="351.8" width="48" height="16.2"/>
+  <object id="28" x="1072" y="336" width="47.8" height="15.8"/>
+  <object id="29" x="1103.8" y="319.8" width="495.8" height="29.2"/>
+  <object id="31" x="320" y="256.2" width="47.8" height="15.8"/>
+  <object id="32" x="352" y="240.2" width="48.2" height="15.8"/>
+  <object id="33" x="384" y="223.6" width="47.6" height="16.8"/>
+  <object id="34" x="416" y="208" width="47.8" height="16"/>
+  <object id="35" x="448" y="194" width="927.8" height="29.8"/>
+  <object id="36" x="1360" y="208" width="48" height="15.6"/>
+  <object id="37" x="1391.8" y="223.6" width="47.8" height="16.4"/>
+  <object id="38" x="1424.2" y="240" width="48" height="15.8"/>
+  <object id="39" x="1455.8" y="255.8" width="48" height="15.6"/>
+  <object id="40" x="1520" y="191.6" width="80" height="29"/>
+  <object id="41" x="256" y="64" width="703.8" height="28.6"/>
+  <object id="42" x="943.6" y="79.4" width="48.2" height="16"/>
+  <object id="43" x="975.8" y="95.6" width="48" height="16.4"/>
+  <object id="44" x="1008" y="112" width="48.4" height="16.2"/>
+  <object id="54" x="1040" y="127" width="48" height="18"/>
+  <object id="55" x="1103" y="63" width="496" height="30"/>
+ </objectgroup>
+ <objectgroup id="6" name="FriendlySpawn" offsetx="0" offsety="-9.33333">
+  <object id="75" x="218" y="436"/>
+  <object id="77" x="1252" y="192"/>
+  <object id="80" x="960" y="436"/>
+  <object id="81" x="1321" y="436"/>
+  <object id="83" x="1449" y="307"/>
+  <object id="84" x="537" y="309"/>
+  <object id="85" x="449" y="308"/>
+  <object id="87" x="137" y="181"/>
+  <object id="88" x="469" y="52"/>
+  <object id="89" x="827" y="181"/>
+  <object id="90" x="1336" y="53"/>
+ </objectgroup>
+ <objectgroup id="7" name="PlayerSpawn">
+  <object id="97" x="16" y="400" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="8" name="LevelTransition1">
+  <object id="92" x="1577.5" y="475.8" width="0.1" height="0.1"/>
+  <object id="93" x="1456" y="384" width="31.8" height="64.1"/>
+ </objectgroup>
+ <objectgroup id="9" name="LevelTransition2">
+  <object id="94" x="1503.9" y="384" width="32" height="64.2"/>
+ </objectgroup>
+ <objectgroup id="10" name="LevelTransition">
+  <object id="95" x="1552.1" y="383.9" width="31.8" height="64.3"/>
+  <object id="96" x="1650" y="-60"/>
+  <object id="110" x="64" y="384" width="48" height="64"/>
+ </objectgroup>
 </map>

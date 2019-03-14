@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -48,6 +50,12 @@ public class PlayScreen implements Screen {
     private Viewport gamePort;
 
 
+    //TODO
+    // BUGS
+    // HOSPITAL LEVEL TRANSITION DOES NOT SEND THE PLAYER TO THE ARENA
+    // SIDE WALK LEVEL CRASHES OUT TRYING TO GET TO HOSPITAL (EVEN WITH MUSIC TURNED OFF)
+    // A
+
     public PlayScreen (final AlienGame game) {
         this.game = game;
         camera = new OrthographicCamera();
@@ -59,12 +67,10 @@ public class PlayScreen implements Screen {
         this.inputProcessor = new MyInputProcessor(camera);
         camera.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        levels = new AbstractLevel[] {new AlleyWayLevel(), new InsideBuildingLevel()};
+        levels = new AbstractLevel[] {new AlleyWayLevel(), new InsideBuildingLevel(), new SideWalkRiverLevel(), new HospitalLevel(), new ArenaLevel()};
         this.levelCounter = 0;
         currentMap = levels[levelCounter];
-        currentMap.spawnEntities();
-        System.out.print("(in play screen)Num of things in entityList " + EntityList.getListEntities().size() + "\n");
-        System.out.println("\n(in play screen)This is at position 1 of the entity list: " + EntityList.getListEntities().get(0).getType());
+        //currentMap.spawnEntities();
 
         // Just needed to see Box2d effects for development
         box2DDebugRenderer = new Box2DDebugRenderer();
@@ -91,7 +97,7 @@ public class PlayScreen implements Screen {
         stage.act();
 
         //For box2D
-        AlienGame.world.step(1/60f, 6, 2);
+        currentMap.getWorld().step(1/60f, 6, 2);
 
         //Centre camera on players Body
         camera.position.x = EntityList.getEntityList().getPlayer().getB2body().getPosition().x;
@@ -117,7 +123,7 @@ public class PlayScreen implements Screen {
         update();
         stage.draw();
 
-        box2DDebugRenderer.render(AlienGame.world, camera.combined);
+        box2DDebugRenderer.render(currentMap.getWorld(), camera.combined);
     }
 
 
@@ -142,13 +148,15 @@ public class PlayScreen implements Screen {
             EntityList.purge();
             EntityList.updateEntityList(player);
             EntityList.getEntityList().getPlayer().setPlayerFinished(false);
+
         }
 
         levelCounter++;
         if (!(levelCounter > levels.length - 1)) {
+            //currentMap.getWorld().dispose(); DO NOT UNCOMMENT, BREAKS EVERYTHING, but leaving as I should dispose of the worlds somewhere
+            currentMap.clearEntitiesToSpawn();
             currentMap = levels[levelCounter];
-            EntityList.getEntities().get(0).setx(25);
-            EntityList.getEntities().get(0).sety(400);
+            currentMap.spawnPlayer();
             currentMap.spawnEntities();
         }
         else {levelCounter--; }
