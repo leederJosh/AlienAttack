@@ -84,7 +84,7 @@ public class HospitalLevel extends AbstractLevel {
 
         if(playerX + playerWidth > levelEnd.getX() && playerX < levelEnd.getX() + levelEnd.getWidth()){
 
-            if(playerY > levelEnd.getY() && playerY + playerHeight < levelEnd.getY() + levelEnd.getHeight()){
+            if(playerY + playerHeight > levelEnd.getY() && playerY + playerHeight < levelEnd.getY() + levelEnd.getHeight()){
                 hasPlayerFinished = true;
             }
         }

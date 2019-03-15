@@ -84,6 +84,8 @@ public class AssetHandler {
         assetManager.load(assetPath + "PistolLeft.png", Texture.class);
         assetManager.load(assetPath + "civilianLeftFace.png", Texture.class);
         assetManager.load(assetPath + "AlienLeftFace.png", Texture.class);
+        assetManager.load(assetPath + "gameOver.png", Texture.class);
+
 
         //Boss
         assetManager.load(assetPath + "BossLeftThree.png", Texture.class);
@@ -93,6 +95,46 @@ public class AssetHandler {
         assetManager.load(assetPath + "SpriteSheets/MainCharacterRight.png", Texture.class);
         assetManager.load(assetPath + "SpriteSheets/MainCharacterLeft.png", Texture.class);
         assetManager.load(assetPath + "SpriteSheets/25MainCharacter.png", Texture.class);
+
+
+        //Player animation textures transferred:
+        //Player animation textures
+        assetManager.load(assetPath + "SpriteSheets/MoveRightMiddleBig.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/MoveLeftMiddleBig.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/MainCharacterRight.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/MainCharacterLeft.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/25%first char right.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/25%first char left.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/50%first char right.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/50% MainCharacter left.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/75%first char right.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/75%first char left.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/100%first char right.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/100%first char left.png", Texture.class);
+
+//player still assets
+        assetManager.load(assetPath + "SpriteSheets/25%first-charstill.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/25%first char leftstill.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/50main-leftstill.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/50main-rightstill.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/75%first-char-leftstill.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/75%first-char-rightstill.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/100%first-char-leftstill.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/100%first-char-rightstill.png", Texture.class);
+
+
+//Alien animation textures
+        assetManager.load(assetPath + "SpriteSheets/AlienFacingLeft.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/AlienFacingRight.png", Texture.class);
+
+//Civilian animation textures
+        assetManager.load(assetPath + "SpriteSheets/CivilianLeft.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/CivilianRight.png", Texture.class);
+
+//boss animation textures
+        assetManager.load(assetPath + "SpriteSheets/BossFacingLeft.png", Texture.class);
+        assetManager.load(assetPath + "SpriteSheets/BossFacingRight.png", Texture.class);
+
 
 
         /** Texture Atlas */

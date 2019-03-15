@@ -1,6 +1,9 @@
-package com.mygdx.game.shooting;
+package com.mygdx.game.shooting.bullets;
 
 import com.mygdx.game.entities.Entity;
+import com.mygdx.game.shooting.AbstractBullet;
+import com.mygdx.game.shooting.BulletType;
+
 import java.util.ArrayList;
 
 /**
@@ -8,7 +11,7 @@ import java.util.ArrayList;
  * @Author Josh Leeder
  * @Date 07/03/19
  */
-public class AlienRifleBullet extends AbstractBullet{
+public class AlienRifleBullet extends AbstractBullet {
 
 
     public AlienRifleBullet(float posX, float posY, BulletType bulletType) {

@@ -1,11 +1,14 @@
 package com.mygdx.game.ai;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.mygdx.game.collisions.MyRayCaster;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.game.AlienGame;
+import com.mygdx.game.levels.AbstractLevel;
+import com.mygdx.game.shooting.AbstractBullet;
 
 /**
  * Standard Artificial Intelligence behaviour
@@ -17,50 +20,131 @@ public abstract class AI{
 
     /** Whether the entity will move right or not */
     private boolean moveRight;
-    /** Raycast for entity movement */
-    private RayCastCallback rayCastCallback;
     /** The size of a tile */
     private final float TILE_SIZE = 16 / AlienGame.ppm;
+    /** The level the entity ill move in */
+    private AbstractLevel level;
+
+
+
+
+    public AI(AbstractLevel level){
+        this.level = level;
+    }
 
     /**
      * Moves the entity in a direction
      * @param entity
      */
-    public void moveEntity(Entity entity){
+    public void moveEntity(Entity entity, Rectangle rectangle){
 
-        rayCastCallback = new MyRayCaster();
+        if(entityHasReachedBoundary(entity, rectangle) == true){
 
-       // rayCastCallback.reportRayFixture();
+            boolean isEntityMovingRight = entity.getMoveRight();
 
-        ((MyRayCaster) rayCastCallback).isHasHitSomething();
-        if(moveRight == true){
-
-            // Point 1 is on the top right corner of the entity
-            Vector2 bottomRightPoint = new Vector2(entity.getx() + entity.getWidth(), entity.gety() + entity.getHeight());
-            // Point 2 is where the ray cast "ends", where we will detect until
-            Vector2 rayExtension = new Vector2(entity.getx() + entity.getWidth(), entity.gety() - TILE_SIZE / 4);
-
-            //rayCastCallback
-
-            // Actually casts the ray from the entity
-            //world.rayCast(rayCastCallback, bottomRightPoint, rayExtension);
-
-//            if(rayCastCallback.)
-
-
+            if(isEntityMovingRight == true){
+                entity.setMoveRight(false);
+                System.out.println("The ai has turned the entities moveRight to false");
+//                moveRight = false;
+//                entity.moveRight(false);
+            }
+            else{
+                entity.setMoveRight(true);
+                System.out.println("The ai has turned the entities moveRight to true");
+//                moveRight = true;
+//                entity.moveRight(true);
+            }
         }
     }
+
+
 
     /** Abstract method to make different types of entities act with different behaviour */
     public abstract void act(Entity entity);
 
-    //TODO
-    // RAYCASTING FOR ENTITY MOVEMENT
-    // IF MOVE RIGHT IS TRUE
-    // THEN RAYCAST DOWNWARDS FROM THE PLAYER X PLUS WIDTH (CAST DOWN HALF A TILE SIZE)
-    // WHEN THE RAY HITS NOTHING THEN SET MOVERIGHT TO FALSE
-    // ALSO SET THE NEW RAY CAST TO PLAYER X
+    /**
+     * Returns true when the hit box of a given bullet overlaps the hitbox of a given entity
+     * @param entity
+     * @param rectangle
+     * @return boolean
+     */
+    private boolean entityHasReachedBoundary(Entity entity, Rectangle rectangle) {
 
+        boolean hasCollided = false;
+
+        //Bullet variables to use
+        float rectangleWidth = rectangle.getWidth();
+        float rectangleHeight = rectangle.getHeight();
+        float rectangleX = rectangle.getX();
+        float rectangleY = rectangle.getY();
+
+        //Entity variables to use
+        float entityWidth = entity.getWidth();
+        float entityHeight = entity.getHeight();
+        float entityX = entity.getx();
+        float entityY = entity.gety();
+
+        //Hit boxes (mostly to make the IFs easier to read
+        float entityXHitBox = entityX + entityWidth;
+        float entityYHitBox = entityY + entityHeight;
+        float rectangleXHitBox = rectangleX + rectangleWidth;
+        float rectangleYHitBox = rectangleY + rectangleHeight;
+
+        // Moving to the right
+        if(entityXHitBox >= rectangleX && entityX < rectangleX){
+
+            //Moving up into rectangle
+            if(entityYHitBox > rectangleY && entityYHitBox < rectangleYHitBox){
+                hasCollided = true;
+            }
+            // Moving down into the box
+            else if(entityY < rectangleYHitBox && entityY > rectangleY){
+                hasCollided = true;
+            }
+        }
+        // Moving to the left
+        else if(entityX <= rectangleXHitBox && entityX > rectangleX){
+
+            //Moving up into rectangle
+            if(entityYHitBox > rectangleY && entityYHitBox < rectangleYHitBox){
+                hasCollided = true;
+            }
+            // Moving down into the box
+            else if(entityY < rectangleYHitBox && entityY > rectangleY){
+                hasCollided = true;
+            }
+        }
+
+//        // If the given entity is within the given rectangle when moving to the right
+//        if (entityYHitBox < rectangleYHitBox && entityYHitBox > rectangleY) {
+//            hasCollided = checkCollision(entityX, entityXHitBox, rectangleX, rectangleXHitBox);
+//        }
+//        else if (entityY < rectangleYHitBox && entityY > rectangleYHitBox) {
+//            hasCollided = checkCollision(entityX, entityXHitBox, rectangleX, rectangleXHitBox);
+//        }
+        return hasCollided;
+    }
+
+    private boolean checkCollision(float entityX, float entityMax, float hitX, float hitMax) {
+        System.out.println(moveRight);
+        if (moveRight) {
+            System.out.println("move right is not the problem");
+            if(entityX <= hitX && entityMax <= hitMax) {
+                System.out.println("Making move to false");
+                return true;
+            }
+        }
+        //Otherwise the entity is moving to the left
+        else {
+            System.out.println("Not moveright but before second if");
+            if (entityX <= hitMax && entityMax >= hitMax) {
+                System.out.println("Making move to true");
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }
 
@@ -79,3 +163,21 @@ public abstract class AI{
 //        else {
 //        entity.moveRight(false, entity);
 //        }
+
+
+/*
+        // Shoot to the right
+        if (rectangleXHitBox > entityX && rectangleXHitBox < entityXHitBox) {
+
+            // Shoot up
+            if (rectangleYHitBox > entityY && rectangleYHitBox < entityYHitBox) {
+
+                hasCollided = true;
+            }
+            // Shoot down
+            else if (rectangleY < entityYHitBox && rectangleY > entityY) {
+
+                hasCollided = true;
+            }
+
+        }*/

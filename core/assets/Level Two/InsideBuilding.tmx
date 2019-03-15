@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="88">
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-down" width="100" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="107">
  <tileset firstgid="1" name="brick" tilewidth="16" tileheight="16" tilecount="1" columns="1">
   <image source="InsideBuildingTiles/InsideBuildingTiles/brick.bmp" width="16" height="16"/>
  </tileset>
@@ -135,6 +135,26 @@
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
 </data>
  </layer>
+ <objectgroup id="12" name="Boundary">
+  <object id="89" x="0" y="224" width="16" height="32"/>
+  <object id="90" x="400" y="224" width="16" height="32"/>
+  <object id="91" x="16" y="80" width="16" height="48"/>
+  <object id="92" x="639.972" y="78.1567" width="19.7929" height="36.5408"/>
+  <object id="93" x="919.103" y="161.389" width="25.3756" height="36.0333"/>
+  <object id="94" x="920.625" y="80.6943" width="28.9281" height="37.5558"/>
+  <object id="95" x="1373.83" y="89.8295" width="21.823" height="31.9732"/>
+  <object id="96" x="1533.7" y="167.986" width="27.4056" height="33.4957"/>
+  <object id="97" x="1470.77" y="232.948" width="18.2704" height="32.9882"/>
+  <object id="98" x="1214.47" y="235.485" width="16.2404" height="29.4356"/>
+  <object id="99" x="1150.02" y="236.5" width="18.7779" height="25.8831"/>
+  <object id="100" x="622.716" y="241.068" width="24.3605" height="29.9432"/>
+  <object id="101" x="380.633" y="315.164" width="18.2704" height="40.6009"/>
+  <object id="102" x="59.3788" y="397.889" width="15.7328" height="27.9131"/>
+  <object id="103" x="375.558" y="388.246" width="19.2854" height="36.0333"/>
+  <object id="104" x="762.789" y="390.784" width="24.868" height="35.5258"/>
+  <object id="105" x="1529.13" y="381.141" width="16.2404" height="47.706"/>
+  <object id="106" x="1166.26" y="388.754" width="23.853" height="43.646"/>
+ </objectgroup>
  <objectgroup id="5" name="Floor">
   <object id="20" x="0" y="417" width="1600" height="15.5"/>
   <object id="22" x="0" y="257.5" width="416" height="30"/>
@@ -185,8 +205,8 @@
   <object id="77" x="1495" y="405"/>
  </objectgroup>
  <objectgroup id="8" name="LevelTransition">
-  <object id="86" x="1568" y="352" width="32" height="64"/>
-  <object id="87" x="144" y="368" width="112" height="48"/>
+  <object id="87" x="144" y="342" width="112" height="80.5"/>
+  <object id="88" x="1568" y="352" width="32" height="80"/>
  </objectgroup>
  <objectgroup id="11" name="PlayerSpawn">
   <object id="85" name="PlayerSpawn" x="16" y="384" width="16" height="16"/>

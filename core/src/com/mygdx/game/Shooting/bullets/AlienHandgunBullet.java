@@ -1,4 +1,7 @@
-package com.mygdx.game.shooting;
+package com.mygdx.game.shooting.bullets;
+
+import com.mygdx.game.shooting.AbstractBullet;
+import com.mygdx.game.shooting.BulletType;
 
 import java.util.Random;
 

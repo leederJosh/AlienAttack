@@ -1,5 +1,6 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -7,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.assets.AssetHandler;
+import com.mygdx.game.collisions.WorldFilterBits;
 import world.DialogNode;
 import java.util.ArrayList;
 
@@ -20,6 +22,8 @@ public class Friendly extends Entity {
     //Dialog tree for when a friendly is hit.
     private ArrayList<DialogNode<CharSequence>> isHitDialog;
     private int dialogIndex;
+
+    private AnimationHandler animationHandler;
 
 
     public Friendly(float x, float y, World world) {
@@ -43,6 +47,8 @@ public class Friendly extends Entity {
         isHitDialog.add(new DialogNode<CharSequence>("Why did you shoot me?"));
         isHitDialog.get(0).addChild(isHitDialog.get(1));
 
+        animationHandler = new AnimationHandler();
+
         defineEntityBox2D(x,y);
 
     }
@@ -51,6 +57,15 @@ public class Friendly extends Entity {
     public void render(SpriteBatch batch) {
         batch.begin();
         batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
+
+        if (moveRight == true) {
+            batch.draw(animationHandler.getAiAnimation("right", this), pos.x, pos.y, getWidth(), getHeight());
+        }
+        if (moveRight == false) {
+            batch.draw(animationHandler.getAiAnimation("left", this), pos.x, pos.y, getWidth(), getHeight());
+        }
+        animationHandler.update(Gdx.graphics.getDeltaTime());
+
         batch.end();
     }
 
@@ -80,6 +95,10 @@ public class Friendly extends Entity {
 
         fixtureDef.shape = shape;
         fixtureDef.friction = 0.2f;
+        //What type of fixture def I am
+        fixtureDef.filter.categoryBits = WorldFilterBits.ENTITY_OBJECT;
+        // What other fixtures I can collide with
+        fixtureDef.filter.maskBits = WorldFilterBits.COLLIDABLE_OBJECT;
         b2body.createFixture(fixtureDef);
 
         // So we can reference the player when using the contact listener

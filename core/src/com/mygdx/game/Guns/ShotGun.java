@@ -3,6 +3,8 @@ package com.mygdx.game.guns;
 import com.mygdx.game.game.AlienGame;
 import com.mygdx.game.shooting.*;
 import com.mygdx.game.entities.EntityList;
+import com.mygdx.game.shooting.bullets.ShotGunBullet;
+
 import java.util.Random;
 
 /**

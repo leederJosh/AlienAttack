@@ -2,6 +2,8 @@ package com.mygdx.game.pickups;
 
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
+import com.mygdx.game.game.AlienGame;
+
 import java.util.ArrayList;
 import static com.mygdx.game.pickups.AbstractPickup.gen;
 
@@ -39,8 +41,8 @@ public class PickupHandler {
             boolean hasCollided = false;
 
             //Pickup variables to use
-            float pickupWidth = pickup.getWIDTH();
-            float pickupHeight = pickup.getHEIGHT();
+            float pickupWidth = pickup.getWIDTH() / AlienGame.ppm;
+            float pickupHeight = pickup.getHEIGHT()/ AlienGame.ppm;
             float pickupX = pickup.getPickupX();
             float pickupY = pickup.getPickupY();
 

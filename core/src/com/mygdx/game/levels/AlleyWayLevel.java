@@ -12,6 +12,7 @@ import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
 import com.mygdx.game.entities.Player;
 
+import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 
 public class AlleyWayLevel extends AbstractLevel {
@@ -93,10 +94,11 @@ public class AlleyWayLevel extends AbstractLevel {
 
         if(playerX + playerWidth > levelEnd.getX() && playerX < levelEnd.getX() + levelEnd.getWidth()){
 
-            if(playerY > levelEnd.getY() && playerY + playerHeight < levelEnd.getY() + levelEnd.getHeight()){
+            if(playerY + playerHeight > levelEnd.getY() && playerY + playerHeight < levelEnd.getY() + levelEnd.getHeight()){
                 hasPlayerFinished = true;
             }
         }
+        System.out.println("I am returning " + hasPlayerFinished);
         return hasPlayerFinished;
     }
 

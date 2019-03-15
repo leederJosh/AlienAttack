@@ -71,6 +71,9 @@ public abstract class AbstractLevel {
     /** The end point of a map */
     protected Rectangle levelEnd;
 
+    /** Boundaries for AI */
+    protected ArrayList<Rectangle>boundaryObjects;
+
 
 
     /** The scale of the level */
@@ -88,7 +91,6 @@ public abstract class AbstractLevel {
         // Handlers
         pickupHandler = new PickupHandler();
         shootingHandler = new ShootingHandler();
-        aiHandler = new AIHandler();
 
         //Currently equipped weapon for the top right of screen
         weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
@@ -211,7 +213,6 @@ public abstract class AbstractLevel {
         text.end();
     }
     public void update (float delta) {
-
         //To remove the dead entities
         EntityList.getEntityList().removeDeadEntities();
 
@@ -219,11 +220,6 @@ public abstract class AbstractLevel {
         for(Entity entity: EntityList.getListEntities()) {
 
             entity.update(delta);
-
-            // ai handler that acts on every entity except for player
-            if(entity.getType().getId().equals("player") == false){
-                aiHandler.makeEntityAct(entity);
-            }
 
             //Handles the bullet collisions
             if(shootingHandler.handleBullet(entity) == true){
@@ -249,12 +245,15 @@ public abstract class AbstractLevel {
         //Handles any collision between player and pickup
         pickupHandler.hasCollidedWithPickUp();
 
-        int index = 0;
-        for(Entity entity : EntityList.getListEntities()){
-            index++;
-            System.out.println("The world of curent entity: " + entity.getWorld());
-        }
-        System.out.println("Abstract level. Entities currently in the list: " + index);
+        //System.out.println("The player health is: " + EntityList.getEntityList().getPlayer().getHealth());
+        
+
+//        int index = 0;
+//        for(Entity entity : EntityList.getListEntities()){
+//            index++;
+//            System.out.println("The world of curent entity: " + entity.getWorld());
+//        }
+//        System.out.println("Abstract level. Entities currently in the list: " + index);
     }
 
     public abstract void dispose ();
@@ -270,5 +269,9 @@ public abstract class AbstractLevel {
 
     public  void clearEntitiesToSpawn(){
         entitiesToSpawn.clear();
+    }
+
+    public ArrayList<Rectangle>getBoundaryObjects(){
+        return boundaryObjects;
     }
 }

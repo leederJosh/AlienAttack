@@ -1,4 +1,4 @@
-package com.mygdx.game.screens;
+package com.mygdx.game.screens.screens;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
@@ -86,13 +86,12 @@ public class MainMenuScreen implements Screen {
         if (isInGame == false) {
             game.batch.draw(bg, 0, 0);
             game.font40.draw(game.batch, "The Final Stand", 70, 440);
-            game.font24.draw(game.batch, "Screen: MAIN MENU", 20, 20);
         }
         game.batch.end();
         stage.draw();
 
-//        musicManager.setLooping(true);
-//        musicManager.play();
+        musicManager.setLooping(true);
+        musicManager.play();
     }
 
     public void update() {
@@ -108,7 +107,12 @@ public class MainMenuScreen implements Screen {
         buttonPlay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(game.playScreen);
+                //game.setScreen(game.playScreen);
+                game.screenManager.setToScreen("play");
+
+//                EntityList.getEntityList().getPlayer().setHealth(100);
+//                EntityList.getEntityList().getPlayer().setIsDead(false);
+//                EntityList.getEntityList().getPlayer().getBodyDef().position.set(25, 400);
 
                 //Trying to get music to fade out (this doesn't work and it is probably best to put this in the music manager)
                 for(musicManager.getVolume(); musicManager.getVolume() > 0 ; musicManager.setVolume(Gdx.graphics.getDeltaTime() * 5)){
@@ -126,7 +130,8 @@ public class MainMenuScreen implements Screen {
         buttonOption.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(game.optionScreen);
+                //game.setScreen(game.optionScreen);
+                game.screenManager.setToScreen("option");
             }
         });
 
@@ -137,7 +142,8 @@ public class MainMenuScreen implements Screen {
         buttonCredit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(game.creditScreen);
+                //game.setScreen(game.creditScreen);
+                game.screenManager.setToScreen("credit");
             }
         });
 

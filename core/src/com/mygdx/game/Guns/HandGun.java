@@ -4,7 +4,7 @@ import com.mygdx.game.game.AlienGame;
 import com.mygdx.game.shooting.AbstractBullet;
 import com.mygdx.game.shooting.BulletList;
 import com.mygdx.game.shooting.BulletType;
-import com.mygdx.game.shooting.HandGunBullet;
+import com.mygdx.game.shooting.bullets.HandGunBullet;
 import com.mygdx.game.entities.EntityList;
 
 /**
