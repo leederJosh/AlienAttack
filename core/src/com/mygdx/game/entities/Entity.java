@@ -3,10 +3,7 @@ package com.mygdx.game.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.game.AlienGame;
 
 public abstract class Entity {
@@ -36,7 +33,9 @@ public abstract class Entity {
     /** Movement */
     protected boolean moveRight;
 
+    /** Collision */
     protected World world;
+    protected Fixture fixture;
 
     public Entity(float x, float y, EntityType type, World world) {
         this.pos = new Vector2(x, y);
@@ -51,7 +50,9 @@ public abstract class Entity {
 
     public abstract void render(SpriteBatch batch);
 
-    public abstract void update (float deltaTime);
+    public void update (float deltaTime){
+        moveRight(moveRight);
+    }
 
     public void moveRight(boolean moveRight){
         // Move right by default
@@ -59,7 +60,7 @@ public abstract class Entity {
         if(moveRight != true){
             direction = -1;
         }
-        b2body.applyLinearImpulse(new Vector2((4f * direction) / scale, 0f), b2body.getWorldCenter(), true);
+        b2body.applyLinearImpulse(new Vector2((3.8f * direction) / scale, 0f), b2body.getWorldCenter(), true);
     }
 
     public void disposeOfBox2d(){
@@ -145,5 +146,7 @@ public abstract class Entity {
     public void setMoveRight(boolean b){
         moveRight = b;
     }
+
+    public abstract void reverseMovement();
 
 }

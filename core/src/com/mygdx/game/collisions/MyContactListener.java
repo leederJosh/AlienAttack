@@ -1,40 +1,32 @@
 package com.mygdx.game.collisions;
 
 import com.badlogic.gdx.physics.box2d.*;
+import com.mygdx.game.entities.Entity;
+
 
 /**
- * Detects contact between the player Body and static map objects
+ * Handles what to do when world objects collide with each other
  * @Author Josh Leeder
- * @Date 10/03/19
+ * @Date 16/03/19
  */
 public class MyContactListener implements ContactListener {
 
-
-    private int count = 0;
     @Override
     public void beginContact(Contact contact) {
 
-        Fixture firstFixture = contact.getFixtureA();
-        Fixture secondFixture = contact.getFixtureB();
+        Fixture fixA = contact.getFixtureA();
+        Fixture fixB = contact.getFixtureB();
+        int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
 
-        //System.out.println("Fixture one" + firstFixture.getUserData().toString()); // This throws a null pointer
+        switch (cDef) {
 
-        System.out.println("Fixture two" + secondFixture.toString()); // This one works
-
-        // Checks the fixtures are not null
-        if(firstFixture == null || secondFixture == null){
-            System.out.println("one");
-            return;
+            case MapObjectLayers.ENTITY_OBJECT | MapObjectLayers.BOUNDARY_OBJECT:
+                if (fixA.getFilterData().categoryBits == MapObjectLayers.ENTITY_OBJECT)
+                    ((Entity) fixA.getUserData()).reverseMovement();
+                else
+                    ((Entity) fixB.getUserData()).reverseMovement();
+            break;
         }
-        if(firstFixture.getUserData() == null || secondFixture.getUserData() == null){
-            System.out.println(count);
-            count++;
-            return;
-        }
-
-        System.out.println("A collision has happened");
-
-
 
     }
 

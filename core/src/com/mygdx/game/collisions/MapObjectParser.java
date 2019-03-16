@@ -1,7 +1,6 @@
 package com.mygdx.game.collisions;
 
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
@@ -56,9 +55,9 @@ public class MapObjectParser {
             fixtureDef.friction = 0.8f; // This is the friction for all of the floor tiles, increase and decrease to slop character sliding (max is 1)
 
             //What type of fixture def I am
-            fixtureDef.filter.categoryBits = WorldFilterBits.COLLIDABLE_OBJECT;
+            fixtureDef.filter.categoryBits = MapObjectLayers.FLOOR_OBJECT;
             // What other fixtures I can collide with
-            fixtureDef.filter.maskBits = WorldFilterBits.ENTITY_OBJECT;
+            fixtureDef.filter.maskBits = MapObjectLayers.ENTITY_OBJECT | MapObjectLayers.PLAYER_OBJECT;
             body.createFixture(fixtureDef);
         }
         shape.dispose();
@@ -182,26 +181,32 @@ public class MapObjectParser {
         return rectangleToReturn;
     }
 
-    public ArrayList<Rectangle> parseBoundaryObjects() {
+    public void parseBoundaryObjects() {
 
-        ArrayList<Rectangle> boundariesGivenLevel = new ArrayList<Rectangle>();
+        BodyDef bdef = new BodyDef();
+        PolygonShape shape = new PolygonShape();
+        FixtureDef fixtureDef = new FixtureDef();
+        Body body;
 
-
-        // Spawns enemies
         // Gets all the rectangle objects from a given map and layer
         for (MapObject object : tiledMap.getLayers().get("Boundary").getObjects().getByType(RectangleMapObject.class)) {
 
             Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
 
-            float xPos = rectangle.getX() / AlienGame.ppm;
-            float yPos = rectangle.getY() / AlienGame.ppm;
-            float width = rectangle.getWidth() / AlienGame.ppm;
-            float height = rectangle.getHeight() / AlienGame.ppm;
+            bdef.type = BodyDef.BodyType.StaticBody;
+            bdef.position.set((rectangle.getX() + rectangle.getWidth() / 2) / AlienGame.ppm, (rectangle.getY() + rectangle.getHeight() / 2) / AlienGame.ppm);
 
-            boundariesGivenLevel.add(new Rectangle(xPos, yPos, width, height));
+            body = world.createBody(bdef);
+            shape.setAsBox((rectangle.getWidth() / 2) / AlienGame.ppm, (rectangle.getHeight() / 2) / AlienGame.ppm);
+            fixtureDef.shape = shape;
+            fixtureDef.friction = 0.8f; // This is the friction for all of the floor tiles, increase and decrease to slop character sliding (max is 1)
 
+            //What type of fixture def I am
+            fixtureDef.filter.categoryBits = MapObjectLayers.BOUNDARY_OBJECT;
+            // What other fixtures I can collide with
+            fixtureDef.filter.maskBits = MapObjectLayers.ENTITY_OBJECT;
+            body.createFixture(fixtureDef);
         }
-
-        return boundariesGivenLevel;
+        shape.dispose();
     }
 }

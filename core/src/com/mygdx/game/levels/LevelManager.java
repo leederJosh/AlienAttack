@@ -17,7 +17,7 @@ public class LevelManager {
 
     public LevelManager(){
         levelCounter = 0;
-        levels = new AbstractLevel[] {new AlleyWayLevel(), new InsideBuildingLevel(), new SideWalkRiverLevel(), new HospitalLevel(), new ArenaLevel()};
+        levels = new AbstractLevel[] {new AlleyWayLevel(), new HospitalLevel(), new ArenaLevel()};
         currentLevel = levels[levelCounter];
     }
 

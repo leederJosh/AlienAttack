@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.mygdx.game.collisions.WorldFilterBits;
+import com.mygdx.game.collisions.MapObjectLayers;
 import com.mygdx.game.guns.*;
 import com.mygdx.game.assets.AssetHandler;
 
@@ -177,7 +177,6 @@ public class Player extends Entity {
 
         if (Gdx.input.isKeyPressed(Keys.D)) {
             batch.draw(animationHandler.getAnimation("right", this), pos.x, pos.y, getWidth(), getHeight());
-            System.out.println("movign righ");
         } else if (Gdx.input.isKeyPressed(Keys.A)) {
             batch.draw(animationHandler.getAnimation("left", this), pos.x, pos.y, getWidth(), getHeight());
         } else {
@@ -309,10 +308,10 @@ public class Player extends Entity {
         fixtureDef.friction = 0.2f;
 
         //What type of fixture def I am
-        fixtureDef.filter.categoryBits = WorldFilterBits.ENTITY_OBJECT;
+        fixtureDef.filter.categoryBits = MapObjectLayers.PLAYER_OBJECT;
         // What other fixtures I can collide with
-        fixtureDef.filter.maskBits = WorldFilterBits.COLLIDABLE_OBJECT;
-        b2body.createFixture(fixtureDef);
+        fixtureDef.filter.maskBits = MapObjectLayers.FLOOR_OBJECT;
+        //b2body.createFixture(fixtureDef);
 
         // So we can reference the player when using the contact listener
         b2body.createFixture(fixtureDef).setUserData(this);
@@ -336,10 +335,10 @@ public class Player extends Entity {
         fixtureDef.shape = shape;
         fixtureDef.friction = 0.2f;
         //What type of fixture def I am
-        fixtureDef.filter.categoryBits = WorldFilterBits.ENTITY_OBJECT;
+        fixtureDef.filter.categoryBits = MapObjectLayers.PLAYER_OBJECT;
         // What other fixtures I can collide with
-        fixtureDef.filter.maskBits = WorldFilterBits.COLLIDABLE_OBJECT;
-        b2body.createFixture(fixtureDef);
+        fixtureDef.filter.maskBits = MapObjectLayers.FLOOR_OBJECT;
+        //b2body.createFixture(fixtureDef);
 
         // So we can reference the player when using the contact listener
         b2body.createFixture(fixtureDef).setUserData(this);
@@ -406,7 +405,15 @@ public class Player extends Entity {
 
     public void setHealth(int health){ this.health = health;}
 
-
+    @Override
+    public void reverseMovement(){
+        if(moveRight){
+            moveRight = false;
+        }
+        else{
+            moveRight = true;
+        }
+    }
 
 
 }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.ai.AIHandler;
 import com.mygdx.game.collisions.MapObjectParser;
+import com.mygdx.game.collisions.MyContactListener;
 import com.mygdx.game.game.AlienGame;
 import com.mygdx.game.game.MyInputProcessor;
 import com.mygdx.game.pickups.AbstractPickup;
@@ -71,15 +72,11 @@ public abstract class AbstractLevel {
     /** The end point of a map */
     protected Rectangle levelEnd;
 
-    /** Boundaries for AI */
-    protected ArrayList<Rectangle>boundaryObjects;
-
-
+    /** The world for the levels Box2D objects */
+    protected World world;
 
     /** The scale of the level */
     protected float scale = AlienGame.ppm;
-
-    private Player player; // Should be moved to game
 
 
     public AbstractLevel() {
@@ -114,14 +111,10 @@ public abstract class AbstractLevel {
             entity.render(batch);
         }
 
-        //Just done to check the drawing of the health pickup works
-        // This does indead work so huzzah
-        /** Pretty sure this works logically but needs to be able to pass around the list of pickups? Should I use another singleton? Could have a pickupHandler object in each map?*/
+        // Render all pickups
         for (AbstractPickup pickup: pickupHandler.getActivePickups()){
             pickup.render(batch, pickup.getPickupX(), pickup.getPickupY());
         }
-
-        //pickupHandler.render(batch, player.getx(), player.gety());
 
         //If the bulletList contains a bullet it will be rendered here
         if(BulletList.getBulletList().getBullets().size() != 0){
@@ -131,8 +124,6 @@ public abstract class AbstractLevel {
                 batch.end();
             }
         }
-
-        //camera.update();
 
         batch.begin();
 
@@ -226,6 +217,10 @@ public abstract class AbstractLevel {
                 //Has a chance to add a pickup to the pickUp handler if an entity has dies
                 pickupHandler.addPickUp(entity);
             }
+
+            if (entity.getType().getId().equals("player") == false) {
+                aiHandler.makeEntityAct(entity);
+            }
         }
 
         //To remove the bullets
@@ -244,34 +239,35 @@ public abstract class AbstractLevel {
 
         //Handles any collision between player and pickup
         pickupHandler.hasCollidedWithPickUp();
-
-        //System.out.println("The player health is: " + EntityList.getEntityList().getPlayer().getHealth());
-        
-
-//        int index = 0;
-//        for(Entity entity : EntityList.getListEntities()){
-//            index++;
-//            System.out.println("The world of curent entity: " + entity.getWorld());
-//        }
-//        System.out.println("Abstract level. Entities currently in the list: " + index);
     }
 
     public abstract void dispose ();
 
     public abstract World getWorld();
 
+    /**
+     * Returns true if the player is within the level transition box
+     * @return
+     */
+    public boolean hasPlayerFinished(){
+        boolean hasPlayerFinished = false;
 
-    public  abstract Rectangle getLevelEnd();
+        Player player = EntityList.getEntityList().getPlayer();
+        float playerX = player.getx();
+        float playerY = player.gety();
+        float playerWidth = player.getWidth();
+        float playerHeight = player.getHeight();
 
-    public abstract boolean hasPlayerFinished();
+
+        if(playerX + playerWidth > levelEnd.getX() && playerX < levelEnd.getX() + levelEnd.getWidth()){
+
+            if(playerY + playerHeight > levelEnd.getY() && playerY + playerHeight < levelEnd.getY() + levelEnd.getHeight()){
+                hasPlayerFinished = true;
+            }
+        }
+        return hasPlayerFinished;
+    }
 
     public abstract void spawnPlayer();
 
-    public  void clearEntitiesToSpawn(){
-        entitiesToSpawn.clear();
-    }
-
-    public ArrayList<Rectangle>getBoundaryObjects(){
-        return boundaryObjects;
-    }
 }

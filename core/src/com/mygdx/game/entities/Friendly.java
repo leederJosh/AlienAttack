@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.assets.AssetHandler;
-import com.mygdx.game.collisions.WorldFilterBits;
+import com.mygdx.game.collisions.MapObjectLayers;
 import world.DialogNode;
 import java.util.ArrayList;
 
@@ -71,6 +71,7 @@ public class Friendly extends Entity {
 
     @Override
     public void update(float deltaTime) {
+        super.update(deltaTime);
         // Keeps the sprite in the box
         pos.x = b2body.getPosition().x - type.getWidth() / 2;
         pos.y = b2body.getPosition().y - type.getHeight() / 2;
@@ -96,10 +97,9 @@ public class Friendly extends Entity {
         fixtureDef.shape = shape;
         fixtureDef.friction = 0.2f;
         //What type of fixture def I am
-        fixtureDef.filter.categoryBits = WorldFilterBits.ENTITY_OBJECT;
+        fixtureDef.filter.categoryBits = MapObjectLayers.ENTITY_OBJECT;
         // What other fixtures I can collide with
-        fixtureDef.filter.maskBits = WorldFilterBits.COLLIDABLE_OBJECT;
-        b2body.createFixture(fixtureDef);
+        fixtureDef.filter.maskBits = MapObjectLayers.FLOOR_OBJECT | MapObjectLayers.BOUNDARY_OBJECT;
 
         // So we can reference the player when using the contact listener
         b2body.createFixture(fixtureDef).setUserData(this);
@@ -129,5 +129,15 @@ public class Friendly extends Entity {
     @Override
     public float getSpeed() {
         return speed;
+    }
+
+    @Override
+    public void reverseMovement(){
+        if(moveRight){
+            moveRight = false;
+        }
+        else{
+            moveRight = true;
+        }
     }
 }

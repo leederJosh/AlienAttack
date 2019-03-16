@@ -3,22 +3,20 @@ package com.mygdx.game.levels;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.ai.AIHandler;
 import com.mygdx.game.assets.AssetHandler;
 import com.mygdx.game.collisions.MapObjectParser;
+import com.mygdx.game.collisions.MyContactListener;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
-import com.mygdx.game.entities.Player;
 
 /**
  * Level 3
  */
 public class HospitalLevel extends AbstractLevel {
 
-    /** The world for the levels Box2D objects */
-    private World world;
 
     public HospitalLevel() {
         super();
@@ -29,6 +27,9 @@ public class HospitalLevel extends AbstractLevel {
         mapObjectParser.parseFloorObjectLayer();
         entitiesToSpawn = mapObjectParser.parseEntitySpawnPoints();
         levelEnd = mapObjectParser.parseTransitionObjects();
+        mapObjectParser.parseBoundaryObjects();
+        aiHandler = new AIHandler(this);
+        world.setContactListener(new MyContactListener());
     }
 
     @Override
@@ -64,31 +65,6 @@ public class HospitalLevel extends AbstractLevel {
     @Override
     public World getWorld() {
         return world;
-    }
-
-    @Override
-    public Rectangle getLevelEnd() {
-        return levelEnd;
-    }
-
-    @Override
-    public boolean hasPlayerFinished() {
-        boolean hasPlayerFinished = false;
-
-        Player player = EntityList.getEntityList().getPlayer();
-        float playerX = player.getx();
-        float playerY = player.gety();
-        float playerWidth = player.getWidth();
-        float playerHeight = player.getHeight();
-
-
-        if(playerX + playerWidth > levelEnd.getX() && playerX < levelEnd.getX() + levelEnd.getWidth()){
-
-            if(playerY + playerHeight > levelEnd.getY() && playerY + playerHeight < levelEnd.getY() + levelEnd.getHeight()){
-                hasPlayerFinished = true;
-            }
-        }
-        return hasPlayerFinished;
     }
 
     @Override

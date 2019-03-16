@@ -87,7 +87,6 @@ public class AnimationHandler {
             // Main character normal
             if (player.getHumanity().getHumanityValue() >= 75) {
                 setUpAnimations(walkSheet);
-                System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
                 return new TextureRegion(walkAnimation.getKeyFrame(stateTime, true));
 
             }
@@ -112,7 +111,7 @@ public class AnimationHandler {
                 return new TextureRegion(walkAnimation.getKeyFrame(stateTime, true));
             }
         }
-        // IF the player is moving to the lefta
+        // IF the player is moving to the left
         else if (direction.equals("left")) {
             FRAME_COLS = 4;
             // 25% Alien texture

@@ -1,14 +1,9 @@
 package com.mygdx.game.ai;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
-import com.mygdx.game.collisions.MyRayCaster;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.game.AlienGame;
 import com.mygdx.game.levels.AbstractLevel;
-import com.mygdx.game.shooting.AbstractBullet;
 
 /**
  * Standard Artificial Intelligence behaviour
@@ -27,7 +22,6 @@ public abstract class AI{
 
 
 
-
     public AI(AbstractLevel level){
         this.level = level;
     }
@@ -36,25 +30,20 @@ public abstract class AI{
      * Moves the entity in a direction
      * @param entity
      */
-    public void moveEntity(Entity entity, Rectangle rectangle){
+    public void moveEntity(Entity entity){
+        boolean isEntityMovingRight = entity.getMoveRight();
 
-        if(entityHasReachedBoundary(entity, rectangle) == true){
-
-            boolean isEntityMovingRight = entity.getMoveRight();
-
-            if(isEntityMovingRight == true){
-                entity.setMoveRight(false);
-                System.out.println("The ai has turned the entities moveRight to false");
+        if(isEntityMovingRight == true){
+            entity.setMoveRight(false);
 //                moveRight = false;
 //                entity.moveRight(false);
-            }
-            else{
-                entity.setMoveRight(true);
-                System.out.println("The ai has turned the entities moveRight to true");
+        }
+        else{
+            entity.setMoveRight(true);
 //                moveRight = true;
 //                entity.moveRight(true);
-            }
         }
+
     }
 
 

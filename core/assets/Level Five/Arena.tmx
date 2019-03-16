@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="20" nextobjectid="7">
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="16">
  <tileset firstgid="1" source="Lava.tsx"/>
  <tileset firstgid="7" source="DoorLeft.tsx"/>
  <tileset firstgid="8" source="Floor.tsx"/>
@@ -252,6 +252,10 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="20" name="Boundary">
+  <object id="11" x="528" y="352" height="48"/>
+  <object id="12" x="1408" y="352" height="48"/>
+ </objectgroup>
  <layer id="11" name="Rain" width="100" height="30">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -290,6 +294,8 @@
   <object id="2" x="0" y="400" width="1601" height="15"/>
   <object id="3" x="-1" y="1" width="6" height="413"/>
   <object id="4" x="1593" y="0" width="6" height="416"/>
+  <object id="13" x="0" y="0" width="1600"/>
+  <object id="14" x="1030.67" y="604"/>
  </objectgroup>
  <objectgroup id="18" name="BossSpawn">
   <object id="5" x="1231" y="354" width="65" height="44"/>

@@ -27,13 +27,12 @@ public class AIHandler {
 
     public void makeEntityAct(Entity entity){
 
-        for(Rectangle rectangle : level.getBoundaryObjects()){
-            friendlyBehaviour.moveEntity(entity, rectangle);
-            enemyBehaviour.moveEntity(entity, rectangle);
-        }
+//        friendlyBehaviour.moveEntity(entity);
+////        enemyBehaviour.moveEntity(entity);
 
         if(entity instanceof Enemy){
             enemyBehaviour.act(entity);
+            System.out.println("This is an enemy acting in ai");
         }
 
 
