@@ -30,8 +30,8 @@ public class Enemy extends Entity {
         image = AssetHandler.getAssetHandler().getTexture("AlienLeftFace.png");
         dialog = new ArrayList<DialogNode<CharSequence>>();
         dialog.add(new DialogNode<CharSequence>("Blorg"));
-        dialog.add(new DialogNode<CharSequence>("Reeeee"));
-        dialog.add(new DialogNode<CharSequence>("Yeet"));
+        dialog.add(new DialogNode<CharSequence>("Kurgsz"));
+        dialog.add(new DialogNode<CharSequence>("Hurgl"));
         dialog.get(0).addChild(dialog.get(1));
         dialog.get(1).addChild(dialog.get(2));
         dialogIndex = 0;

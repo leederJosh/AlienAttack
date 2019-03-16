@@ -46,6 +46,7 @@ public class Friendly extends Entity {
         isHitDialog = new ArrayList<DialogNode<CharSequence>>();
         isHitDialog.add(new DialogNode<CharSequence>("Don't shoot!"));
         isHitDialog.add(new DialogNode<CharSequence>("Why did you shoot me?"));
+        isHitDialog.add(new DialogNode<CharSequence>("Goodbye cruel world"));
         isHitDialog.get(0).addChild(isHitDialog.get(1));
     }
 
