@@ -42,22 +42,10 @@ public class LevelManager {
         return currentLevel;
     }
 
-    public void incrementLevelCounter(){
-        levelCounter++;
-    }
-
-    public void decrementLevelCounter(){
-        levelCounter--;
-    }
-
     public void setLevelCounter(int index){
         if(index <= levels.length - 1){
             levelCounter = index;
         }
         currentLevel = levels[index];
-    }
-
-    public int getLevelCounter() {
-        return levelCounter;
     }
 }
