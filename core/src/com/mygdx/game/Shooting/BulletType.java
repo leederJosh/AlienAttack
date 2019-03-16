@@ -1,4 +1,4 @@
-package com.mygdx.game.Shooting;
+package com.mygdx.game.shooting;
 
 /**
  * A class to give each bullet a type (Human or Alien)
@@ -7,7 +7,7 @@ package com.mygdx.game.Shooting;
  */
 public enum BulletType {
 
-    ALIEN("alien"), HUMAN("human");
+    ALIEN("alien"), PLAYER("player"), ENEMY("enemy");
     private String id;
 
     private BulletType(String id) {

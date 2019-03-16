@@ -1,13 +1,19 @@
-package com.mygdx.game.Pickups;
+package com.mygdx.game.pickups;
+
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.EntityList;
+import com.mygdx.game.game.AlienGame;
 
 import java.util.ArrayList;
+import static com.mygdx.game.pickups.AbstractPickup.gen;
 
 /**
- * Handles the collision with pickups and the actions to take when collisions occure
+ * Handles the collision with pickups and the actions to take when collisions occur
  * @author Josh Leeder
  * @date 1/02/19
  */
 public class PickupHandler {
+
 
     /** A list of the pickups on the screen */
     private ArrayList<AbstractPickup> activePickups;
@@ -15,44 +21,145 @@ public class PickupHandler {
     /** A list of pickups to remove */
     private ArrayList<AbstractPickup> pickupsToRemove;
 
+    /** Whether a pickup should drop or not */
+    protected boolean toDrop;
+
 
     public PickupHandler() {
         activePickups = new ArrayList<AbstractPickup>();
         pickupsToRemove = new ArrayList<AbstractPickup>();
     }
 
+
     /**
-     * Add to active pickups list
-     * @param pickup
+     * Detects when a player walks over a pickup and calls the appropriate act method from the pickup
      */
-    public void addPickUp(AbstractPickup pickup){
-        activePickups.add(pickup);
+    public void hasCollidedWithPickUp() {
+
+        for (AbstractPickup pickup : activePickups) {
+
+            boolean hasCollided = false;
+
+            //Pickup variables to use
+            float pickupWidth = pickup.getWIDTH() / AlienGame.ppm;
+            float pickupHeight = pickup.getHEIGHT()/ AlienGame.ppm;
+            float pickupX = pickup.getPickupX();
+            float pickupY = pickup.getPickupY();
+
+            //Entity variables to use
+            float playerWidth = EntityList.getEntityList().getPlayer().getWidth();
+            float playerHeight = EntityList.getEntityList().getPlayer().getHeight();
+            float playerX = EntityList.getEntityList().getPlayer().getx();
+            float playerY = EntityList.getEntityList().getPlayer().gety();
+
+            //Hit boxes (mostly to make the IFs easier to read
+            float playerXHitBox = playerX + playerWidth;
+            float playerYHitBox = playerY + playerHeight;
+            float pickupXHitBox = pickupX + pickupWidth;
+            float pickupYHitBox = pickupY + pickupHeight;
+
+            // Shoot to the right
+            if (pickupXHitBox > playerX && pickupXHitBox < playerXHitBox) {
+
+                // Shoot up
+                if (pickupYHitBox > playerY && pickupYHitBox < playerYHitBox) {
+
+                    hasCollided = true;
+                }
+                // Shoot down
+                else if (playerY < playerYHitBox && pickupY > playerY) {
+
+                    hasCollided = true;
+                }
+
+            }
+            //Shoot to the left
+            else if (pickupX < playerXHitBox && pickupX > playerX) {
+
+                // Shoot up
+                if (pickupYHitBox > playerY && pickupYHitBox < playerYHitBox) {
+
+                    hasCollided = true;
+                }
+                // Shoot down
+                else if (pickupY < playerYHitBox && pickupY > playerY) {
+
+                    hasCollided = true;
+                }
+            }
+
+            // If the player has collided with a pickup this will add the effect to player
+            if (hasCollided == true){
+                pickup.act();
+                pickup.setPickupValue(0);
+                addPickUpsToRemove(pickup);
+            }
+        }
+        clearPickups();
     }
 
     /**
      * Add a pickup to the list for removal
      * @param pickup
      */
-    public void pickupRemoval(AbstractPickup pickup){
+    private void addPickUpsToRemove(AbstractPickup pickup) {
         pickupsToRemove.add(pickup);
     }
 
     /**
      * Clears the pickups appropriate to remove from the active pickups list
      */
-    public void clearPickups(){
-        for(AbstractPickup pickup: pickupsToRemove){
+    public void clearPickups() {
+        for (AbstractPickup pickup : pickupsToRemove) {
             activePickups.remove(pickup);
         }
         pickupsToRemove.clear();
     }
 
-    public ArrayList<AbstractPickup> getActivePickups(){
+    /**
+     * Returns a list of all pickups on the map
+     */
+    public ArrayList<AbstractPickup> getActivePickups() {
         return activePickups;
     }
 
-    //Will need some for of collision detection here where we iterate through the active list and test hte x and ys of all of the pickups
-    // againsts the player entity in position 0 of the entity list
-    // Then do some action like pickup.act when that does occur
-    // THis will allow it to be general for all pickups
+    /**
+     * The random chance that the pickup will drop
+     * @return toDrop
+     */
+    private boolean dropItem() {
+
+        toDrop = false;
+        // 1 in 4 chance to drop the pickup
+        // The next int is between 0 and n where n is exclusive
+        if (gen.nextInt(4) == 3) {
+            toDrop = true;
+        }
+        return true;
+    }
+
+    /**
+     * Randomly decided which item to drop
+     * @return
+     */
+    private int pickupToDrop() {
+        //At the moment this is 0 to always spawn a health pickup
+        return gen.nextInt(1);
+    }
+
+    /**
+     * Add to active pickups list
+     * @param entity
+     */
+    public void addPickUp(Entity entity) {
+
+        if (dropItem() == true) {
+
+            //IF pickupToDrop returns 0 then spawn a HEALTH pickup
+            if (pickupToDrop() == 0) {
+                activePickups.add(new HealthPickup(entity.getx(), entity.gety()));
+            }
+        }
+    }
 }
+

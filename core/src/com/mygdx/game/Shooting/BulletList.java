@@ -1,4 +1,4 @@
-package com.mygdx.game.Shooting;
+package com.mygdx.game.shooting;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,6 @@ public class BulletList {
     private static BulletList bulletList = null;
 
     /** List to hold all bullet entities */
-    //Not sure if I need this as T or AbstractBullet
     private static ArrayList<AbstractBullet> bullets;
 
     /** A list of bullets to remove from the screen */
@@ -75,7 +74,5 @@ public class BulletList {
             //This may break things if not done at the right time
             bulletsToRemove.clear();
         }
-
     }
-
 }

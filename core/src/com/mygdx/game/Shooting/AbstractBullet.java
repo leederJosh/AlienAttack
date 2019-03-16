@@ -1,11 +1,8 @@
-package com.mygdx.game.Shooting;
+package com.mygdx.game.shooting;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.game.world.AssetHandler;
+import com.mygdx.game.game.AlienGame;
+import com.mygdx.game.assets.AssetHandler;
 
 /**
  * A class to encapsulate general bullet behavior
@@ -15,9 +12,9 @@ import com.mygdx.game.world.AssetHandler;
 public abstract class AbstractBullet {
 
     /** Bullets current x position */
-    private float bulletX;
+    protected float bulletX;
     /** Bullets current y position */
-    private float bulletY;
+    protected float bulletY;
     /** A factor to scale the bullet to depending on the gun */
     private double bulletSize;
     /** The damage a bullet will deal to another entity */
@@ -26,19 +23,17 @@ public abstract class AbstractBullet {
     private Texture bulletTex;
     /** Whether or not hte bullet needs to be removed */
     private boolean remove;
-    /** Asset manager to get the texture */
-    AssetManager manager = new AssetManager();
     /** The speed the bullet travels at */
     protected float speed;
-    /**The amount the bullet will move in the X per frame */
+    /** The amount the bullet will move in the X per frame */
     private float moveX;
-    /**The amount the bullet will move in the Y per frame */
+    /** The amount the bullet will move in the Y per frame */
     private float moveY;
     /** Keeps the bullets original X position so that it can be removed later */
     private float originX;
     /** Keeps the bullet original Y position so that it can be removed later */
     private float originY;
-    /** The bundaries for the X and Y of the bullet */
+    /** The boundaries for the X and Y of the bullet */
     private static float boundary = 10000;
     /** Width of the bullet */
     protected float width;
@@ -48,90 +43,31 @@ public abstract class AbstractBullet {
     protected int degreeOfSpread;
     /** The type of the bullet */
     protected BulletType bulletType;
+    /** The scale of bullet depending on the alien game PPM */
+    protected float scale = AlienGame.ppm;
 
 
-    //Constructor
     public AbstractBullet(float posX, float posY, BulletType bulletType){
         bulletX = posX;
         bulletY = posY;
-
-        this.bulletType = bulletType;
-
         originX = posX;
         originY = posY;
 
-        // manager.load("assets/bullet.png", Texture.class);
-        // This is the problem at the moment
-        //bulletTex = new Texture ((FileHandle) AssetHandler.assetHandler.getAssetManager().get("assets/bullet.png"));
+        this.bulletType = bulletType;
         bulletTex = AssetHandler.getAssetHandler().getTexture("bullet.png");
     }
 
     /**
-     * Updates the current X position of the bullet
+     * Renders the bullet next to the players gun
      */
-    public void updateXPosition(){
-        bulletX += moveX;
-    }
-
-    /**
-     * Updates the current Y position of the bullet
-     */
-    public void updateYPosition() {
-        bulletY += moveY;
-    }
-
-    public int getBulletDamage(){
-        return bulletDamage;
+    public void render(){
+        bulletTex = new Texture(("bullet.png"));
     }
 
     public void bulletMovement(){
         updateXPosition();
         updateYPosition();
         removeOffscreenBullet();
-    }
-
-    //get the X pos of the bullet
-    public float getBulletX(){
-        return bulletX;
-    }
-
-    //get the Y pos of the bullet
-    public float getBulletY(){
-        return bulletY;
-    }
-
-    //get the speed of the bullet
-    public float getSpeed(){
-        return speed;
-    }
-
-    public void updateRemove(){
-        remove = true;
-    }
-
-    /**
-     * Renders the bullet next to the players gun
-     */
-    public void render(SpriteBatch batch, float posX, float posY){
-        //Not sure if this will work yet
-        bulletTex = new Texture(("bullet.png"));
-        //batch.draw(bulletTex, posX, posY);
-    }
-
-    /**
-     * Whether a bullet should be removed or not
-     * @return remove
-     */
-    public boolean toRemove(){
-        return remove;
-    }
-
-    /**
-     * Returns the texture for the bullet
-     * @return bulletTex
-     */
-    public Texture getBulletTex(){
-        return bulletTex;
     }
 
     /**
@@ -141,14 +77,13 @@ public abstract class AbstractBullet {
      */
     public void calculateMovement(float mouseX, float mouseY){
 
-        // Will work out the values i need for the X coordinates to work out hypotenuse
+        // Will work out the values I need for the X coordinates to work out hypotenuse
         // This will be the mouseX - current bulletX, then squared and added to
         // the mouseY - current bulletY
-        // The squareroot of the sum of these values squared is the hypotenuse hypo
+        // The square root of the sum of these values squared is the hypotenuse hypo
         float xDifference = mouseX - bulletX;
         float yDifference = mouseY - bulletY;
         float hypo = (float)Math.sqrt((xDifference * xDifference) + (yDifference * yDifference));
-
 
         moveX = (xDifference/hypo) * speed;
         moveY = (yDifference/hypo) * speed + degreeOfSpread;
@@ -168,6 +103,31 @@ public abstract class AbstractBullet {
         }
     }
 
+    public abstract void act();
+
+
+    /** Getters and Setters */
+
+    public float getBulletX(){
+        return bulletX;
+    }
+
+    public float getBulletY(){
+        return bulletY;
+    }
+
+    public int getBulletDamage(){
+        return bulletDamage;
+    }
+
+    public void updateXPosition(){
+        bulletX += moveX;
+    }
+
+    public void updateYPosition() {
+        bulletY += moveY;
+    }
+
     public float getWidth(){
         return width;
     }
@@ -176,28 +136,15 @@ public abstract class AbstractBullet {
         return height;
     }
 
-    /**
-     * Set the damage of a bullet
-     * @param damage
-     */
+    public boolean toRemove(){
+        return remove;
+    }
+
+    public Texture getBulletTex(){
+        return bulletTex;
+    }
+
     public void setDamage(int damage){
         bulletDamage = damage;
     }
-
-
-    /**
-     * Abstract method to be implemented in AlienGuns
-     */
-    public abstract void act();
-
-    // To Do
-
-    // Then collision detection
-    // Should be a case of getting the x of the bullet and comparing
-    // the x and the x plus width with all the entities int he bullet list
-    // Same idea with the y i think for now
-    // Then if they collide do something, o health first then humanity
-
-    // Then i can work on other guns like machine gun and shotgun
-    // Think I may need to make states or strategies for this
 }

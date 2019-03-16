@@ -1,7 +1,10 @@
-package com.mygdx.game.Shooting;
+package com.mygdx.game.shooting;
 
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
+import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.shooting.bullets.AlienHandgunBullet;
+import com.mygdx.game.shooting.bullets.AlienRifleBullet;
 
 import java.util.ArrayList;
 
@@ -12,79 +15,179 @@ import java.util.ArrayList;
  */
 public class ShootingHandler {
 
-    /** Holds the entities to remove from the Entity List */
+    /**
+     * Holds the entities to remove from the Entity List
+     */
     private ArrayList<Entity> deadEntities;
 
-    public ShootingHandler(){
+    public ShootingHandler() {
         deadEntities = new ArrayList<Entity>();
     }
 
     /**
      * Handles what happens when a bullet collides with an entity
-     *
-     * @param bulletList
-     * @param entityList
+     * Compares a given bullet list and a given entity list
+     * Returns true if an entity has died
+     * @param entity
      */
-    public void handleBullet(BulletList bulletList, EntityList entityList) {
+    public boolean handleBullet(Entity entity) {
 
+        boolean entityHasDied = false;
 
-        for (Entity entity : entityList.getEntities()) {
-            for (AbstractBullet bullet : bulletList.getBullets()) {
-                if(bullet.bulletType == BulletType.ALIEN){
-                    bullet.act();
-                }
-                    if (entity.getType().getId().equals("player") == false && entity.getx() > bullet.getBulletX()) {
+        ArrayList<AbstractBullet>alienRifleBulletsToAdd = new ArrayList<AbstractBullet>();
 
-                        /**
-                         * It seems to be looping through 2 times for every entity to the left of the player
-                         */
-                        // Shooting in all directions
-                        // Now this is confusing so here is a breakdown:
-                        // Check the bullets X plus bullet width is greater than the X of the entity / 2 (so it hits the middle of the entity in all directions)
-                        // AND
-                        // check the bullet Y plus the bullet height is greater than the entity Y
-                        // AND
-                        // Check the bullet Y plus bullet height is less than the entity Y plus entity height
-                        // This is to effectively draw a box around the entity using it's height, it's Y and it's X
-                        // This means that if the bullet hits in this box collision will occur, if not then no collision
-                        // Without the last part it registers a hit if a bullet travels anywhere above the entity
-                        if (bullet.getBulletX() + bullet.getWidth() > entity.getx() + entity.getWidth() / 2
-                                && bullet.getBulletY() + bullet.getHeight() > entity.gety()
-                                && bullet.getBulletY() + bullet.getHeight() < entity.gety() + entity.getHeight()) {
+        for (AbstractBullet bullet : BulletList.getBulletList().getBullets()) {
 
+            // Makes the alien bullets act
+            if(bullet instanceof AlienHandgunBullet){
+                bullet.act();
+            }
 
-                            System.out.print("\nHealth before " + entity.getHealth());
-                            entity.reduceHealth(bullet.getBulletDamage());
-                            //This is necessary so entities are only affected by bullets once
-                            bullet.setDamage(0);
+            String entityType = entity.getType().getId();
+            String bulletType = bullet.bulletType.getId();
 
-                            /** Things that need to be added here:
-                             * Handling the drop in humanity depending on the entity type
-                             * How are we going to get the player here? Use index 0 of the list you passed in?
-                             * There is a bug with how the entities despawn on death
-                             * They leave a black rectangle that only goes away after clicking so it is linked to when this method is called and how often
-                             */
+            // If the bullet has collided with an entity
+            if(bulletHasCollided(entity, bullet)){
 
-                            if(entity.getHealth() <= 0){
-                                deadEntities.add(entity);
-                            }
-                            System.out.print("\nHealth After " + entity.getHealth());
-                            bullet.updateRemove();
-                        }
+                int bulletDamage = bullet.getBulletDamage();
+
+                // Handles player bullet hitting enemy
+                if(bulletType.equals("player") && entityType.equals("enemy")){
+
+                    entity.reduceHealth(bulletDamage);
+                    if(entity.getHealth() <= 0){
+                        EntityList.getEntityList().getPlayer().getHumanity().increaseHumanity(15);
                     }
+
+                    bullet.setDamage(0);
+                    BulletList.getBulletList().addBulletToRemove(bullet);
+                }
+                // Handles player bullet hitting a friendly
+                else if(bulletType.equals("player") && entityType.equals("friendly")){
+
+                    entity.reduceHealth(bulletDamage);
+                    EntityList.getEntityList().getPlayer().getHumanity().decreaseHumanity(10);
+
+                    bullet.setDamage(0);
+                    BulletList.getBulletList().addBulletToRemove(bullet);
+
+                }
+                // Handles player bullet hitting player
+                else if(bulletType.equals("player") && entityType.equals("player")){
+                    // DO NOTHING
+                }
+                //Handles enemy bullet hitting the player
+                else if(bulletType.equals("enemy") && entityType.equals("player")){
+
+                    EntityList.getEntityList().getPlayer().reduceHealth(bulletDamage);
+                    bullet.setDamage(0);
+                    BulletList.getBulletList().addBulletToRemove(bullet);
+                }
+                // Handles enemy bullet hitting enemy
+                else if(bulletType.equals("enemy") && entityType.equals("enemy")){
+                    //DO NOTHING
+                }
+                // Handles enemy bullet hitting friendly
+                else if(bulletType.equals("enemy") && entityType.equals("friendly")){
+                    //DO NOTHING
+                }
+
+                //Handles the entity dying
+                // NOT PLAYER IS ONLY IN AT THE MOMENT TO STOP GAME CRASHING OUT
+                if(entity.getHealth() <= 0 && !entityType.equals("player")){
+                    deadEntities.add(entity);
+                    entityHasDied = true;
+                    World world = entity.getWorld();
+                    world.destroyBody(entity.getB2body());
+                    //entity.dispose();
+                    //AlienGame.world.destroyBody(entity.getB2body());
+
+                    // If the gun is an alien rifle spawn 4 other bullets on killing an entity
+                    if(bullet instanceof AlienRifleBullet){
+                        for(AbstractBullet bullet1 :((AlienRifleBullet) bullet).spawnExtraBullets(entity)){
+                            alienRifleBulletsToAdd.add(bullet1);
+                        }
+                        System.out.print("\nALIEN RIFLE ACTING");
+                    }
+                }
             }
         }
+
+        // Add the ALIEN RIFLE BULLETS HERE
+        for(AbstractBullet rifleBullets: alienRifleBulletsToAdd){
+            BulletList.getBulletList().addBullet(rifleBullets);
+        }
         removeDeadEntities();
+        return entityHasDied;
     }
 
     /**
      * Remove all the entities in the dead list from the EntityList
      */
-    public void removeDeadEntities(){
-        for(Entity entity : deadEntities){
-            entity.dispose();
-            EntityList.getEntityList().removeDeadEntity(entity);
+    public void removeDeadEntities() {
+        for (Entity entity : deadEntities) {
+            EntityList.getEntityList().addToRemoval(entity);
         }
     }
-}
 
+    /**
+     * Returns true when the hit box of a given bullet overlaps the hitbox of a given entity
+     * @param entity
+     * @param bullet
+     * @return boolean
+     */
+    private boolean bulletHasCollided(Entity entity, AbstractBullet bullet) {
+
+        boolean hasCollided = false;
+
+        //Bullet variables to use
+        float bulletWidth = bullet.getWidth();
+        float bulletHeight = bullet.getHeight();
+        float bulletX = bullet.getBulletX();
+        float bulletY = bullet.getBulletY();
+
+        //Entity variables to use
+        float entityWidth = entity.getWidth();
+        float entityHeight = entity.getHeight();
+        float entityX = entity.getx();
+        float entityY = entity.gety();
+
+        //Hit boxes (mostly to make the IFs easier to read
+        float entityXHitBox = entityX + entityWidth;
+        float entityYHitBox = entityY + entityHeight;
+        float bulletXHitBox = bulletX + bulletWidth;
+        float bulletYHitBox = bulletY + bulletHeight;
+
+        // Shoot to the right
+        if (bulletXHitBox > entityX && bulletXHitBox < entityXHitBox) {
+
+            // Shoot up
+            if (bulletYHitBox > entityY && bulletYHitBox < entityYHitBox) {
+
+                hasCollided = true;
+            }
+            // Shoot down
+            else if (bulletY < entityYHitBox && bulletY > entityY) {
+
+                hasCollided = true;
+            }
+
+        }
+        //Shoot to the left
+        else if (bulletX < entityXHitBox && bulletX > entityX) {
+
+            // Shoot up
+            if (bulletYHitBox > entityY && bulletYHitBox < entityYHitBox) {
+
+                hasCollided = true;
+            }
+            // Shoot down
+            else if (bulletY < entityYHitBox && bulletY > entityY) {
+
+                hasCollided = true;
+            }
+        }
+
+        return hasCollided;
+    }
+}

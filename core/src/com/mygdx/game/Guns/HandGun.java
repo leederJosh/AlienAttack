@@ -1,8 +1,10 @@
-package com.mygdx.game.Guns;
+package com.mygdx.game.guns;
 
-import com.mygdx.game.Shooting.AbstractBullet;
-import com.mygdx.game.Shooting.BulletList;
-import com.mygdx.game.Shooting.HandGunBullet;
+import com.mygdx.game.game.AlienGame;
+import com.mygdx.game.shooting.AbstractBullet;
+import com.mygdx.game.shooting.BulletList;
+import com.mygdx.game.shooting.BulletType;
+import com.mygdx.game.shooting.bullets.HandGunBullet;
 import com.mygdx.game.entities.EntityList;
 
 /**
@@ -14,6 +16,8 @@ import com.mygdx.game.entities.EntityList;
 public class HandGun implements GunInterface{
 
 
+    // The amount X of the player the bullet will spawn
+    private float direction = 10 / AlienGame.ppm;
 
     @Override
     public void shoot(float mappedMouseX, float mappedMouseY) {
@@ -21,9 +25,6 @@ public class HandGun implements GunInterface{
         //Get the position of the player to shoot in the right direction
         float playerX = EntityList.getEntities().get(0).getx();
         float playerY = EntityList.getEntities().get(0).gety();
-
-        // The amount X of the player the bullet will spawn
-        int direction = 10;
 
         //Check which way to spawn bullet
         //By default spawn to the right, if the player x is greater than the mouse do this to spawn to the left
@@ -33,7 +34,7 @@ public class HandGun implements GunInterface{
         }
 
         // Make the bullet, calculate how it should move per tick and add it to the bullet list
-        AbstractBullet bullet = new HandGunBullet(playerX + direction, playerY);
+        AbstractBullet bullet = new HandGunBullet(playerX + direction, playerY, BulletType.PLAYER);
         bullet.calculateMovement(mappedMouseX, mappedMouseY);
         BulletList.getBulletList().addBullet(bullet);
     }

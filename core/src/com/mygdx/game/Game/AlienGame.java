@@ -1,9 +1,8 @@
-package com.mygdx.game.Game;
+package com.mygdx.game.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,15 +10,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.mygdx.game.Pickups.PickupHandler;
-import com.mygdx.game.Screens.*;
-import com.mygdx.game.Shooting.BulletList;
+import com.mygdx.game.shooting.BulletList;
+import com.mygdx.game.levels.LevelManager;
+import com.mygdx.game.screens.managers.ScreenManager;
 import com.mygdx.game.entities.EntityList;
-import com.mygdx.game.world.AssetHandler;
-import com.mygdx.game.world.GameMap;
-import com.mygdx.game.world.TiledGameMap;
-
-import java.io.File;
+import com.mygdx.game.assets.AssetHandler;
 
 /**
  * AlienGame represents the window. Handles the different screens.
@@ -28,93 +23,92 @@ import java.io.File;
  */
 public class AlienGame extends Game {
 
-    public static final String TITLE = "The Final Stand";
-    public static final float VERSION = 0.1f;
+    /** The levels object for Box2D */ // This is X gravity and Y gravity, leave at zero for now as it seems to cause problems
+    //public static World world = new World(new Vector2(0f, -9.81f), false);
+    public static final float ppm = 100;
+
+
+    /** Window */
+    public OrthographicCamera camera;
     public static final int V_WIDTH = 512;
     public static final int V_HEIGHT = 512;
-    public static final String PROJECT_PATH = new File("").getAbsolutePath();
 
-    public OrthographicCamera camera;
+    /** HUD */
     public SpriteBatch batch;
-    public Texture img;
-    /////////////////////////////////
-    //Why are these all public?
-    //NATHAN
-    public GameMap gameMap;
     public ShapeRenderer sr;
     public Texture weapon;
-    public SpriteBatch imageBatch;
-    ////////////////////////////////
 
+    /** Fonts */
     public BitmapFont font24;
     public BitmapFont font40;
     public BitmapFont fontT16;
     public BitmapFont fontB24;
 
+    /** screens */
+    public ScreenManager screenManager;
 
-    public AssetManager assets;
+    /**Level manager */
+    private LevelManager levelManager;
+//    public LoadingScreen loadingScreen;
+//    public SplashScreen splashScreen;
+//    public MainMenuScreen mainMenuScreen;
+//    public PlayScreen playScreen;
+//    public OptionScreen optionScreen;
+//    public CreditScreen creditScreen;
+//    public GameOverScreen gameOverScreen;
 
-    public LoadingScreen loadingScreen;
-    public SplashScreen splashScreen;
-    public MainMenuScreen mainMenuScreen;
-    public PlayScreen playScreen;
-    public OptionScreen optionScreen;
-    public CreditScreen creditScreen;
-
-    //Pickup handler I added
-    private PickupHandler pickupHandler;
 
 
     @Override
     public void create () {
 
-        //Creates the singletons
+        // Creates the singletons
         AssetHandler.getAssetHandler();
         EntityList.getEntityList();
         BulletList.getBulletList();
 
-
-        //Create the pickupHandler object
-        pickupHandler = new PickupHandler();
-
-        //assets = new AssetManager(new PrefixFileHandleResolver(new InternalFileHandleResolver(), AlienGame.PROJECT_PATH));
-
-
-        //assets= new AssetManager();
         batch = new SpriteBatch();
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, V_WIDTH, V_HEIGHT);
 
+        // Camera
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, V_WIDTH , V_HEIGHT);
+
+        // Create player
+//        Player player = new Player(400, 300);
+//        EntityList.updateEntityList(player);
+//        EntityList.setPlayer(player);
 
 
         initFonts();
 
-        gameMap = new TiledGameMap(batch);
+        // Creates the screens
+        screenManager = new ScreenManager(this);
+        screenManager.setToScreen("loading");
+        levelManager = new LevelManager();
+//        loadingScreen = new LoadingScreen(this);
+//        splashScreen = new SplashScreen(this);
+//        mainMenuScreen = new MainMenuScreen(this);
+//        playScreen = new PlayScreen(this);
+//        optionScreen = new OptionScreen(this);
+//        creditScreen = new CreditScreen(this);
+//        gameOverScreen = new GameOverScreen(this);
 
-        loadingScreen = new LoadingScreen(this);
-        splashScreen = new SplashScreen(this);
-        mainMenuScreen = new MainMenuScreen(this);
-        playScreen = new PlayScreen(this, gameMap);
-        optionScreen = new OptionScreen(this);
-        creditScreen = new CreditScreen(this);
 
-        this.setScreen(loadingScreen);
+        // Set the screen to the loading screen
+        //this.setScreen(loadingScreen);
 
-        String path = AlienGame.PROJECT_PATH.replace("desktop", "core/assets");
-
-        /////////////////////////////////////
-        //NATHAN
+        // For the window and the HUD elements
         sr = new ShapeRenderer();
-        //weapon = new Texture(path + "/Pistol.png");
         weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
         float w = Gdx.graphics.getWidth();
         float y = Gdx.graphics.getHeight();
-        camera = new OrthographicCamera();
+        //camera = new OrthographicCamera();
+
         //false so it doesn't load from top left
-        camera.setToOrtho(true, w, y);
+        //camera.setToOrtho(true, w, y);
         camera.update();
-        //loads the game map
-        ////////////////////////////////////
+
+        //world.setContactListener(new MyContactListener());
     }
 
     @Override
@@ -124,52 +118,8 @@ public class AlienGame extends Game {
             Gdx.app.exit();
         }
 
-        ////////////////////////////////////
-        //NATHAN
-
+        screenManager.update(Gdx.graphics.getDeltaTime());
         camera.update();
-
-
-        //interface attempt
-        batch.begin();
-        //draw the bars here
-        sr.begin(ShapeRenderer.ShapeType.Filled);
-        //health
-        sr.setColor(Color.RED); //uses gdx.color
-        sr.rect(15, 450, 100, 10);
-
-        sr.setColor(Color.GREEN);
-        sr.rect(15, 450, 90, 10);
-        //humanity
-        sr.setColor(Color.GRAY);
-        sr.rect(275, 450, 100, 10);
-
-        sr.setColor(Color.ORANGE);
-        sr.rect(275, 450, 90, 10);
-        //experience
-        sr.setColor(Color.GRAY);
-        sr.rect(15, 440, 100, 5);
-
-        sr.setColor(Color.BLUE);
-        sr.rect(15, 440, 90, 5);
-        sr.end();
-
-        sr.begin(ShapeRenderer.ShapeType.Line);
-        //outlines (weapon and bars)
-        //weapon
-        sr.setColor(Color.GREEN);
-        sr.rect(575, 425, 50, 50);
-        batch.draw(weapon, 575, 425);
-        //health
-        sr.setColor(Color.BLACK);
-        sr.rect(15, 450, 100, 10);
-        //humanity
-        sr.rect(275, 450, 100, 10);
-        //experience
-        sr.rect(15, 440, 100, 5);
-        sr.end();
-        batch.end();
-        /////////////////////////////////////////////////
         super.render();
 
     }
@@ -179,26 +129,17 @@ public class AlienGame extends Game {
         batch.dispose();
         font24.dispose();
         AssetHandler.getAssetHandler().dispose();
-        loadingScreen.dispose();
-        splashScreen.dispose();
-        mainMenuScreen.dispose();
-        playScreen.dispose();
-        optionScreen.dispose();
-        creditScreen.dispose();
-        /////////////////////////
-        //NATHAN
-        gameMap.dispose();
-        ////////////////////////
-
-
+//        loadingScreen.dispose();
+//        splashScreen.dispose();
+//        mainMenuScreen.dispose();
+//        playScreen.dispose();
+//        optionScreen.dispose();
+//        creditScreen.dispose();
+//        gameOverScreen.dispose();
     }
 
     private void initFonts() {
-        System.out.println(PROJECT_PATH);
-        String path = PROJECT_PATH.replace("desktop", "core/assets/fonts");
-        System.out.println(path);
-        //FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(PROJECT_PATH + "pixelFont.ttf"));
-        //FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(path + "/pixelFont.ttf"));
+
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(AssetHandler.getAssetHandler().getAssetManager().getFileHandleResolver().resolve("core/assets/pixelFont.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
         FreeTypeFontGenerator.FreeTypeFontParameter paramsTitle = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -219,6 +160,10 @@ public class AlienGame extends Game {
         params.size = 24;
         params.color = Color.WHITE;
         font24 = generator.generateFont(params);
+    }
+
+    public LevelManager getLevelManager(){
+        return levelManager;
     }
 
 }
