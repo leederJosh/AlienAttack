@@ -1,6 +1,7 @@
 package com.mygdx.game.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -246,6 +247,22 @@ public class Player extends Entity {
         handleInput();
 
        limitInAirSpeed();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+
+            currentGun = shotGun;
+        }
+
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+
+            currentGun = alienHandGun;
+
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+            currentGun = alienRifle;
+        }
 
     }
 
