@@ -41,7 +41,7 @@ public abstract class AbstractPickup {
     }
 
     /**
-     * Draws the pickup to the screen
+     * Draws the pickup to the screenccc
      * @param batch
      * @param posX
      * @param posY
