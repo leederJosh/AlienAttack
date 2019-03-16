@@ -1,12 +1,11 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.assets.AssetHandler;
-import world.DialogNode;
+import com.mygdx.game.collisions.MapObjectLayers;
+
 import java.util.ArrayList;
 
 public class Enemy extends Entity {
@@ -15,6 +14,7 @@ public class Enemy extends Entity {
     //Happy dialog tree.
     private ArrayList<DialogNode<CharSequence>> dialog;
     private int dialogIndex;
+    private AnimationHandler animationHandler;
 
     public Enemy(float x, float y, World world) {
         super(x, y, EntityType.ENEMY, world);
@@ -22,14 +22,15 @@ public class Enemy extends Entity {
         // Textures
         image = AssetHandler.getAssetHandler().getTexture("AlienLeftFace.png");
 
-        // Dialog
         dialog = new ArrayList<DialogNode<CharSequence>>();
         dialog.add(new DialogNode<CharSequence>("Blorg"));
-        dialog.add(new DialogNode<CharSequence>("Reeeee"));
-        dialog.add(new DialogNode<CharSequence>("Yeet"));
+        dialog.add(new DialogNode<CharSequence>("Kurgsz"));
+        dialog.add(new DialogNode<CharSequence>("Hurgl"));
         dialog.get(0).addChild(dialog.get(1));
         dialog.get(1).addChild(dialog.get(2));
         dialogIndex = 0;
+
+        animationHandler = new AnimationHandler();
 
         defineEntityBox2D(x,y);
 
@@ -40,16 +41,27 @@ public class Enemy extends Entity {
     public void render(SpriteBatch batch) {
         batch.begin();
         batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
+
+        if (moveRight == true) {
+            batch.draw(animationHandler.getAiAnimation("right", this), pos.x, pos.y, getWidth(), getHeight());
+        }
+        if (moveRight == false) {
+            batch.draw(animationHandler.getAiAnimation("left", this), pos.x, pos.y, getWidth(), getHeight());
+        }
+        animationHandler.update(Gdx.graphics.getDeltaTime());
+
         batch.end();
     }
 
     @Override
     public void update(float deltaTime){
+        super.update(deltaTime);
         // Keeps the sprite in the box
         pos.x = b2body.getPosition().x - type.getWidth() / 2;
         pos.y = b2body.getPosition().y - type.getHeight() / 2;
 
     }
+
 
 
     /**
@@ -71,12 +83,21 @@ public class Enemy extends Entity {
 
         fixtureDef.shape = shape;
         fixtureDef.friction = 0.2f;
-        b2body.createFixture(fixtureDef);
+        //What type of fixture def I am
+        fixtureDef.filter.categoryBits = MapObjectLayers.ENTITY_OBJECT;
+        // What other fixtures I can collide with
+        fixtureDef.filter.maskBits = MapObjectLayers.FLOOR_OBJECT | MapObjectLayers.BOUNDARY_OBJECT;
+        b2body.createFixture(fixtureDef).setUserData(this);
 
         // So we can reference the player when using the contact listener
         //b2body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
+
+
     }
+
+
+
 
     @Override
     public float getSpeed() {
@@ -102,5 +123,15 @@ public class Enemy extends Entity {
     public DialogNode getDialog() {
         DialogNode output = dialog.get(dialogIndex);
         return output;
+    }
+
+    @Override
+    public void reverseMovement(){
+        if(moveRight){
+            moveRight = false;
+        }
+        else{
+            moveRight = true;
+        }
     }
 }

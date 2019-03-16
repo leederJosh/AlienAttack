@@ -1,4 +1,7 @@
-package com.mygdx.game.shooting;
+package com.mygdx.game.shooting.bullets;
+
+import com.mygdx.game.shooting.AbstractBullet;
+import com.mygdx.game.shooting.BulletType;
 
 /**
  * Behavior for the hand gun bullet
@@ -12,7 +15,7 @@ public class HandGunBullet extends AbstractBullet {
         super(posX, posY, type);
         width = 15 / scale;
         height = 15 / scale;
-        speed = 5 / scale;
+        speed = 7 / scale;
         bulletDamage = 25;
     }
 

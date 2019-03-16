@@ -10,13 +10,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.game.screens.*;
 import com.mygdx.game.shooting.BulletList;
-import com.mygdx.game.collisions.MyContactListener;
+import com.mygdx.game.levels.LevelManager;
+import com.mygdx.game.screens.managers.ScreenManager;
 import com.mygdx.game.entities.EntityList;
-import com.mygdx.game.entities.Player;
 import com.mygdx.game.assets.AssetHandler;
 
 /**
@@ -48,12 +45,18 @@ public class AlienGame extends Game {
     public BitmapFont fontB24;
 
     /** screens */
-    public LoadingScreen loadingScreen;
-    public SplashScreen splashScreen;
-    public MainMenuScreen mainMenuScreen;
-    public PlayScreen playScreen;
-    public OptionScreen optionScreen;
-    public CreditScreen creditScreen;
+    public ScreenManager screenManager;
+
+    /**Level manager */
+    private LevelManager levelManager;
+//    public LoadingScreen loadingScreen;
+//    public SplashScreen splashScreen;
+//    public MainMenuScreen mainMenuScreen;
+//    public PlayScreen playScreen;
+//    public OptionScreen optionScreen;
+//    public CreditScreen creditScreen;
+//    public GameOverScreen gameOverScreen;
+
 
 
     @Override
@@ -79,25 +82,30 @@ public class AlienGame extends Game {
         initFonts();
 
         // Creates the screens
-        loadingScreen = new LoadingScreen(this);
-        splashScreen = new SplashScreen(this);
-        mainMenuScreen = new MainMenuScreen(this);
-        playScreen = new PlayScreen(this);
-        optionScreen = new OptionScreen(this);
-        creditScreen = new CreditScreen(this);
+        screenManager = new ScreenManager(this);
+        screenManager.setToScreen("loading");
+        levelManager = new LevelManager();
+//        loadingScreen = new LoadingScreen(this);
+//        splashScreen = new SplashScreen(this);
+//        mainMenuScreen = new MainMenuScreen(this);
+//        playScreen = new PlayScreen(this);
+//        optionScreen = new OptionScreen(this);
+//        creditScreen = new CreditScreen(this);
+//        gameOverScreen = new GameOverScreen(this);
+
 
         // Set the screen to the loading screen
-        this.setScreen(loadingScreen);
+        //this.setScreen(loadingScreen);
 
         // For the window and the HUD elements
         sr = new ShapeRenderer();
         weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
         float w = Gdx.graphics.getWidth();
         float y = Gdx.graphics.getHeight();
-        camera = new OrthographicCamera();
+        //camera = new OrthographicCamera();
 
         //false so it doesn't load from top left
-        camera.setToOrtho(true, w, y);
+        //camera.setToOrtho(true, w, y);
         camera.update();
 
         //world.setContactListener(new MyContactListener());
@@ -110,6 +118,7 @@ public class AlienGame extends Game {
             Gdx.app.exit();
         }
 
+        screenManager.update(Gdx.graphics.getDeltaTime());
         camera.update();
         super.render();
 
@@ -120,12 +129,13 @@ public class AlienGame extends Game {
         batch.dispose();
         font24.dispose();
         AssetHandler.getAssetHandler().dispose();
-        loadingScreen.dispose();
-        splashScreen.dispose();
-        mainMenuScreen.dispose();
-        playScreen.dispose();
-        optionScreen.dispose();
-        creditScreen.dispose();
+//        loadingScreen.dispose();
+//        splashScreen.dispose();
+//        mainMenuScreen.dispose();
+//        playScreen.dispose();
+//        optionScreen.dispose();
+//        creditScreen.dispose();
+//        gameOverScreen.dispose();
     }
 
     private void initFonts() {
@@ -150,6 +160,10 @@ public class AlienGame extends Game {
         params.size = 24;
         params.color = Color.WHITE;
         font24 = generator.generateFont(params);
+    }
+
+    public LevelManager getLevelManager(){
+        return levelManager;
     }
 
 }

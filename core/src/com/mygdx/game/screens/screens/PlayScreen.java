@@ -1,4 +1,4 @@
-package com.mygdx.game.screens;
+package com.mygdx.game.screens.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -41,6 +39,8 @@ public class PlayScreen implements Screen {
     private int levelCounter;
     private AbstractLevel[] levels;
 
+    private LevelManager levelManager;
+
     /** Necessary assets */
     private String uiAtlas = "uiskin.atlas";
     private String uiJson = "uiskin.json";
@@ -50,28 +50,23 @@ public class PlayScreen implements Screen {
     private Viewport gamePort;
 
 
-    //TODO
-    // BUGS
-    // HOSPITAL LEVEL TRANSITION DOES NOT SEND THE PLAYER TO THE ARENA
-    // SIDE WALK LEVEL CRASHES OUT TRYING TO GET TO HOSPITAL (EVEN WITH MUSIC TURNED OFF)
-    // A
-
     public PlayScreen (final AlienGame game) {
         this.game = game;
-        camera = new OrthographicCamera();
-        gamePort = new FitViewport(AlienGame.V_WIDTH / AlienGame.ppm, AlienGame.V_HEIGHT / AlienGame.ppm, camera);
-
-        this.stage = new Stage(new StretchViewport(Gdx.graphics.getWidth() / AlienGame.ppm, Gdx.graphics.getHeight()  / AlienGame.ppm , camera));
+        levelManager = game.getLevelManager();
         batch = new SpriteBatch();
+//        levels = new AbstractLevel[] {new AlleyWayLevel(), new InsideBuildingLevel(), new SideWalkRiverLevel(), new HospitalLevel(), new ArenaLevel()};
+//        this.levelCounter = 0;
+//        currentMap = levels[levelCounter];
+        camera = new OrthographicCamera();
+        inputProcessor = new MyInputProcessor(camera);
+        //inputProcessor.setCamera(camera);
 
-        this.inputProcessor = new MyInputProcessor(camera);
+        gamePort = new FitViewport(AlienGame.V_WIDTH / AlienGame.ppm, AlienGame.V_HEIGHT / AlienGame.ppm, camera);
+        this.stage = new Stage(new StretchViewport(Gdx.graphics.getWidth() / AlienGame.ppm, Gdx.graphics.getHeight()  / AlienGame.ppm , camera));
         camera.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
-
-        levels = new AbstractLevel[] {new AlleyWayLevel(), new InsideBuildingLevel(), new SideWalkRiverLevel(), new HospitalLevel(), new ArenaLevel()};
-        this.levelCounter = 0;
-        currentMap = levels[levelCounter];
         //currentMap.spawnEntities();
 
+        levelManager.getCurrentLevel().spawnEntities();
         // Just needed to see Box2d effects for development
         box2DDebugRenderer = new Box2DDebugRenderer();
     }
@@ -96,15 +91,26 @@ public class PlayScreen implements Screen {
 
         stage.act();
 
+        levelManager.getCurrentLevel().update(Gdx.graphics.getDeltaTime());
         //For box2D
-        currentMap.getWorld().step(1/60f, 6, 2);
+        levelManager.getCurrentLevel().getWorld().step(1/60f, 6, 2);
+
+        //currentMap.getWorld().step(1/60f, 6, 2);
 
         //Centre camera on players Body
         camera.position.x = EntityList.getEntityList().getPlayer().getB2body().getPosition().x;
         camera.position.y = EntityList.getEntityList().getPlayer().getB2body().getPosition().y;
 
-        if(currentMap.hasPlayerFinished() == true){
-            setLevel();
+        if(levelManager.getCurrentLevel().hasPlayerFinished() == true){
+            levelManager.initialiseNextLevel();
+        }
+
+        if (EntityList.getEntityList().getPlayer().isDead() == true){
+            game.screenManager.setToScreen("gameOver");
+            EntityList.purge();
+            //levelCounter = 0;
+            EntityList.getEntityList().getPlayer().setIsDead(false);
+            EntityList.getEntityList().getPlayer().setHealth(100);
         }
     }
 
@@ -113,8 +119,11 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.35f, 0.35f, 0.35f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        currentMap.update(Gdx.graphics.getDeltaTime());
-        currentMap.render(camera, batch);
+
+
+        levelManager.getCurrentLevel().render(camera, batch);
+        //currentMap.update(Gdx.graphics.getDeltaTime());
+        //currentMap.render(camera, batch);
 
         for(Entity entity: EntityList.getListEntities()) {
             entity.update(delta);
@@ -123,7 +132,7 @@ public class PlayScreen implements Screen {
         update();
         stage.draw();
 
-        box2DDebugRenderer.render(currentMap.getWorld(), camera.combined);
+        box2DDebugRenderer.render(levelManager.getCurrentLevel().getWorld(), camera.combined);
     }
 
 
@@ -135,33 +144,11 @@ public class PlayScreen implements Screen {
         buttonMainMenu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(game.mainMenuScreen);
+                //game.setScreen(game.mainMenuScreen);
+                game.screenManager.setToScreen("menu");
             }
         });
         stage.addActor(buttonMainMenu);
-    }
-
-
-    public void setLevel(){
-        if(((Player)EntityList.getEntities().get(0)).hasPlayerFinished()) {
-            Player player = ((Player) EntityList.getEntities().get(0));
-            EntityList.purge();
-            EntityList.updateEntityList(player);
-            EntityList.getEntityList().getPlayer().setPlayerFinished(false);
-
-        }
-
-        levelCounter++;
-        if (!(levelCounter > levels.length - 1)) {
-            //currentMap.getWorld().dispose(); DO NOT UNCOMMENT, BREAKS EVERYTHING, but leaving as I should dispose of the worlds somewhere
-            currentMap.clearEntitiesToSpawn();
-            currentMap = levels[levelCounter];
-            currentMap.spawnPlayer();
-            currentMap.spawnEntities();
-        }
-        else {levelCounter--; }
-
-        System.out.print("Num of things in entityList " + EntityList.getListEntities().size() + "\n");
     }
 
 

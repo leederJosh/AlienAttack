@@ -25,7 +25,7 @@ import com.mygdx.game.shooting.ShootingHandler;
 import com.mygdx.game.assets.AssetHandler;
 import com.mygdx.game.entities.*;
 import com.mygdx.game.pickups.WeaponPickup;
-import world.DialogNode;
+import com.mygdx.game.entities.DialogNode;
 
 
 import java.util.ArrayList;
@@ -84,12 +84,11 @@ public abstract class AbstractLevel {
     /** The end point of a map */
     protected Rectangle levelEnd;
 
-
+    /** The world for the levels Box2D objects */
+    protected World world;
 
     /** The scale of the level */
     protected float scale = AlienGame.ppm;
-
-    private Player player; // Should be moved to game
 
 
     public AbstractLevel() {
@@ -101,7 +100,6 @@ public abstract class AbstractLevel {
         // Handlers
         pickupHandler = new PickupHandler();
         shootingHandler = new ShootingHandler();
-        aiHandler = new AIHandler();
        // weaponpick = new WeaponPickup();
 
         //Currently equipped weapon for the top right of screen
@@ -134,14 +132,10 @@ public abstract class AbstractLevel {
             entity.render(batch);
         }
 
-        //Just done to check the drawing of the health pickup works
-        // This does indead work so huzzah
-        /** Pretty sure this works logically but needs to be able to pass around the list of pickups? Should I use another singleton? Could have a pickupHandler object in each map?*/
+        // Render all pickups
         for (AbstractPickup pickup: pickupHandler.getActivePickups()){
             pickup.render(batch, pickup.getPickupX(), pickup.getPickupY());
         }
-
-        //pickupHandler.render(batch, player.getx(), player.gety());
 
         //If the bulletList contains a bullet it will be rendered here
         if(BulletList.getBulletList().getBullets().size() != 0){
@@ -151,8 +145,6 @@ public abstract class AbstractLevel {
                 batch.end();
             }
         }
-
-        //camera.update();
 
         batch.begin();
 
@@ -266,7 +258,6 @@ public abstract class AbstractLevel {
     }
 
     public void update (float delta) {
-
         //To remove the dead entities
         EntityList.getEntityList().removeDeadEntities();
 
@@ -275,15 +266,14 @@ public abstract class AbstractLevel {
 
             entity.update(delta);
 
-            // ai handler that acts on every entity except for player
-            if(entity.getType().getId().equals("player") == false){
-                aiHandler.makeEntityAct(entity);
-            }
-
             //Handles the bullet collisions
             if(shootingHandler.handleBullet(entity) == true){
                 //Has a chance to add a pickup to the pickUp handler if an entity has dies
                 pickupHandler.addPickUp(entity);
+            }
+
+            if (entity.getType().getId().equals("player") == false) {
+                aiHandler.makeEntityAct(entity);
             }
         }
 
@@ -328,22 +318,35 @@ public abstract class AbstractLevel {
 
 
         }
-
-
     }
 
     public abstract void dispose ();
 
     public abstract World getWorld();
 
+    /**
+     * Returns true if the player is within the level transition box
+     * @return
+     */
+    public boolean hasPlayerFinished(){
+        boolean hasPlayerFinished = false;
 
-    public  abstract Rectangle getLevelEnd();
+        Player player = EntityList.getEntityList().getPlayer();
+        float playerX = player.getx();
+        float playerY = player.gety();
+        float playerWidth = player.getWidth();
+        float playerHeight = player.getHeight();
 
-    public abstract boolean hasPlayerFinished();
+
+        if(playerX + playerWidth > levelEnd.getX() && playerX < levelEnd.getX() + levelEnd.getWidth()){
+
+            if(playerY + playerHeight > levelEnd.getY() && playerY + playerHeight < levelEnd.getY() + levelEnd.getHeight()){
+                hasPlayerFinished = true;
+            }
+        }
+        return hasPlayerFinished;
+    }
 
     public abstract void spawnPlayer();
 
-    public  void clearEntitiesToSpawn(){
-        entitiesToSpawn.clear();
-    }
 }

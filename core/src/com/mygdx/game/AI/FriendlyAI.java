@@ -2,6 +2,7 @@ package com.mygdx.game.ai;
 
 
 import com.mygdx.game.entities.Entity;
+import com.mygdx.game.levels.AbstractLevel;
 
 /**
  * Friendly ai behaviour, just moves left and right
@@ -10,8 +11,8 @@ import com.mygdx.game.entities.Entity;
  */
 public class FriendlyAI extends AI {
 
-    public FriendlyAI(){
-
+    public FriendlyAI(AbstractLevel level){
+        super(level);
     }
 
     @Override

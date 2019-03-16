@@ -1,4 +1,4 @@
-package com.mygdx.game.screens;
+package com.mygdx.game.screens.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -39,10 +39,10 @@ public class SplashScreen implements Screen {
         Runnable transtionRunnable = new  Runnable(){
             @Override
             public void run() {
-                game.setScreen(game.mainMenuScreen);
+                //game.setScreen(game.mainMenuScreen);
+                game.screenManager.setToScreen("menu");
             }
         };
-
         Texture splashTex = AssetHandler.getAssetHandler().getTexture(splashTexture);
         splashImg = new Image(splashTex);
         splashImg.setOrigin(splashImg.getWidth() / 2 , splashImg.getHeight() / 2);
@@ -65,7 +65,6 @@ public class SplashScreen implements Screen {
 
         game.batch.begin();
         game.batch.draw(bg, 0, 0);
-        game.font24.draw(game.batch, "Screen: SPLASH", 20, 20);
         game.batch.end();
         stage.draw();
 

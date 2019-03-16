@@ -1,9 +1,11 @@
 package com.mygdx.game.ai;
 
 import com.mygdx.game.game.AlienGame;
+import com.mygdx.game.levels.AbstractLevel;
 import com.mygdx.game.shooting.*;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
+import com.mygdx.game.shooting.bullets.HandGunBullet;
 
 import java.util.Random;
 
@@ -21,7 +23,8 @@ public class EnemyAI extends AI {
     /** The chance the enemy has of shooting, if you set this to 4 the chance is 1 in 5 as the generator includes 0 */
     private  int shootingChance;
 
-    public EnemyAI(){
+    public EnemyAI(AbstractLevel level){
+        super(level);
         xBoundary = 125 / AlienGame.ppm;
         yBoundary = 125 / AlienGame.ppm;
         shootingChance = 60;

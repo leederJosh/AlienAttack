@@ -3,10 +3,7 @@ package com.mygdx.game.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.game.AlienGame;
 
 public abstract class Entity {
@@ -15,7 +12,7 @@ public abstract class Entity {
     protected EntityType type;
     protected int health = 50;
     protected final int
-            MAX_HEALTH = 50,
+            MAX_HEALTH = 100,
             MIN_HEALTH = 0;
 
     private float xOrigin;
@@ -33,7 +30,12 @@ public abstract class Entity {
     protected final float MAX_SPEED = 1.5f;
     protected static final float speed = 1;
 
+    /** Movement */
+    protected boolean moveRight;
+
+    /** Collision */
     protected World world;
+    protected Fixture fixture;
 
     public Entity(float x, float y, EntityType type, World world) {
         this.pos = new Vector2(x, y);
@@ -41,24 +43,24 @@ public abstract class Entity {
         this.world = world;
         xOrigin = x;
         xDestination = x + xBoundary;
+        moveRight = true;
+
     }
 
 
     public abstract void render(SpriteBatch batch);
 
-    public abstract void update (float deltaTime);
+    public void update (float deltaTime){
+        moveRight(moveRight);
+    }
 
-    public void moveRight(boolean right, Entity entity){
-
-        // Checks to see if the entity is a player, and if it is gets the speed that is based on humanity
-        float speedOfEntity = entity.getSpeed();
-
+    public void moveRight(boolean moveRight){
         // Move right by default
         int direction = 1;
-        if(right != true){
+        if(moveRight != true){
             direction = -1;
         }
-        b2body.applyLinearImpulse(new Vector2(((3f * speedOfEntity) * direction) / scale, 0f), b2body.getWorldCenter(), true);
+        b2body.applyLinearImpulse(new Vector2((3.8f * direction) / scale, 0f), b2body.getWorldCenter(), true);
     }
 
     public void disposeOfBox2d(){
@@ -136,5 +138,15 @@ public abstract class Entity {
     public World getWorld(){
         return world;
     }
+
+    public boolean getMoveRight(){
+        return moveRight;
+    }
+
+    public void setMoveRight(boolean b){
+        moveRight = b;
+    }
+
+    public abstract void reverseMovement();
 
 }

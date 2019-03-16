@@ -1,4 +1,4 @@
-package com.mygdx.game.screens;
+package com.mygdx.game.screens.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -64,7 +64,8 @@ public class LoadingScreen implements Screen {
     }
 
     private void update() {
-        game.setScreen(game.splashScreen);
+        //game.setScreen(game.splashScreen);
+        game.screenManager.setToScreen("splash");
         stage.act();
     }
 

@@ -99,12 +99,15 @@ public class  EntityList {
 
     /** Clears entity list and map */
     public static void purge() {
-        for(Entity entity : entityArrayList){
-            World world = entity.getWorld();
-            world.destroyBody(entity.getB2body());
-        }
+//        for(Entity entity : entityArrayList){
+//            World world = entity.getWorld();
+//            world.destroyBody(entity.getB2body());
+//            entity.disposeOfBox2d();
+//        }
+        Player temp = (Player)entityArrayList.get(0);
         entityArrayList.clear();
         entityMap.clear();
+        updateEntityList(temp);
     }
 
     /**

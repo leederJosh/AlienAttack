@@ -3,14 +3,14 @@ package com.mygdx.game.levels;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.ai.AIHandler;
 import com.mygdx.game.assets.AssetHandler;
 import com.mygdx.game.collisions.MapObjectParser;
+import com.mygdx.game.collisions.MyContactListener;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
-import com.mygdx.game.entities.Player;
 
 /**
  * Handles level 2.
@@ -18,11 +18,9 @@ import com.mygdx.game.entities.Player;
 public class InsideBuildingLevel extends AbstractLevel {
 
 
-    /** The world for the levels Box2D objects */
-    private World world;
-
     public InsideBuildingLevel() {
         super();
+        aiHandler = new AIHandler(this);
         tiledMap = AssetHandler.getAssetHandler().loadLevel("Level Two/InsideBuilding.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1  / scale);
         world = new World(new Vector2(0f, -9.81f), false);
@@ -30,6 +28,9 @@ public class InsideBuildingLevel extends AbstractLevel {
         mapObjectParser.parseFloorObjectLayer();
         entitiesToSpawn = mapObjectParser.parseEntitySpawnPoints();
         levelEnd = mapObjectParser.parseTransitionObjects();
+        mapObjectParser.parseBoundaryObjects();
+        aiHandler = new AIHandler(this); // DON'T THINK WE NEED THIS, THEY ACT WITHOUT IT SOMEWHERE
+        world.setContactListener(new MyContactListener());
     }
 
     @Override
@@ -65,31 +66,6 @@ public class InsideBuildingLevel extends AbstractLevel {
     @Override
     public World getWorld() {
         return world;
-    }
-
-    @Override
-    public Rectangle getLevelEnd() {
-        return levelEnd;
-    }
-
-    @Override
-    public boolean hasPlayerFinished() {
-        boolean hasPlayerFinished = false;
-
-        Player player = EntityList.getEntityList().getPlayer();
-        float playerX = player.getx();
-        float playerY = player.gety();
-        float playerWidth = player.getWidth();
-        float playerHeight = player.getHeight();
-
-
-        if(playerX + playerWidth > levelEnd.getX() && playerX < levelEnd.getX() + levelEnd.getWidth()){
-
-            if(playerY > levelEnd.getY() && playerY + playerHeight < levelEnd.getY() + levelEnd.getHeight()){
-                hasPlayerFinished = true;
-            }
-        }
-        return hasPlayerFinished;
     }
 
     @Override

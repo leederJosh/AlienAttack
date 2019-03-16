@@ -1,3 +1,4 @@
+
 package com.mygdx.game.game;
 
 import com.badlogic.gdx.Gdx;
@@ -5,10 +6,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
-import com.mygdx.game.entities.Entity;
+import com.mygdx.game.assets.AssetHandler;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.mygdx.game.entities.EntityList;
 import com.mygdx.game.entities.Player;
-import com.mygdx.game.assets.AssetHandler;
 
 /**
  * Handles the inputs from the player
@@ -41,6 +42,9 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
             final float rawMouseY = Gdx.input.getY();
 
             // Map X and Y
+            if (camera == null) {
+                camera = new OrthographicCamera();
+            }
             final float mappedMouseX = (rawMouseX - Gdx.graphics.getWidth()/2 + camera.position.x);
             final float mappedMouseY = (Gdx.graphics.getHeight()/2 - rawMouseY + camera.position.y);
 
@@ -58,6 +62,10 @@ public class MyInputProcessor<T> implements Comparable, InputProcessor {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public void setCamera (OrthographicCamera camera) {
+        this.camera = camera;
     }
 
     @Override

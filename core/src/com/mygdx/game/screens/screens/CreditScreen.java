@@ -1,4 +1,4 @@
-package com.mygdx.game.screens;
+package com.mygdx.game.screens.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -85,7 +85,8 @@ public class CreditScreen implements Screen {
         buttonMainMenu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(game.mainMenuScreen);
+                //game.setScreen(game.mainMenuScreen);
+                game.screenManager.setToScreen("menu");
             }
         });
         stage.addActor(buttonMainMenu);

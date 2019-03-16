@@ -1,4 +1,7 @@
-package com.mygdx.game.shooting;
+package com.mygdx.game.shooting.bullets;
+
+import com.mygdx.game.shooting.AbstractBullet;
+import com.mygdx.game.shooting.BulletType;
 
 import java.util.Random;
 
@@ -15,7 +18,7 @@ public class AlienHandgunBullet  extends AbstractBullet {
         super(posX, posY, bulletType);
         width = 7 / scale;
         height = 7 / scale;
-        speed = 5 / scale;
+        speed = 7 / scale;
         bulletDamage = 5;
         generator = new Random();
     }
@@ -32,8 +35,8 @@ public class AlienHandgunBullet  extends AbstractBullet {
      */
     public void act() {
         if (generator.nextInt(5) == 1){
-            width++;
-            height++;
+            width += 1 / scale;
+            height += 1 /scale;
         }
     }
 }

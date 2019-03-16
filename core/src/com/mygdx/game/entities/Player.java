@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.mygdx.game.collisions.MapObjectLayers;
 import com.mygdx.game.guns.*;
 import com.mygdx.game.assets.AssetHandler;
 
@@ -25,10 +26,22 @@ public class Player extends Entity {
     private Texture
             image,
             weapon,
-            weaponLeft,
+            weaponLeft,/*
             walkSheet,
-            walkSheetLeft;
+            walkSheetLeft,*/
+            playerLeftStill,
+            playerLeftStill25,
+            playerLeftStill50,
+            playerLeftStill75,
+            playerLeftStill100,
+            playerRightStill,
+            playerRightStill25,
+            playerRightStill50,
+            playerRightStill75,
+            playerRightStill100;
+
     private SpriteBatch spriteBatch;
+    private boolean wasRight;
 
     /** Animation */
     private static final float Animation_speed = 0.5f;
@@ -38,6 +51,7 @@ public class Player extends Entity {
 
     /** Humanity */
     private Humanity humanity;
+    private AnimationHandler animationHandler;
 
     /** Gun types */
     private GunInterface currentGun;
@@ -47,22 +61,42 @@ public class Player extends Entity {
     private GunInterface alienRifle;
     private boolean isFinished;
 
+    private boolean isDead;
+
     /** max speed of player */
     private final float MAX_PLAYER_SPEED = 3f;
 
-
     public Player(float x, float y, World world) {
         super(x, y, EntityType.PLAYER, world);
+        this.isDead = false;
 
         //Create humanity object
         humanity = new Humanity();
 
         // Textures
         this.image = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveRightMiddleBig.png");
-        this.weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
-        this.weaponLeft = AssetHandler.getAssetHandler().getTexture("PistolLeft.png");
-        this.walkSheet = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterRight.png");
-        this.walkSheetLeft = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterLeft.png");
+        weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
+        weaponLeft = AssetHandler.getAssetHandler().getTexture("PistolLeft.png");
+        //this.walkSheet = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterRight.png");
+        //this.walkSheetLeft = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterLeft.png");
+
+        animationHandler = new AnimationHandler();
+
+        wasRight = true;
+//        this.image = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveRightMiddleBig.png");
+        //      this.image = AssetHandler.getAssetHandler().getTexture("SpriteSheets/100%first-char-leftstill.png");
+        playerLeftStill = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveLeftMiddleBig.png");
+        playerLeftStill25 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/25%first char leftstill.png");
+        playerLeftStill50 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/50main-leftstill.png");
+        playerLeftStill75 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/75%first-char-leftstill.png");
+        playerLeftStill100 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/100%first-char-leftstill.png");
+
+        playerRightStill = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveRightMiddleBig.png");
+        playerRightStill25 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/25%first-charstill.png");
+        playerRightStill50 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/50main-rightstill.png");
+        playerRightStill75 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/75%first-char-rightstill.png");
+        playerRightStill100 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/100%first-char-rightstill.png");
+/*
 
         // Animation - Walking right
         TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth()/FRAME_COLS, walkSheet.getHeight()/FRAME_ROWS);
@@ -85,7 +119,7 @@ public class Player extends Entity {
                 walkLeftFrames[index2++] = tmp2 [r][c];
             }
         }
-        walkLeftAnimation = new Animation<TextureRegion>(0.33f, walkLeftFrames);
+        walkLeftAnimation = new Animation<TextureRegion>(0.33f, walkLeftFrames); */
 
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
@@ -112,37 +146,76 @@ public class Player extends Entity {
     @Override
     public void render(SpriteBatch batch) {
 
-        batch.begin();
-        batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
 
+        batch.begin();
         //we scale the image so that it is the same size as we specified in entityType
         //current image is
-        if (Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D)) {
-            batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
-        } else {
-            if (Gdx.input.isKeyPressed(Keys.D)) {
-                batch.draw(weapon, pos.x, pos.y);
-            }
-            if (Gdx.input.isKeyPressed(Keys.A)) {
+    /*if (Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D)) {
+        batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
+    }*/
+        if (Gdx.input.isKeyPressed(Keys.A)) {
+            if (this.humanity.getHumanityValue() >= 50) {
+                wasRight = false;
                 batch.draw(weaponLeft, pos.x - 22, pos.y + 2);
             }
+            if (this.humanity.getHumanityValue() < 50) {
+                wasRight = true;
+                batch.draw(weapon, pos.x, pos.y + 2);
+            }
+        }
+        if (Gdx.input.isKeyPressed(Keys.D)) {
+            if (this.humanity.getHumanityValue() >= 50) {
+                wasRight = true;
+                batch.draw(weapon, pos.x, pos.y + 2);
+            } else if (this.humanity.getHumanityValue() < 50) {
+                wasRight = false;
+                batch.draw(weaponLeft, pos.x - 22, pos.y + 2);
+            }
+        }
+        //player animated
+        stateTime += Gdx.graphics.getDeltaTime();
 
-            //player animated
-            stateTime += Gdx.graphics.getDeltaTime();
-            if (Gdx.input.isKeyPressed(Keys.D)) {
-                //TextureRegion currentFrame = walkAnimation.getKeyFrame(stateTime, true);
-                batch.draw(humanity.getAnimation("right"), pos.x, pos.y, getWidth(), getHeight());
+
+        if (Gdx.input.isKeyPressed(Keys.D)) {
+            batch.draw(animationHandler.getAnimation("right", this), pos.x, pos.y, getWidth(), getHeight());
+        } else if (Gdx.input.isKeyPressed(Keys.A)) {
+            batch.draw(animationHandler.getAnimation("left", this), pos.x, pos.y, getWidth(), getHeight());
+        } else {
+            if (wasRight == true) {
+                if (this.humanity.getHumanityValue() >= 75) {
+                    batch.draw(playerRightStill, pos.x, pos.y, getWidth(), getHeight());
+                } else if (this.humanity.getHumanityValue() >= 50 && this.humanity.getHumanityValue() <= 74) {
+                    batch.draw(playerRightStill25, pos.x, pos.y, getWidth(), getHeight());
+                } else if (this.humanity.getHumanityValue() < 50 && this.humanity.getHumanityValue() >= 25) {
+                    batch.draw(playerRightStill50, pos.x, pos.y, getWidth(), getHeight());
+                } else if (this.humanity.getHumanityValue() < 25) {
+                    batch.draw(playerRightStill75, pos.x, pos.y, getWidth(), getHeight());
+                } else if (this.humanity.getHumanityValue() == 0) {
+                    batch.draw(playerRightStill100, pos.x, pos.y, getWidth(), getHeight());
+                } //TODO : BELOW IS A PROBLEM "wasRight" is always true
+            } else if (wasRight == false) {
+                if (this.humanity.getHumanityValue() >= 75) {
+                    batch.draw(playerLeftStill, pos.x, pos.y, getWidth(), getHeight());
+                } else if (this.humanity.getHumanityValue() >= 50 && this.humanity.getHumanityValue() <= 74) {
+                    batch.draw(playerLeftStill25, pos.x, pos.y, getWidth(), getHeight());
+                } else if (this.humanity.getHumanityValue() < 50 && this.humanity.getHumanityValue() >= 25) {
+                    batch.draw(playerLeftStill50, pos.x, pos.y, getWidth(), getHeight());
+                } else if (this.humanity.getHumanityValue() < 25) {
+                    batch.draw(playerLeftStill75, pos.x, pos.y, getWidth(), getHeight());
+                } else if (this.humanity.getHumanityValue() == 0) {
+                    batch.draw(playerLeftStill100, pos.x, pos.y, getWidth(), getHeight());
+                }
             }
-            if (Gdx.input.isKeyPressed(Keys.A)) {
-                //TextureRegion currentFrame2 = walkLeftAnimation.getKeyFrame(stateTime, true);
-                batch.draw(humanity.getAnimation("left"), pos.x, pos.y, getWidth(), getHeight());
-            }
+            //batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
         }
         batch.end();
     }
 
-    @Override
+        @Override
     public void update(float deltaTime) {
+        if (health <= 0){
+            isDead = true;
+        }
 
         // Keeps the sprite in the box
         pos.x = b2body.getPosition().x - type.getWidth() / 2;
@@ -150,6 +223,7 @@ public class Player extends Entity {
 
         // Update humanity stats
         humanity.update(deltaTime);
+        animationHandler.update(deltaTime);
 
         //Deduct health when the player is on top of an enemy (Enemy melee)
         for (int i = 1; i < EntityList.getListEntities().size(); i++) {
@@ -160,11 +234,6 @@ public class Player extends Entity {
                 reduceHealth(10);
                 System.out.println("Health (move on entity): " + health);
             }
-        }
-
-        //Check to see if the player has finished the level
-        if (pos.x > 1500) {
-            isFinished = true;
         }
 
         //Make sure that the health never goes below 0 or above 100.
@@ -197,7 +266,6 @@ public class Player extends Entity {
 
     }
 
-
     private void handleInput(){
 
         // If the player is below half humanity flip controls
@@ -205,12 +273,12 @@ public class Player extends Entity {
 
             // Player moves left
             if (Gdx.input.isKeyPressed(Keys.D)) {
-                moveRight(false, this);
+                moveRight(false);
             }
 
             // Player moves right
             if (Gdx.input.isKeyPressed(Keys.A)) {
-                moveRight(true, this);
+                moveRight(true);
             }
         }
         // Else if player above 50 humanity (inclusive) then normal controls
@@ -218,12 +286,12 @@ public class Player extends Entity {
 
             // Player moves left
             if (Gdx.input.isKeyPressed(Keys.A) && b2body.getLinearVelocity().x <= MAX_SPEED) {
-                moveRight(false, this);
+                moveRight(false);
             }
 
             // Player moves right
             if (Gdx.input.isKeyPressed(Keys.D) && b2body.getLinearVelocity().x >= MAX_SPEED * -1) {
-                moveRight(true, this);
+                moveRight(true);
             }
         }
 
@@ -255,13 +323,19 @@ public class Player extends Entity {
 
         fixtureDef.shape = shape;
         fixtureDef.friction = 0.2f;
-        b2body.createFixture(fixtureDef);
+
+        //What type of fixture def I am
+        fixtureDef.filter.categoryBits = MapObjectLayers.PLAYER_OBJECT;
+        // What other fixtures I can collide with
+        fixtureDef.filter.maskBits = MapObjectLayers.FLOOR_OBJECT;
+        //b2body.createFixture(fixtureDef);
 
         // So we can reference the player when using the contact listener
         b2body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
     }
 
+    /** Give player a new body definition in a new given world */
     public void reDefinePlayerBox2D(float xPos, float yPos, World newWorld) {
 
         // Define the box2d body around player
@@ -277,7 +351,11 @@ public class Player extends Entity {
 
         fixtureDef.shape = shape;
         fixtureDef.friction = 0.2f;
-        b2body.createFixture(fixtureDef);
+        //What type of fixture def I am
+        fixtureDef.filter.categoryBits = MapObjectLayers.PLAYER_OBJECT;
+        // What other fixtures I can collide with
+        fixtureDef.filter.maskBits = MapObjectLayers.FLOOR_OBJECT;
+        //b2body.createFixture(fixtureDef);
 
         // So we can reference the player when using the contact listener
         b2body.createFixture(fixtureDef).setUserData(this);
@@ -326,6 +404,32 @@ public class Player extends Entity {
 
     public BodyDef getBodyDef(){
         return bdef;
+    }
+
+    public int getHealth(){ return health;}
+
+    public void setIsDead(boolean dead){
+        isDead = dead;
+    }
+
+    public boolean getIsDead(){
+        return isDead;
+    }
+
+    public boolean isDead(){
+        return isDead;
+    }
+
+    public void setHealth(int health){ this.health = health;}
+
+    @Override
+    public void reverseMovement(){
+        if(moveRight){
+            moveRight = false;
+        }
+        else{
+            moveRight = true;
+        }
     }
 
 

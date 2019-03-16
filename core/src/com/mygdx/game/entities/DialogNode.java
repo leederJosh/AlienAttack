@@ -1,4 +1,4 @@
-package world;
+package com.mygdx.game.entities;
 
 import java.util.ArrayList;
 import java.util.Iterator;
