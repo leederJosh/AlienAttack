@@ -14,7 +14,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.ai.AIHandler;
 import com.mygdx.game.collisions.MapObjectParser;
-import com.mygdx.game.collisions.MyContactListener;
 import com.mygdx.game.game.AlienGame;
 import com.mygdx.game.game.MyInputProcessor;
 import com.mygdx.game.pickups.AbstractPickup;
@@ -24,7 +23,7 @@ import com.mygdx.game.shooting.BulletList;
 import com.mygdx.game.shooting.ShootingHandler;
 import com.mygdx.game.assets.AssetHandler;
 import com.mygdx.game.entities.*;
-import world.DialogNode;
+import com.mygdx.game.entities.DialogNode;
 
 import java.util.ArrayList;
 import java.util.Map;

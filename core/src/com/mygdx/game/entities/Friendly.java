@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.assets.AssetHandler;
 import com.mygdx.game.collisions.MapObjectLayers;
-import world.DialogNode;
+
 import java.util.ArrayList;
 
 public class Friendly extends Entity {
@@ -18,7 +18,6 @@ public class Friendly extends Entity {
 
     //Happy dialog tree.
     private ArrayList<DialogNode<CharSequence>> happyDialog;
-
     //Dialog tree for when a friendly is hit.
     private ArrayList<DialogNode<CharSequence>> isHitDialog;
     private int dialogIndex;
@@ -45,6 +44,7 @@ public class Friendly extends Entity {
         isHitDialog = new ArrayList<DialogNode<CharSequence>>();
         isHitDialog.add(new DialogNode<CharSequence>("Don't shoot!"));
         isHitDialog.add(new DialogNode<CharSequence>("Why did you shoot me?"));
+        isHitDialog.add(new DialogNode<CharSequence>("Goodbye cruel world"));
         isHitDialog.get(0).addChild(isHitDialog.get(1));
 
         animationHandler = new AnimationHandler();

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.assets.AssetHandler;
 import com.mygdx.game.collisions.MapObjectLayers;
-import world.DialogNode;
+
 import java.util.ArrayList;
 
 public class Enemy extends Entity {
@@ -22,11 +22,10 @@ public class Enemy extends Entity {
         // Textures
         image = AssetHandler.getAssetHandler().getTexture("AlienLeftFace.png");
 
-        // Dialog
         dialog = new ArrayList<DialogNode<CharSequence>>();
         dialog.add(new DialogNode<CharSequence>("Blorg"));
-        dialog.add(new DialogNode<CharSequence>("Reeeee"));
-        dialog.add(new DialogNode<CharSequence>("Yeet"));
+        dialog.add(new DialogNode<CharSequence>("Kurgsz"));
+        dialog.add(new DialogNode<CharSequence>("Hurgl"));
         dialog.get(0).addChild(dialog.get(1));
         dialog.get(1).addChild(dialog.get(2));
         dialogIndex = 0;
