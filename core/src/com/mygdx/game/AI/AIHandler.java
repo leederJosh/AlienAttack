@@ -1,11 +1,8 @@
 package com.mygdx.game.ai;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.entities.Enemy;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.levels.AbstractLevel;
-
-import java.util.ArrayList;
 
 /** Handles the ai behaviour each tick
  * @Author Josh Leeder
@@ -27,12 +24,8 @@ public class AIHandler {
 
     public void makeEntityAct(Entity entity){
 
-//        friendlyBehaviour.moveEntity(entity);
-////        enemyBehaviour.moveEntity(entity);
-
         if(entity instanceof Enemy){
             enemyBehaviour.act(entity);
-            System.out.println("This is an enemy acting in ai");
         }
 
 
