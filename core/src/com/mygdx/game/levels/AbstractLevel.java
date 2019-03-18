@@ -349,4 +349,6 @@ public abstract class AbstractLevel {
 
     public abstract void spawnPlayer();
 
+    public abstract void refreshEntities();
+
 }

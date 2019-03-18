@@ -432,5 +432,8 @@ public class Player extends Entity {
         }
     }
 
+    public void refreshHumanity(){
+        humanity.refreshHumanity();
+    }
 
 }

@@ -75,6 +75,12 @@ public class ArenaLevel extends AbstractLevel {
     public boolean hasPlayerFinished(){
         return false;
     }
+
+    @Override
+    public void refreshEntities() {
+        entitiesToSpawn.clear();
+        entitiesToSpawn = mapObjectParser.parseEntitySpawnPoints();
+    }
 }
 
 
