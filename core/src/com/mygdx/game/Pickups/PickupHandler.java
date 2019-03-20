@@ -142,7 +142,7 @@ public class PickupHandler {
         toDrop = false;
         // 1 in 4 chance to drop the pickup
         // The next int is between 0 and n where n is exclusive
-        if (gen.nextInt(5) == 3) {
+        if (gen.nextInt(4) == 3) {
             toDrop = true;
         }
         return toDrop;
@@ -175,13 +175,14 @@ public class PickupHandler {
                 activePickups.add(new CluePickup(entity.getx(), entity.gety()));
             }
 
-            if (pickupToDrop() == 2){
-                activePickups.add(new WeaponPickup(entity.getx(), entity.gety()));
+          //  if (pickupToDrop() == 2){
+          //      activePickups.add(new WeaponPickup(entity.getx(), entity.gety()));
             }
 
 
         }
 
     }
-}
+
+
 
