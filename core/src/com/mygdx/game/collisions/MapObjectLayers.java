@@ -15,5 +15,7 @@ public class MapObjectLayers {
     public static final short BOUNDARY_OBJECT = 8;
     /** Defines the player object */
     public static final short PLAYER_OBJECT = 16;
+    /** Defines the trap object */
+    public static final short TRAP_OBJECT = 32;
 
 }

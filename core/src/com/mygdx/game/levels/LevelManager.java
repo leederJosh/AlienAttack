@@ -31,9 +31,11 @@ public class LevelManager {
         if (!(levelCounter > levels.length - 1)) {
             //currentMap.getWorld().dispose(); DO NOT UNCOMMENT, BREAKS EVERYTHING, but leaving as I should dispose of the worlds somewhere
             //currentMap.clearEntitiesToSpawn();
+            stopMusic();
             currentLevel = levels[levelCounter];
             currentLevel.spawnPlayer();
             currentLevel.spawnEntities();
+            playMusic();
         }
         else {levelCounter--; }
     }
@@ -47,5 +49,17 @@ public class LevelManager {
             levelCounter = index;
         }
         currentLevel = levels[index];
+    }
+
+    public void refreshEntities(){
+        currentLevel.refreshEntities();
+    }
+
+    public void playMusic(){
+        currentLevel.playMusic();
+    }
+
+    public void stopMusic(){
+        currentLevel.stopMusic();
     }
 }

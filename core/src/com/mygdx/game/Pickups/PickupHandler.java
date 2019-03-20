@@ -1,8 +1,7 @@
 package com.mygdx.game.pickups;
-
+import com.mygdx.game.game.AlienGame;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
-import com.mygdx.game.game.AlienGame;
 
 import java.util.ArrayList;
 import static com.mygdx.game.pickups.AbstractPickup.gen;
@@ -24,6 +23,12 @@ public class PickupHandler {
     /** Whether a pickup should drop or not */
     protected boolean toDrop;
 
+    public void setToDrop(boolean toDrop) {
+        this.toDrop = toDrop;
+    }
+
+   public boolean hasCollided;
+
 
     public PickupHandler() {
         activePickups = new ArrayList<AbstractPickup>();
@@ -34,12 +39,11 @@ public class PickupHandler {
     /**
      * Detects when a player walks over a pickup and calls the appropriate act method from the pickup
      */
-    public void hasCollidedWithPickUp() {
+    public boolean hasCollidedWithPickUp() {
+
 
         for (AbstractPickup pickup : activePickups) {
-
-            boolean hasCollided = false;
-
+            hasCollided = false;
             //Pickup variables to use
             float pickupWidth = pickup.getWIDTH() / AlienGame.ppm;
             float pickupHeight = pickup.getHEIGHT()/ AlienGame.ppm;
@@ -93,9 +97,13 @@ public class PickupHandler {
                 pickup.act();
                 pickup.setPickupValue(0);
                 addPickUpsToRemove(pickup);
+
             }
         }
+
+
         clearPickups();
+        return hasCollided;
     }
 
     /**
@@ -112,8 +120,10 @@ public class PickupHandler {
     public void clearPickups() {
         for (AbstractPickup pickup : pickupsToRemove) {
             activePickups.remove(pickup);
+
         }
         pickupsToRemove.clear();
+
     }
 
     /**
@@ -132,19 +142,20 @@ public class PickupHandler {
         toDrop = false;
         // 1 in 4 chance to drop the pickup
         // The next int is between 0 and n where n is exclusive
-        if (gen.nextInt(4) == 3) {
+        if (gen.nextInt(5) == 3) {
             toDrop = true;
         }
-        return true;
+        return toDrop;
     }
 
     /**
      * Randomly decided which item to drop
      * @return
      */
-    private int pickupToDrop() {
+    public int pickupToDrop() {
         //At the moment this is 0 to always spawn a health pickup
-        return gen.nextInt(1);
+        return gen.nextInt(3);
+
     }
 
     /**
@@ -159,7 +170,18 @@ public class PickupHandler {
             if (pickupToDrop() == 0) {
                 activePickups.add(new HealthPickup(entity.getx(), entity.gety()));
             }
+
+            if (pickupToDrop() == 1){
+                activePickups.add(new CluePickup(entity.getx(), entity.gety()));
+            }
+
+            if (pickupToDrop() == 2){
+                activePickups.add(new WeaponPickup(entity.getx(), entity.gety()));
+            }
+
+
         }
+
     }
 }
 

@@ -73,13 +73,14 @@ public class OptionScreen implements Screen {
         game.font40.draw(game.batch,"The Final Stand", 60, 420);
         game.fontT16.draw(game.batch,"-------------------------------------------------", 10, 380);
         game.fontT16.draw(game.batch,"SURVIVE EACH TREACHEROUS LEVEL LONG ENOUGH TO", 10, 350);
-        game.fontT16.draw(game.batch,"PROCEDD TO THE NEXT STAGE IN ORDER TO SAVE", 10, 320);
+        game.fontT16.draw(game.batch,"PROCEED TO THE NEXT STAGE IN ORDER TO SAVE", 10, 320);
         game.fontT16.draw(game.batch,"HUMANITY THROUGH OBTAINING THE CURE, BUT BE", 10, 290);
         game.fontT16.draw(game.batch,"AWARE ONE WRONG STEP COULD END YOUR MISSION.", 10, 260);
         game.fontT16.draw(game.batch,"WITH THE CURE HUMANITY CAN STRIKE BACK AND", 10, 230);
         game.fontT16.draw(game.batch,"RECLAIM THEIR FREEDOM.", 10, 200);
         game.fontT16.draw(game.batch,"WASD / ARROW KEYS TO MOVE", 140, 150);
         game.fontT16.draw(game.batch,"MOUSE LEFT CLICK TO SHOOT", 140, 120);
+        game.fontT16.draw(game.batch,"A&D KEYS SWITCHED WHEN HUMANITY IS BELOW 50.", 10, 90);
         game.batch.end();
 
         stage.draw();

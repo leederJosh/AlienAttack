@@ -72,6 +72,21 @@ public class HospitalLevel extends AbstractLevel {
         mapObjectParser.parsePlayerSpawnPoint(world);
     }
 
+    @Override
+    public void refreshEntities() {
+        entitiesToSpawn.clear();
+        entitiesToSpawn = mapObjectParser.parseEntitySpawnPoints();
+    }
+
+    @Override
+    public void stopMusic() {
+
+    }
+
+    @Override
+    public void playMusic() {
+
+    }
 
 }
 

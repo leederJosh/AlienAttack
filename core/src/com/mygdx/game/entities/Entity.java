@@ -10,7 +10,7 @@ public abstract class Entity {
 
     protected Vector2 pos;
     protected EntityType type;
-    protected int health = 50;
+    protected int health = 100;
     protected final int
             MAX_HEALTH = 100,
             MIN_HEALTH = 0;

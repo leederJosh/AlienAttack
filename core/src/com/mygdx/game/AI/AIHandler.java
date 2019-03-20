@@ -1,5 +1,6 @@
 package com.mygdx.game.ai;
 
+import com.mygdx.game.entities.Boss;
 import com.mygdx.game.entities.Enemy;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.levels.AbstractLevel;
@@ -24,7 +25,7 @@ public class AIHandler {
 
     public void makeEntityAct(Entity entity){
 
-        if(entity instanceof Enemy){
+        if(entity instanceof Enemy || entity instanceof Boss){
             enemyBehaviour.act(entity);
         }
 

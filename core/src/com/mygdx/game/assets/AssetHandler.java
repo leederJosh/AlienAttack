@@ -84,8 +84,13 @@ public class AssetHandler {
         assetManager.load(assetPath + "PistolLeft.png", Texture.class);
         assetManager.load(assetPath + "civilianLeftFace.png", Texture.class);
         assetManager.load(assetPath + "AlienLeftFace.png", Texture.class);
+        assetManager.load(assetPath + "SMG.png", Texture.class);
+        assetManager.load(assetPath + "SMGLeft.png", Texture.class);
+        assetManager.load(assetPath + "TopLeft.png", Texture.class);
+        assetManager.load(assetPath + "TopRight.png", Texture.class);
+        assetManager.load(assetPath + "BottomRight.png", Texture.class);
+        assetManager.load(assetPath + "BottomLeft.png", Texture.class);
         assetManager.load(assetPath + "gameOver.png", Texture.class);
-
 
         //Boss
         assetManager.load(assetPath + "BossLeftThree.png", Texture.class);
@@ -148,6 +153,12 @@ public class AssetHandler {
 
         /** Music */
         assetManager.load(assetPath + "Music/MenuScreen.mp3", Music.class);
+        assetManager.load(assetPath + "Music/levelOne.mp3", Music.class);
+        assetManager.load(assetPath + "Music/levelTwo.mp3", Music.class);
+        assetManager.load(assetPath + "Music/levelThree.mp3", Music.class);
+        assetManager.load(assetPath + "Music/levelFour.mp3", Music.class);
+        assetManager.load(assetPath + "Music/levelFive.mp3", Music.class);
+        assetManager.load(assetPath + "Music/gameOver.mp3", Music.class);
 
         // Wait for the Assetmanager to finish loading all the assets
         assetManager.finishLoading();

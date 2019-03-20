@@ -21,6 +21,8 @@ public class Boss extends Entity  {
         image = AssetHandler.getAssetHandler().getTexture("BossLeftThree.png");
         animationHandler = new AnimationHandler();
 
+        health = 300;
+
         defineEntityBox2D(x,y);
     }
 

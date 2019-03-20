@@ -2,6 +2,8 @@ package com.mygdx.game.assets;
 
 import com.badlogic.gdx.audio.Music;
 
+import java.util.HashMap;
+
 /**
  * Manages the music in each level
  * @Author Josh Leeder
@@ -18,7 +20,6 @@ public class MusicManager implements Music {
     public MusicManager(Music songName){
         this.songName = songName;
     }
-
 
     @Override
     public void play() {

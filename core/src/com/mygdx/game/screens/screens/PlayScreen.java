@@ -54,12 +54,8 @@ public class PlayScreen implements Screen {
         this.game = game;
         levelManager = game.getLevelManager();
         batch = new SpriteBatch();
-//        levels = new AbstractLevel[] {new AlleyWayLevel(), new InsideBuildingLevel(), new SideWalkRiverLevel(), new HospitalLevel(), new ArenaLevel()};
-//        this.levelCounter = 0;
-//        currentMap = levels[levelCounter];
         camera = new OrthographicCamera();
         inputProcessor = new MyInputProcessor(camera);
-        //inputProcessor.setCamera(camera);
 
         gamePort = new FitViewport(AlienGame.V_WIDTH / AlienGame.ppm, AlienGame.V_HEIGHT / AlienGame.ppm, camera);
         this.stage = new Stage(new StretchViewport(Gdx.graphics.getWidth() / AlienGame.ppm, Gdx.graphics.getHeight()  / AlienGame.ppm , camera));
@@ -92,6 +88,7 @@ public class PlayScreen implements Screen {
         stage.act();
 
         levelManager.getCurrentLevel().update(Gdx.graphics.getDeltaTime());
+
         //For box2D
         levelManager.getCurrentLevel().getWorld().step(1/60f, 6, 2);
 

@@ -107,19 +107,10 @@ public class MainMenuScreen implements Screen {
         buttonPlay.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //game.setScreen(game.playScreen);
                 game.screenManager.setToScreen("play");
+                musicManager.stop();
 
-//                EntityList.getEntityList().getPlayer().setHealth(100);
-//                EntityList.getEntityList().getPlayer().setIsDead(false);
-//                EntityList.getEntityList().getPlayer().getBodyDef().position.set(25, 400);
 
-                //Trying to get music to fade out (this doesn't work and it is probably best to put this in the music manager)
-                for(musicManager.getVolume(); musicManager.getVolume() > 0 ; musicManager.setVolume(Gdx.graphics.getDeltaTime() * 5)){
-                    musicManager.stop();
-                }
-                //isInGame = true;
-                //game.setScreen(AlleyWayLevel());
             }
         });
 
@@ -130,7 +121,6 @@ public class MainMenuScreen implements Screen {
         buttonOption.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //game.setScreen(game.optionScreen);
                 game.screenManager.setToScreen("option");
             }
         });
@@ -142,7 +132,6 @@ public class MainMenuScreen implements Screen {
         buttonCredit.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //game.setScreen(game.creditScreen);
                 game.screenManager.setToScreen("credit");
             }
         });

@@ -64,9 +64,10 @@ public class CreditScreen implements Screen {
         game.fontT16.draw(game.batch,"ART DESIGN          ADBUL / HASNAATH", 30, 270);
         game.fontT16.draw(game.batch,"SOUND DESIGN       SAMUEL", 30, 240);
         game.fontT16.draw(game.batch,"PROGRAMMERS       EHSAN / SAMUEL / SOJOURNER", 30, 210);
-        game.fontT16.draw(game.batch,"MENU DESIGN        EHSAN", 30, 180);
-        game.fontT16.draw(game.batch,"LEVEL DESIGN        HASNAATH", 30, 150);
-        game.fontT16.draw(game.batch,"WEBSITE DESIGN     ABDUL", 30, 120);
+        game.fontT16.draw(game.batch,"                       NATHAN / JOSH", 30, 180);
+        game.fontT16.draw(game.batch,"MENU DESIGN        EHSAN", 30, 150);
+        game.fontT16.draw(game.batch,"LEVEL DESIGN        HASNAATH / ABDUL", 30, 120);
+        game.fontT16.draw(game.batch,"WEBSITE DESIGN     ABDUL /HASNAATH", 30, 90);
         game.batch.end();
 
         stage.draw();

@@ -2,6 +2,8 @@ package com.mygdx.game.collisions;
 
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.Player;
+import com.mygdx.game.game.AlienGame;
 
 
 /**
@@ -20,12 +22,35 @@ public class MyContactListener implements ContactListener {
 
         switch (cDef) {
 
+            // When an entity object collides with a boundary object
             case MapObjectLayers.ENTITY_OBJECT | MapObjectLayers.BOUNDARY_OBJECT:
                 if (fixA.getFilterData().categoryBits == MapObjectLayers.ENTITY_OBJECT)
                     ((Entity) fixA.getUserData()).reverseMovement();
                 else
                     ((Entity) fixB.getUserData()).reverseMovement();
             break;
+
+            // When an player object collides with a trap object
+            case MapObjectLayers.PLAYER_OBJECT | MapObjectLayers.TRAP_OBJECT:
+                System.out.println("contact with player and trap");
+                if (fixA.getFilterData().categoryBits == MapObjectLayers.PLAYER_OBJECT) {
+                    ((Player) fixA.getUserData()).reduceHealth(10);
+                    if (fixB.getBody().getPosition().x < ((Player) fixA.getUserData()).getB2body().getPosition().x) {
+                        ((Player) fixA.getUserData()).getB2body().setLinearVelocity(-3, 1.5f);
+                    } else {
+                        ((Player) fixA.getUserData()).getB2body().setLinearVelocity(3, 1.5f);
+                    }
+                }
+                else{
+                    ((Player) fixB.getUserData()).reduceHealth(10);
+                    if(fixA.getBody().getPosition().x <  ((Player) fixB.getUserData()).getB2body().getPosition().x){
+                        ((Player) fixB.getUserData()).getB2body().setLinearVelocity(-3, 1.5f);
+                    }
+                    else{
+                        ((Player) fixB.getUserData()).getB2body().setLinearVelocity(3, 1.5f);
+                    }
+                }
+                break;
         }
 
     }

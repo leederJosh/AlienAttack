@@ -209,4 +209,37 @@ public class MapObjectParser {
         }
         shape.dispose();
     }
+
+    /**
+     * Creates a Box2D body for every object in the given Object layer, adds it to the Box2D game levels
+     * This is for collision between players and trap objects
+     */
+    public void parseTrapObjectLayer() {
+
+        BodyDef bdef = new BodyDef();
+        PolygonShape shape = new PolygonShape();
+        FixtureDef fixtureDef = new FixtureDef();
+        Body body;
+
+        // Gets all the rectangle objects from a given map and layer
+        for (MapObject object : tiledMap.getLayers().get("Trap").getObjects().getByType(RectangleMapObject.class)) {
+
+            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
+
+            bdef.type = BodyDef.BodyType.StaticBody;
+            bdef.position.set((rectangle.getX() + rectangle.getWidth() / 2) / AlienGame.ppm, (rectangle.getY() + rectangle.getHeight() / 2) / AlienGame.ppm);
+
+            body = world.createBody(bdef);
+            shape.setAsBox((rectangle.getWidth() / 2) / AlienGame.ppm, (rectangle.getHeight() / 2) / AlienGame.ppm);
+            fixtureDef.shape = shape;
+            fixtureDef.friction = 0.8f; // This is the friction for all of the floor tiles, increase and decrease to slop character sliding (max is 1)
+
+            //What type of fixture def I am
+            fixtureDef.filter.categoryBits = MapObjectLayers.TRAP_OBJECT;
+            // What other fixtures I can collide with
+            fixtureDef.filter.maskBits = MapObjectLayers.PLAYER_OBJECT;
+            body.createFixture(fixtureDef);
+        }
+        shape.dispose();
+    }
 }

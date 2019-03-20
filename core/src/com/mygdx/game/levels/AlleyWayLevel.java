@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.ai.AIHandler;
 import com.mygdx.game.assets.AssetHandler;
+import com.mygdx.game.assets.MusicManager;
 import com.mygdx.game.collisions.MapObjectParser;
 import com.mygdx.game.collisions.MyContactListener;
 import com.mygdx.game.entities.Entity;
@@ -31,9 +32,15 @@ public class AlleyWayLevel extends AbstractLevel {
         mapObjectParser.parsePlayerSpawnPoint(world);
         entitiesToSpawn = new ArrayList<Entity>(mapObjectParser.parseEntitySpawnPoints());
         mapObjectParser.parseBoundaryObjects();
+        mapObjectParser.parseTrapObjectLayer();
         levelEnd = mapObjectParser.parseTransitionObjects();
         aiHandler = new AIHandler(this);
         world.setContactListener(new MyContactListener());
+
+        musicManager = new MusicManager(AssetHandler.getAssetHandler().getMusic("levelOne.mp3"));
+        musicManager.setLooping(true);
+        //musicManager.play();
+
     }
 
     @Override
@@ -76,6 +83,21 @@ public class AlleyWayLevel extends AbstractLevel {
         mapObjectParser.parsePlayerSpawnPoint(world);
     }
 
+    @Override
+    public void refreshEntities() {
+        entitiesToSpawn.clear();
+        entitiesToSpawn = mapObjectParser.parseEntitySpawnPoints();
+    }
+
+    @Override
+    public void stopMusic() {
+        musicManager.stop();
+    }
+
+    @Override
+    public void playMusic() {
+        musicManager.play();
+    }
 
 
 }

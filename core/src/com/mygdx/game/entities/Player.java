@@ -1,6 +1,7 @@
 package com.mygdx.game.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -76,14 +77,10 @@ public class Player extends Entity {
         this.image = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveRightMiddleBig.png");
         weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
         weaponLeft = AssetHandler.getAssetHandler().getTexture("PistolLeft.png");
-        //this.walkSheet = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterRight.png");
-        //this.walkSheetLeft = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterLeft.png");
 
+        // Animation
         animationHandler = new AnimationHandler();
-
         wasRight = true;
-//        this.image = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveRightMiddleBig.png");
-        //      this.image = AssetHandler.getAssetHandler().getTexture("SpriteSheets/100%first-char-leftstill.png");
         playerLeftStill = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveLeftMiddleBig.png");
         playerLeftStill25 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/25%first char leftstill.png");
         playerLeftStill50 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/50main-leftstill.png");
@@ -95,30 +92,7 @@ public class Player extends Entity {
         playerRightStill50 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/50main-rightstill.png");
         playerRightStill75 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/75%first-char-rightstill.png");
         playerRightStill100 = AssetHandler.getAssetHandler().getTexture("SpriteSheets/100%first-char-rightstill.png");
-/*
 
-        // Animation - Walking right
-        TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth()/FRAME_COLS, walkSheet.getHeight()/FRAME_ROWS);
-        TextureRegion[] walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-        // Walking left
-        TextureRegion[][] tmp2 = TextureRegion.split(walkSheetLeft, walkSheetLeft.getWidth()/FRAME_COLS, walkSheetLeft.getHeight()/FRAME_ROWS);
-        TextureRegion[] walkLeftFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
-
-        int index = 0;
-        for (int i = 0; i < FRAME_ROWS; i++) {
-            for(int j = 0; j < FRAME_COLS; j++) {
-                walkFrames[index++] = tmp [i][j];
-            }
-        }
-        walkAnimation = new Animation<TextureRegion>(0.33f, walkFrames);
-
-        int index2 = 0;
-        for (int r = 0; r < FRAME_ROWS; r++) {
-            for(int c = 0; c < FRAME_COLS; c++) {
-                walkLeftFrames[index2++] = tmp2 [r][c];
-            }
-        }
-        walkLeftAnimation = new Animation<TextureRegion>(0.33f, walkLeftFrames); */
 
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
@@ -131,9 +105,6 @@ public class Player extends Entity {
 
         //Gun objects for the player
         currentGun = handGun;
-        //currentGun = shotGun;
-        //currentGun = alienHandGun;
-        //currentGun = alienRifle;
         isFinished = false;
 
         // The collision box to be drawn around the player
@@ -148,10 +119,7 @@ public class Player extends Entity {
 
         batch.begin();
         //we scale the image so that it is the same size as we specified in entityType
-        //current image is
-    /*if (Gdx.input.isKeyPressed(Keys.A) && Gdx.input.isKeyPressed(Keys.D)) {
-        batch.draw(image, pos.x, pos.y, getWidth(), getHeight());
-    }*/
+        // Draws the gun on different sides of the player and sets which way the player continues to look after key press
         if (Gdx.input.isKeyPressed(Keys.A)) {
             if (this.humanity.getHumanityValue() >= 50) {
                 wasRight = false;
@@ -171,9 +139,9 @@ public class Player extends Entity {
                 batch.draw(weaponLeft, pos.x - 22, pos.y + 2);
             }
         }
+
         //player animated
         stateTime += Gdx.graphics.getDeltaTime();
-
 
         if (Gdx.input.isKeyPressed(Keys.D)) {
             batch.draw(animationHandler.getAnimation("right", this), pos.x, pos.y, getWidth(), getHeight());
@@ -244,8 +212,27 @@ public class Player extends Entity {
         }
 
         handleInput();
+        limitInAirSpeed();
 
-       limitInAirSpeed();
+        if(Gdx.input.isKeyPressed(Keys.NUM_1)){
+           currentGun = handGun;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+
+            currentGun = shotGun;
+        }
+
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3) && humanity.getHumanityValue() <= 50) {
+
+            currentGun = alienHandGun;
+
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4) && humanity.getHumanityValue() <= 25) {
+            currentGun = alienRifle;
+        }
 
     }
 
@@ -310,7 +297,7 @@ public class Player extends Entity {
         //What type of fixture def I am
         fixtureDef.filter.categoryBits = MapObjectLayers.PLAYER_OBJECT;
         // What other fixtures I can collide with
-        fixtureDef.filter.maskBits = MapObjectLayers.FLOOR_OBJECT;
+        fixtureDef.filter.maskBits = MapObjectLayers.FLOOR_OBJECT | MapObjectLayers.TRAP_OBJECT;
         //b2body.createFixture(fixtureDef);
 
         // So we can reference the player when using the contact listener
@@ -337,7 +324,7 @@ public class Player extends Entity {
         //What type of fixture def I am
         fixtureDef.filter.categoryBits = MapObjectLayers.PLAYER_OBJECT;
         // What other fixtures I can collide with
-        fixtureDef.filter.maskBits = MapObjectLayers.FLOOR_OBJECT;
+        fixtureDef.filter.maskBits = MapObjectLayers.FLOOR_OBJECT | MapObjectLayers.TRAP_OBJECT;
         //b2body.createFixture(fixtureDef);
 
         // So we can reference the player when using the contact listener
@@ -415,5 +402,8 @@ public class Player extends Entity {
         }
     }
 
+    public void refreshHumanity(){
+        humanity.refreshHumanity();
+    }
 
 }
