@@ -1,6 +1,7 @@
 package com.mygdx.game.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -28,6 +29,7 @@ public class Player extends Entity {
             weaponLeft,/*
             walkSheet,
             walkSheetLeft,*/
+
             playerLeftStill,
             playerLeftStill25,
             playerLeftStill50,
@@ -38,6 +40,9 @@ public class Player extends Entity {
             playerRightStill50,
             playerRightStill75,
             playerRightStill100;
+
+    private String currentGunPng,
+                    currentLeftPng;
 
     private SpriteBatch spriteBatch;
     private boolean wasRight;
@@ -72,10 +77,31 @@ public class Player extends Entity {
         //Create humanity object
         humanity = new Humanity();
 
-        // Textures
+       // Textures
+        if (currentGun== handGun){
+            currentGunPng= "Pistol.png";
+            currentLeftPng = "PistolLeft.png";
+        }
+        if (currentGun== shotGun){
+            currentGunPng= "SMG.png";
+            currentLeftPng = "SMGLeft.png";
+        }
+        if (currentGun== alienHandGun){
+            currentGunPng= "AlienPistol.png";
+            currentLeftPng = "AlienPistolLeft.png";
+        }
+        if (currentGun== alienRifle){
+            currentGunPng= "AlienShotgun.png";
+            currentLeftPng = "AlienShotgunLeft.png";
+        }
+
+
         this.image = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MoveRightMiddleBig.png");
-        weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
-        weaponLeft = AssetHandler.getAssetHandler().getTexture("PistolLeft.png");
+        weapon = AssetHandler.getAssetHandler().getTexture(currentGunPng);
+        weaponLeft = AssetHandler.getAssetHandler().getTexture(currentLeftPng);
+
+
+
         //this.walkSheet = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterRight.png");
         //this.walkSheetLeft = AssetHandler.getAssetHandler().getTexture("SpriteSheets/MainCharacterLeft.png");
 
@@ -246,6 +272,24 @@ public class Player extends Entity {
         handleInput();
 
        limitInAirSpeed();
+        //if(shotgunEnabler == 1){}
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            currentGun = shotGun;
+
+        }
+
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+
+            currentGun = alienHandGun;
+
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+            currentGun = alienRifle;
+        }
+
+
 
     }
 
@@ -415,5 +459,8 @@ public class Player extends Entity {
         }
     }
 
+    public void refreshHumanity(){
+        humanity.refreshHumanity();
+    }
 
 }

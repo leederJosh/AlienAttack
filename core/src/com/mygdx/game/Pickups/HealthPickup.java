@@ -1,8 +1,9 @@
 package com.mygdx.game.pickups;
 
+
 import com.mygdx.game.entities.EntityList;
 import com.mygdx.game.assets.AssetHandler;
-
+import com.mygdx.game.pickups.AbstractPickup;
 /**
  * Health pickups that are dropped randomly on an ememy dying
  * @author Josh Leeder

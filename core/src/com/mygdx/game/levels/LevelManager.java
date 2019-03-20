@@ -48,4 +48,8 @@ public class LevelManager {
         }
         currentLevel = levels[index];
     }
+
+    public void refreshEntities(){
+        currentLevel.refreshEntities();
+    }
 }

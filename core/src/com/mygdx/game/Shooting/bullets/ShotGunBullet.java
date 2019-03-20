@@ -14,7 +14,7 @@ public class ShotGunBullet extends AbstractBullet {
         super(posX, posY, type);
         width = 10 / scale;
         height = 10 / scale;
-        speed = 6 / scale;
+        speed = 8 / scale;
         bulletDamage = 15;
     }
 

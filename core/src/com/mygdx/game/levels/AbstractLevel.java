@@ -1,6 +1,7 @@
 package com.mygdx.game.levels;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -23,10 +24,14 @@ import com.mygdx.game.shooting.BulletList;
 import com.mygdx.game.shooting.ShootingHandler;
 import com.mygdx.game.assets.AssetHandler;
 import com.mygdx.game.entities.*;
+import com.mygdx.game.pickups.WeaponPickup;
 import com.mygdx.game.entities.DialogNode;
+import com.mygdx.game.pickups.CluePickup;
+
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 
 /**
@@ -34,16 +39,30 @@ import java.util.TreeMap;
  */
 public abstract class AbstractLevel {
 
+    protected static Random gen = new Random();
     /** Map rendering */
     protected TiledMap tiledMap;
     protected OrthogonalTiledMapRenderer tiledMapRenderer;
 
     /** HUD elements */
     protected ShapeRenderer sr;
-    protected Texture weapon;
+    protected Texture
+            weapon1,
+            weapon2,
+            weapon3,
+            weapon4,
+            temp1,
+            TopLeft,
+            TopRight,
+            BottomLeft,
+            BottomRight,
+            bigWeapon,
+            chosenClue;
+
     protected SpriteBatch text;
     protected SpriteBatch imageBatch;
     protected BitmapFont font;
+    protected BitmapFont font2;
     private int playerHealth;
     private int playerHumanity;
 
@@ -60,6 +79,9 @@ public abstract class AbstractLevel {
     private DialogNode currentDialog;
     protected BulletList bulletList;
     protected MapObjectParser mapObjectParser;
+    protected WeaponPickup weaponpick;
+    //protected WeaponIntChooser weaponchoose;
+    protected CluePickup cluepick;
 
     /** Camera */
     protected Camera cam;
@@ -87,15 +109,28 @@ public abstract class AbstractLevel {
         // Handlers
         pickupHandler = new PickupHandler();
         shootingHandler = new ShootingHandler();
+        //weaponchoose = new WeaponIntChooser();
+      //  weaponpick = new WeaponPickup();
 
         //Currently equipped weapon for the top right of screen
-        weapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
+        weapon1 = AssetHandler.getAssetHandler().getTexture("Pistol.png");
+        weapon2 = AssetHandler.getAssetHandler().getTexture("SMG.png");
+        weapon3 = AssetHandler.getAssetHandler().getTexture("AlienPistol.png");
+        weapon4 = AssetHandler.getAssetHandler().getTexture("AlienShotgun.png");
+        bigWeapon = AssetHandler.getAssetHandler().getTexture("Pistol.png");
+
+        TopLeft = AssetHandler.getAssetHandler().getTexture("TopLeft.png");
+        TopRight = AssetHandler.getAssetHandler().getTexture("TopRight.png");
+        BottomLeft = AssetHandler.getAssetHandler().getTexture("BottomLeft.png");
+        BottomRight = AssetHandler.getAssetHandler().getTexture("BottomRight.png");
 
         // HUD elements
         sr = new ShapeRenderer();
         imageBatch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal( "core/assets/8bit9.fnt"));
         text = new SpriteBatch();
+        font2 = new BitmapFont(Gdx.files.internal( "core/assets/8bit9white.fnt"));
+        //cluepick = new ClueChooser();
     }
 
 
@@ -149,10 +184,23 @@ public abstract class AbstractLevel {
         //outlines (weapon and bars)
         sr.begin(ShapeRenderer.ShapeType.Line);
 
-        //weapon
+        //box for weapon
         sr.setColor(Color.GREEN);
-        sr.rect(575, ((int) drawHeightBars - 25), 50, 50);
-        batch.draw(weapon, 575, 425);
+        sr.rect(450, ((int) drawHeightBars - 30), 50, 50);
+        sr.setColor(Color.ORANGE);
+        sr.rect(475, ((int) drawHeightBars - 60), 25, 25);
+        sr.rect(475, ((int) drawHeightBars - 85), 25, 25);
+        sr.rect(475, ((int) drawHeightBars - 110), 25, 25);
+        sr.rect(475, ((int) drawHeightBars - 135), 25, 25);
+        batch.draw(weapon1, 575, 425);
+
+        //box for clues
+        sr.setColor(Color.BLUE);
+        sr.rect(15, ((int) drawHeightBars - 55), 25, 25);
+        sr.rect(15, ((int) drawHeightBars - 80), 25, 25);
+        sr.rect(15, ((int) drawHeightBars - 105), 25, 25);
+        sr.rect(15, ((int) drawHeightBars - 130), 25, 25);
+
 
         //health
         sr.setColor(Color.BLACK);
@@ -164,14 +212,75 @@ public abstract class AbstractLevel {
         batch.end();
 
         //drawing the pistol in top right
-        imageBatch.begin();
-        imageBatch.draw(weapon, 450, ((int) drawHeightBars - 30), 50, 50);
-        imageBatch.end();
 
+        imageBatch.begin();
+        imageBatch.draw(bigWeapon, 430, ((int) drawHeightBars - 45), 75, 75); //pos1
+
+
+        /**
+         * draws 4 weapon in inventory
+         */
+
+            imageBatch.draw(weapon1, 460, ((int) drawHeightBars - 75), 50, 50); //pos2
+
+            imageBatch.draw(weapon2, 470, ((int) drawHeightBars - 90), 30, 30); //pos2
+
+
+            imageBatch.draw(weapon3, 460, ((int) drawHeightBars - 125), 50, 50); //pos3
+
+
+            imageBatch.draw(weapon4, 470, ((int) drawHeightBars - 140), 30, 30); //pos3
+
+
+
+
+        /**
+         * draw clues
+         */
+        
+        if(pickupHandler.pickupToDrop()==1 && pickupHandler.hasCollided){
+
+
+            int TexOpt = ((gen.nextInt(4)+ 1));
+            int clueY = 50;
+            switch(TexOpt) {
+                case 1:
+                    chosenClue = TopLeft;
+                    clueY = 50;
+                    break;
+
+                case 2:
+                    chosenClue = TopRight;
+                    clueY = 75;
+                    break;
+
+                case 3:
+                    chosenClue = BottomLeft;
+                    clueY = 100;
+                    break;
+
+                case 4:
+                    chosenClue = BottomRight;
+                    clueY = 150;
+                    break;
+
+            }
+            imageBatch.draw(chosenClue, 15, ((int) drawHeightBars - clueY), 15, 15); //pos1
+        }
+       // imageBatch.draw(TopRight, 15, ((int) drawHeightBars - 75), 15, 15); //pos1
+       // imageBatch.draw(BottomLeft, 15, ((int) drawHeightBars - 100), 15, 15); //pos1
+       // imageBatch.draw(BottomRight, 15, ((int) drawHeightBars - 125), 15, 15); //pos1
+
+        imageBatch.end();
         //Text labels
         text.begin();
         font.draw(text, "HP:", 15, (float) drawHeightText);
         font.draw(text, "HUMANITY:", 275, (float) drawHeightText);
+        font2.draw(text, "1",455, ((int) drawHeightBars - 40));
+        font2.draw(text, "2",455, ((int) drawHeightBars - 65));
+        font2.draw(text, "3",455, ((int) drawHeightBars - 90));
+        font2.draw(text, "4",455, ((int) drawHeightBars - 115));
+
         text.end();
 
         //drawing the dialog box
@@ -202,6 +311,8 @@ public abstract class AbstractLevel {
         }
         text.end();
     }
+
+
     public void update (float delta) {
         //To remove the dead entities
         EntityList.getEntityList().removeDeadEntities();
@@ -238,6 +349,30 @@ public abstract class AbstractLevel {
 
         //Handles any collision between player and pickup
         pickupHandler.hasCollidedWithPickUp();
+
+        int index = 0;
+        for(Entity entity : EntityList.getListEntities()){
+            index++;
+            System.out.println("The world of current entity: " + entity.getWorld());
+        }
+        System.out.println("Abstract level. Entities currently in the list: " + index);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+            bigWeapon = weapon1;
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            bigWeapon = weapon2;
+        }
+
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+            bigWeapon = weapon3;
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+            bigWeapon = weapon4;
+        }
+
+
     }
 
     public abstract void dispose ();
@@ -268,5 +403,7 @@ public abstract class AbstractLevel {
     }
 
     public abstract void spawnPlayer();
+
+    public abstract void refreshEntities();
 
 }

@@ -19,61 +19,65 @@ import com.mygdx.game.entities.EntityList;
  */
 public class SideWalkRiverLevel extends AbstractLevel {
 
+    
+    public SideWalkRiverLevel() {
+        super();
+        tiledMap = AssetHandler.getAssetHandler().loadLevel("Level Three/SidewalkRiver.tmx");
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1  / scale);
+        world = new World(new Vector2(0f, -9.81f), false);
+        mapObjectParser = new MapObjectParser(world, tiledMap);
+        mapObjectParser.parseFloorObjectLayer();
+        entitiesToSpawn = mapObjectParser.parseEntitySpawnPoints();
+        levelEnd = mapObjectParser.parseTransitionObjects();
+        mapObjectParser.parseBoundaryObjects();
+        aiHandler = new AIHandler(this);
+        world.setContactListener(new MyContactListener());
+    }
 
-
-
-        public SideWalkRiverLevel() {
-            super();
-            tiledMap = AssetHandler.getAssetHandler().loadLevel("Level Three/SidewalkRiver.tmx");
-            tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1  / scale);
-            world = new World(new Vector2(0f, -9.81f), false);
-            mapObjectParser = new MapObjectParser(world, tiledMap);
-            mapObjectParser.parseFloorObjectLayer();
-            entitiesToSpawn = mapObjectParser.parseEntitySpawnPoints();
-            levelEnd = mapObjectParser.parseTransitionObjects();
-            mapObjectParser.parseBoundaryObjects();
-            aiHandler = new AIHandler(this);
-            world.setContactListener(new MyContactListener());
-        }
-
-        @Override
-        public void spawnEntities() {
-            for(Entity entity : entitiesToSpawn){
-                EntityList.updateEntityList(entity);
-            }
-        }
-
-        @Override
-        public void render(OrthographicCamera camera, SpriteBatch batch) {
-            //Set the camera/view, tells the renderer what camera to use
-            tiledMapRenderer.setView(camera);
-            tiledMapRenderer.render();
-
-            //this is to render the entities
-            //this is so the game renders based on how the cameras want the game to render
-            batch.setProjectionMatrix(camera.combined);
-            super.render(camera, batch);
-            camera.update();
-        }
-
-        @Override
-        public void update(float delta) {
-            super.update(delta);
-        }
-
-        @Override
-        public void dispose() {
-            tiledMap.dispose();
-        }
-
-        @Override
-        public World getWorld() {
-            return world;
-        }
-
-        @Override
-        public void spawnPlayer() {
-            mapObjectParser.parsePlayerSpawnPoint(world);
+    @Override
+    public void spawnEntities() {
+        for(Entity entity : entitiesToSpawn){
+            EntityList.updateEntityList(entity);
         }
     }
+
+    @Override
+    public void render(OrthographicCamera camera, SpriteBatch batch) {
+        //Set the camera/view, tells the renderer what camera to use
+        tiledMapRenderer.setView(camera);
+        tiledMapRenderer.render();
+
+        //this is to render the entities
+        //this is so the game renders based on how the cameras want the game to render
+        batch.setProjectionMatrix(camera.combined);
+        super.render(camera, batch);
+        camera.update();
+    }
+
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+    }
+
+    @Override
+    public void dispose() {
+        tiledMap.dispose();
+    }
+
+    @Override
+    public World getWorld() {
+        return world;
+    }
+
+    @Override
+    public void spawnPlayer() {
+        mapObjectParser.parsePlayerSpawnPoint(world);
+    }
+
+    @Override
+    public void refreshEntities() {
+        entitiesToSpawn.clear();
+        entitiesToSpawn = mapObjectParser.parseEntitySpawnPoints();
+    }
+}
 
