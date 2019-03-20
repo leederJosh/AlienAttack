@@ -227,9 +227,8 @@ public class Humanity {
         stateTime = 0f;
     }
 
-    public void refreshHumanity() {
+    public void refresh() {
         humanityValue = 100;
     }
-
 }
 

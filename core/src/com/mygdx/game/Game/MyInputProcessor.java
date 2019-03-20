@@ -1,4 +1,3 @@
-
 package com.mygdx.game.game;
 
 import com.badlogic.gdx.Gdx;
@@ -6,10 +5,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
-import com.mygdx.game.assets.AssetHandler;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.mygdx.game.entities.EntityList;
 import com.mygdx.game.entities.Player;
+import com.mygdx.game.assets.AssetHandler;
 
 /**
  * Handles the inputs from the player

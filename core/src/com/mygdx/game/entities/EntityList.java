@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class  EntityList {
+public class EntityList {
 
     private static EntityList entityList = null;
     private static TreeMap<Double, Entity> entityMap;

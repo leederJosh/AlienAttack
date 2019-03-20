@@ -84,18 +84,9 @@ public class AssetHandler {
         assetManager.load(assetPath + "PistolLeft.png", Texture.class);
         assetManager.load(assetPath + "civilianLeftFace.png", Texture.class);
         assetManager.load(assetPath + "AlienLeftFace.png", Texture.class);
-        assetManager.load(assetPath + "SMG.png", Texture.class);
-        assetManager.load(assetPath + "SMGLeft.png", Texture.class);
-        assetManager.load(assetPath + "TopLeft.png", Texture.class);
-        assetManager.load(assetPath + "TopRight.png", Texture.class);
-        assetManager.load(assetPath + "BottomRight.png", Texture.class);
-        assetManager.load(assetPath + "BottomLeft.png", Texture.class);
-        assetManager.load(assetPath + "FullClue.png", Texture.class);
         assetManager.load(assetPath + "gameOver.png", Texture.class);
-        assetManager.load(assetPath + "AlienPistol.png", Texture.class);
-        assetManager.load(assetPath + "AlienShotgun.png", Texture.class);
-        assetManager.load(assetPath + "AlienPistolLeft.png", Texture.class);
-        assetManager.load(assetPath + "AlienShotgunLeft.png", Texture.class);
+
+
         //Boss
         assetManager.load(assetPath + "BossLeftThree.png", Texture.class);
 

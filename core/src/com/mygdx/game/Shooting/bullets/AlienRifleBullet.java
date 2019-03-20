@@ -18,7 +18,7 @@ public class AlienRifleBullet extends AbstractBullet {
         super(posX, posY, bulletType);
         width = 13 / scale;
         height = 13 / scale;
-        speed = 9 / scale;
+        speed = 7 / scale;
         bulletDamage = 10;
     }
 

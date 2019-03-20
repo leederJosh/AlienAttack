@@ -1,8 +1,8 @@
 package com.mygdx.game.shooting;
 
+import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.EntityList;
-import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.shooting.bullets.AlienHandgunBullet;
 import com.mygdx.game.shooting.bullets.AlienRifleBullet;
 

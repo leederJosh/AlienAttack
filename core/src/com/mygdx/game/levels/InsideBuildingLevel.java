@@ -72,10 +72,4 @@ public class InsideBuildingLevel extends AbstractLevel {
     public void spawnPlayer() {
         mapObjectParser.parsePlayerSpawnPoint(world);
     }
-
-    @Override
-    public void refreshEntities() {
-        entitiesToSpawn.clear();
-        entitiesToSpawn = mapObjectParser.parseEntitySpawnPoints();
-    }
 }

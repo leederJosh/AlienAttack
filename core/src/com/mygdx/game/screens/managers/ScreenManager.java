@@ -72,7 +72,7 @@ public class ScreenManager {
 
     //TODO
     // What this includes
-    // A way to instantiate all screens
+    // A way to instantiate all Screens
     // Holds the current Screen
     // Handles the current scenes request to change screens
     // Will need an abstract screen so that all screens are of the same type

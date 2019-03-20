@@ -10,9 +10,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.mygdx.game.shooting.BulletList;
 import com.mygdx.game.levels.LevelManager;
 import com.mygdx.game.screens.managers.ScreenManager;
+import com.mygdx.game.shooting.BulletList;
 import com.mygdx.game.entities.EntityList;
 import com.mygdx.game.assets.AssetHandler;
 
