@@ -75,4 +75,9 @@ public class BulletList {
             bulletsToRemove.clear();
         }
     }
+
+    public void clearBulletList(){
+        bullets.clear();
+        bulletsToRemove.clear();
+    }
 }
